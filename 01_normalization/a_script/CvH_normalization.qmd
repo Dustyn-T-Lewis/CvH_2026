@@ -1,0 +1,989 @@
+---
+title: "CvH Proteomics — Normalization Pipeline"
+subtitle: "Cancer Survivor (CR) vs. Healthy (PPS) Skeletal Muscle DIA-MS Proteomics"
+author: "DTL"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Show code"
+    theme: flatly
+    fig-width: 10
+    fig-height: 7
+execute:
+  warning: false
+  message: false
+---
+
+# 0 — Setup {#sec-setup}
+
+This document implements a normalization pipeline for the CvH DIA-MS
+proteomics dataset using the `proteoDA` package. The pipeline follows
+current best practices for label-free quantitative proteomics
+preprocessing, drawing on recommendations from Välikangas et al. (2018)
+and the `proteoDA` workflow.
+
+**Study overview:** Cancer survivors (CR) who completed 12 weeks of
+resistance training were compared with healthy age-matched controls
+(PPS). CR participants were randomized to creatine (CRE) or placebo
+(PLA) supplementation. Vastus lateralis biopsies were collected at
+baseline (T1) and post-training (T2) for CR participants, and at a
+single timepoint (T1) for healthy controls.
+
+```{r setup}
+#| label: setup
+
+# Package management
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(
+  proteoDA,
+  readxl, readr, dplyr, tidyr, stringr,
+  httr, xml2,
+  ggplot2, patchwork, knitr
+)
+
+# Paths
+base_dir   <- normalizePath(file.path(dirname(getwd()), ".."), mustWork = TRUE)
+input_dir  <- file.path(base_dir, "00_input")
+report_dir <- file.path(base_dir, "01_normalization", "b_reports")
+data_dir   <- file.path(base_dir, "01_normalization", "c_data")
+
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(data_dir,   recursive = TRUE, showWarnings = FALSE)
+
+# Color palette — consistent across all CvH scripts
+pal_group <- c(CR_CRE = "#2166AC", CR_PLA = "#67A9CF", PPS = "#B2182B")
+pal_group_time <- c(
+  CR_T1 = "#92C5DE", CR_T2 = "#2166AC",
+  H_T1  = "#B2182B"
+)
+pal_supplement <- c(CRE = "#2166AC", PLA = "#67A9CF", `NA` = "#999999")
+shape_tp <- c(T1 = 16, T2 = 17)  # circle, triangle
+```
+
+
+# 1 — Load & Validate Data {#sec-load}
+
+We begin by reading the raw DIA-MS intensity data and the sample
+metadata. The raw file contains protein-level intensities exported from
+the search engine, with annotation columns (UniProt ID, gene symbol,
+description) followed by one column per sample.
+
+```{r load-data}
+#| label: load-data
+
+# Raw intensity data
+raw <- read_excel(file.path(input_dir, "CvH_raw.xlsx"))
+
+# Separate annotation from intensity
+annot_cols <- c("uniprot_id", "protein", "gene", "description", "n_seq")
+annotation <- raw[, annot_cols]
+intensity  <- raw[, setdiff(names(raw), annot_cols)]
+
+cat(sprintf("Raw data: %d proteins x %d samples\n", nrow(raw), ncol(intensity)))
+
+# Metadata
+metadata <- read.csv(file.path(input_dir, "CvH_meta.csv"), stringsAsFactors = FALSE)
+rownames(metadata) <- metadata$Col_ID
+
+cat(sprintf("Metadata: %d samples\n", nrow(metadata)))
+```
+
+```{r validate-alignment}
+#| label: validate-alignment
+
+# Critical check: sample columns must match metadata rows
+data_samples <- colnames(intensity)
+meta_samples <- metadata$Col_ID
+
+stopifnot(
+  "Sample mismatch between data and metadata" =
+    setequal(data_samples, meta_samples)
+)
+
+# Reorder intensity columns to match metadata row order
+intensity <- intensity[, meta_samples]
+
+cat("Validation passed: all", length(meta_samples), "samples aligned.\n")
+```
+
+```{r sample-summary}
+#| label: sample-summary
+
+metadata %>%
+  count(Group, Timepoint, Group_Time, Supplement) %>%
+  kable(caption = "Sample distribution across experimental groups")
+```
+
+
+# 2 — CRAPome Contaminant Annotation {#sec-crapome}
+
+Affinity purification-mass spectrometry (AP-MS) experiments routinely
+detect common laboratory contaminants—keratins, serum albumin,
+trypsin—that are not biologically meaningful. The CRAPome database
+(Mellacheruvu et al., 2013) catalogues proteins frequently observed
+across hundreds of AP-MS negative control experiments, providing an
+empirical frequency metric.
+
+For tissue proteomics (as opposed to AP-MS), CRAPome serves as a useful
+heuristic: proteins appearing in >20% of CRAPome experiments are likely
+environmental or processing contaminants rather than genuine tissue
+constituents. However, we must exercise caution with **skeletal muscle
+biopsies**, where abundant structural and metabolic proteins (e.g.,
+myosins, creatine kinase, collagens) may also appear frequently in
+CRAPome due to their ubiquity in biological samples.
+
+We therefore define a **muscle protection list** of genes known to be
+genuinely expressed in vastus lateralis tissue, which are exempt from
+contaminant flagging regardless of their CRAPome frequency.
+
+```{r muscle-protect}
+#| label: muscle-protect
+
+muscle_protect <- c(
+  # Myosin heavy/light chains
+  "MYH1", "MYH2", "MYH7", "MYH4", "MYL1", "MYL2", "MYL3",
+  "MYBPC1", "MYBPC2",
+  # Actins
+  "ACTA1", "ACTC1", "ACTN2", "ACTN3", "ACTB", "ACTG1",
+  # Tropomyosins & troponins
+  "TPM1", "TPM2", "TPM3", "TNNC1", "TNNC2", "TNNI1", "TNNI2",
+  "TNNT1", "TNNT3",
+  # Giant structural
+
+  "TTN", "NEB",
+  # Metabolic enzymes
+  "CKM", "CKB", "CKMT2", "MB", "PYGM", "ALDOA", "ENO3",
+  "GAPDH", "PKM", "LDHA", "LDHB", "ENO1", "PFKM", "GPI",
+  # Mitochondrial
+  "ATP5F1A", "ATP5F1B", "COX4I1", "COX5A", "UQCRC1", "UQCRC2",
+  "SDHA", "SDHB", "CS", "MDH2", "IDH2", "OGDH",
+  # Structural / cytoskeletal
+  "DES", "VIM", "FLNC", "LDB3", "MYOZ1", "MYOZ2", "SYNPO2L",
+  # Collagens (ECM — expected from biopsy)
+  "COL1A1", "COL1A2", "COL3A1", "COL6A1", "COL6A2", "COL6A3",
+  # Heat shock (also abundant in muscle)
+  "HSPA1A", "HSPA8", "HSPB1", "HSPB6", "HSPD1", "HSPE1",
+  "HSP90AA1", "HSP90AB1",
+  # Hemoglobin (expected from biopsy blood contamination — real)
+  "HBA1", "HBA2", "HBB",
+  # Calcium handling
+  "ATP2A1", "ATP2A2", "CASQ1", "CALM1", "CALM2",
+  # Glycolytic / TCA
+  "TPI1", "PGAM2", "PGK1", "MDH1"
+)
+```
+
+```{r crapome-query}
+#| label: crapome-query
+
+crapome_cache <- file.path(data_dir, "00_crapome_annotations.csv")
+
+if (file.exists(crapome_cache)) {
+  cat("Loading cached CRAPome annotations...\n")
+  crapome <- read_csv(crapome_cache, show_col_types = FALSE)
+} else {
+  cat("Querying CRAPome API for", length(unique(annotation$gene)), "genes...\n")
+  cat("This will take ~10-15 minutes.\n\n")
+
+  genes <- unique(annotation$gene)
+  crapome <- tibble(gene = genes, crapome_n_expt = NA_integer_)
+
+  for (i in seq_along(genes)) {
+    g <- genes[i]
+    if (i %% 100 == 0) cat(sprintf("  %d / %d ...\n", i, length(genes)))
+
+    tryCatch({
+      url <- sprintf(
+        "https://reprint-apms.org/?q=ws/proteindetail/%s/human/singleStep",
+        URLencode(g, reserved = TRUE)
+      )
+      resp <- GET(url, timeout(15))
+
+      if (status_code(resp) == 200) {
+        xml_text <- content(resp, as = "text", encoding = "UTF-8")
+        # Check if it looks like XML (not an error page)
+        if (grepl("^<\\?xml", xml_text)) {
+          doc <- read_xml(xml_text)
+          expts <- xml_attr(xml_find_all(doc, ".//protein"), "expt")
+          crapome$crapome_n_expt[i] <- length(unique(expts))
+        } else {
+          crapome$crapome_n_expt[i] <- 0L
+        }
+      } else {
+        crapome$crapome_n_expt[i] <- 0L
+      }
+    }, error = function(e) {
+      crapome$crapome_n_expt[i] <<- 0L
+    })
+
+    Sys.sleep(0.2)
+  }
+
+  # Calculate percentage relative to the most frequently detected protein
+  max_expt <- max(crapome$crapome_n_expt, na.rm = TRUE)
+  crapome$crapome_pct <- round(crapome$crapome_n_expt / max_expt * 100, 1)
+
+  write_csv(crapome, crapome_cache)
+  cat(sprintf("\nCRAPome annotation complete. Max experiments: %d\n", max_expt))
+}
+
+# Ensure pct is computed even from cache
+if (!"crapome_pct" %in% names(crapome)) {
+  max_expt <- max(crapome$crapome_n_expt, na.rm = TRUE)
+  crapome$crapome_pct <- round(crapome$crapome_n_expt / max_expt * 100, 1)
+}
+```
+
+```{r crapome-flag}
+#| label: crapome-flag
+
+# Flag contaminants: >20% CRAPome frequency AND not on the muscle protect list
+crapome <- crapome %>%
+  mutate(
+    is_muscle_protected = gene %in% muscle_protect,
+    is_contaminant = (crapome_pct > 20) & !is_muscle_protected
+  )
+
+# Join to annotation
+annotation <- annotation %>%
+  left_join(crapome, by = "gene") %>%
+  mutate(
+    crapome_n_expt = replace_na(crapome_n_expt, 0L),
+    crapome_pct    = replace_na(crapome_pct, 0),
+    is_contaminant = replace_na(is_contaminant, FALSE)
+  )
+
+# Summary
+n_flagged   <- sum(annotation$is_contaminant)
+n_protected <- sum(annotation$is_muscle_protected & annotation$crapome_pct > 20,
+                   na.rm = TRUE)
+
+cat(sprintf("Proteins flagged as contaminants: %d\n", n_flagged))
+cat(sprintf("Muscle proteins protected (CRAPome >20%% but retained): %d\n", n_protected))
+```
+
+```{r crapome-table}
+#| label: crapome-table
+
+# Show flagged contaminants
+annotation %>%
+  filter(is_contaminant) %>%
+  select(gene, uniprot_id, description, crapome_n_expt, crapome_pct) %>%
+  arrange(desc(crapome_pct)) %>%
+  kable(caption = "Proteins flagged as CRAPome contaminants (>20% frequency, not muscle-protected)")
+
+# Show protected proteins that would have been flagged
+annotation %>%
+  filter(is_muscle_protected, crapome_pct > 20) %>%
+  select(gene, uniprot_id, description, crapome_n_expt, crapome_pct) %>%
+  arrange(desc(crapome_pct)) %>%
+  kable(caption = "Muscle-protected proteins retained despite high CRAPome frequency")
+```
+
+
+# 3 — Assemble DAList {#sec-dalist}
+
+The `proteoDA` package uses a specialized S3 object called a `DAList` to
+hold intensity data, protein annotation, and sample metadata together.
+This ensures consistent indexing throughout the analysis pipeline. The
+`DAList` requires:
+
+1. **data** — a numeric matrix of intensities (proteins × samples)
+2. **annotation** — a data frame with a unique `uniprot_id` column
+3. **metadata** — a data frame whose row names match the column names of
+   the data
+
+```{r check-duplicates}
+#| label: check-duplicates
+
+# Check for duplicate uniprot_ids
+dup_ids <- annotation$uniprot_id[duplicated(annotation$uniprot_id)]
+
+if (length(dup_ids) > 0) {
+  cat(sprintf("Found %d duplicate uniprot_ids — deduplicating by highest mean intensity.\n",
+              length(dup_ids)))
+
+  # Calculate row means for deduplication
+  intensity_num <- as.data.frame(lapply(intensity, as.numeric))
+  annotation$row_mean <- rowMeans(intensity_num, na.rm = TRUE)
+
+  keep_idx <- annotation %>%
+    mutate(row_idx = row_number()) %>%
+    group_by(uniprot_id) %>%
+    slice_max(row_mean, n = 1, with_ties = FALSE) %>%
+    pull(row_idx)
+
+  annotation <- annotation[keep_idx, ]
+  intensity  <- intensity[keep_idx, ]
+  annotation$row_mean <- NULL
+
+  cat(sprintf("After deduplication: %d unique proteins\n", nrow(annotation)))
+} else {
+  cat("No duplicate uniprot_ids found.\n")
+}
+```
+
+```{r assemble-dalist}
+#| label: assemble-dalist
+
+# Convert intensity to numeric matrix
+intensity_mat <- as.data.frame(lapply(intensity, as.numeric))
+rownames(intensity_mat) <- annotation$uniprot_id
+
+# Annotation df
+annot_df <- as.data.frame(annotation)
+rownames(annot_df) <- annotation$uniprot_id
+
+# Metadata df — rownames must match colnames of data
+meta_df <- as.data.frame(metadata)
+rownames(meta_df) <- metadata$Col_ID
+
+# Assemble
+dal <- DAList(
+  data       = intensity_mat,
+  annotation = annot_df,
+  metadata   = meta_df
+)
+
+cat(sprintf("DAList assembled: %d proteins x %d samples\n",
+            nrow(dal$data), ncol(dal$data)))
+```
+
+
+# 4 — Quality Filtering {#sec-filtering}
+
+Protein filtering proceeds in two stages: (1) removal of contaminant
+proteins identified via CRAPome, and (2) removal of proteins with
+excessive missing data.
+
+For DIA-MS data, missing values predominantly arise from peptides below
+the detection limit (missing not at random, MNAR) rather than stochastic
+sampling (missing completely at random, MCAR) as is more common in DDA
+data (Lazar et al., 2016). A 66% completeness threshold per condition
+(`Group_Time`) ensures that retained proteins have sufficient data for
+reliable statistical inference while preserving proteins that may be
+condition-specific.
+
+```{r zero-to-missing}
+#| label: zero-to-missing
+
+# Track protein counts through filtering
+filter_log <- tibble(
+  step      = character(),
+  n_before  = integer(),
+  n_after   = integer(),
+  n_removed = integer()
+)
+
+n_start <- nrow(dal$data)
+
+# Convert 0s to NA (DIA-MS exports may use 0 for below-detection-limit)
+dal <- zero_to_missing(dal)
+
+n_zeros <- n_start  # same number of proteins, but 0s are now NA
+cat(sprintf("Converted zeros to NA. Total proteins: %d\n", nrow(dal$data)))
+```
+
+```{r filter-contaminants}
+#| label: filter-contaminants
+
+n_before <- nrow(dal$data)
+dal <- filter_proteins_by_annotation(dal, !is_contaminant)
+n_after <- nrow(dal$data)
+
+filter_log <- bind_rows(filter_log, tibble(
+  step = "CRAPome contaminant removal",
+  n_before = n_before, n_after = n_after, n_removed = n_before - n_after
+))
+
+cat(sprintf("CRAPome filtering: %d -> %d proteins (%d removed)\n",
+            n_before, n_after, n_before - n_after))
+```
+
+```{r filter-missingness}
+#| label: filter-missingness
+
+n_before <- nrow(dal$data)
+dal <- filter_proteins_by_proportion(
+  dal,
+  min_prop = 0.66,
+  grouping_column = "Group_Time"
+)
+n_after <- nrow(dal$data)
+
+filter_log <- bind_rows(filter_log, tibble(
+  step = "Missingness filter (66% per Group_Time)",
+  n_before = n_before, n_after = n_after, n_removed = n_before - n_after
+))
+
+cat(sprintf("Missingness filtering: %d -> %d proteins (%d removed)\n",
+            n_before, n_after, n_before - n_after))
+```
+
+```{r filtering-outputs}
+#| label: filtering-outputs
+
+# Add the starting count
+filter_log <- bind_rows(
+  tibble(step = "Raw input", n_before = NA_integer_,
+         n_after = n_start, n_removed = NA_integer_),
+  filter_log
+) %>%
+  mutate(pct_retained = round(n_after / n_start * 100, 1))
+
+# Save filtering effects
+write_csv(filter_log, file.path(data_dir, "03_filtering_effects.csv"))
+
+# Build filtered proteins list
+# Identify which proteins were removed and why
+all_uniprots <- annot_df$uniprot_id
+kept_uniprots <- rownames(dal$data)
+removed_uniprots <- setdiff(all_uniprots, kept_uniprots)
+
+filtered_proteins <- annot_df %>%
+  filter(uniprot_id %in% removed_uniprots) %>%
+  select(uniprot_id, gene, description, crapome_pct, is_contaminant) %>%
+  mutate(reason = if_else(is_contaminant, "CRAPome contaminant", "Missingness"))
+
+write_csv(filtered_proteins, file.path(data_dir, "03_filtered_proteins.csv"))
+
+kable(filter_log, caption = "Protein filtering summary")
+```
+
+```{r filtering-barplot}
+#| label: filtering-barplot
+#| fig-cap: "Protein counts at each filtering stage"
+
+filter_plot_data <- filter_log %>%
+  mutate(step = factor(step, levels = step))
+
+p_filter <- ggplot(filter_plot_data, aes(x = step, y = n_after)) +
+  geom_col(fill = "#2166AC", width = 0.6) +
+  geom_text(aes(label = n_after), vjust = -0.3, size = 4) +
+  labs(x = NULL, y = "Number of proteins",
+       title = "Protein retention through filtering pipeline") +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+
+p_filter
+
+ggsave(file.path(report_dir, "03_filtering_effects.pdf"),
+       p_filter, width = 8, height = 5)
+```
+
+
+# 5 — Outlier Detection & Removal {#sec-outliers}
+
+Sample-level outliers can arise from technical failures (failed
+digestion, poor injection), sample degradation, or mislabeling. We apply
+three complementary diagnostic methods and remove samples flagged by at
+least two:
+
+1. **Paired missingness** — samples with excessive missing data or
+   unusual changes in missingness between timepoints
+2. **PCA-based Mahalanobis distance** — samples that are multivariate
+   outliers in principal component space (Hubert et al., 2005)
+3. **MAD-based intensity** — samples whose median intensity deviates
+   from the global median by more than 3 median absolute deviations
+   (Leys et al., 2013)
+
+These diagnostics are applied **before normalization** since they rely
+on missingness patterns and raw intensity structure rather than
+normalized values.
+
+```{r outlier-missingness}
+#| label: outlier-missingness
+
+# Per-sample percent missing
+pct_missing <- colMeans(is.na(dal$data)) * 100
+
+# Paired missingness (delta) for CR subjects with both T1 and T2
+paired_subjects <- dal$metadata %>%
+  filter(Group != "PPS") %>%
+  count(Subject_ID) %>%
+  filter(n == 2) %>%
+  pull(Subject_ID)
+
+delta_missing <- tibble(
+  Col_ID = character(),
+  Subject_ID = character(),
+  pct_missing = numeric(),
+  delta_missing = numeric()
+)
+
+for (subj in paired_subjects) {
+  rows <- dal$metadata %>% filter(Subject_ID == subj)
+  t1_id <- rows$Col_ID[rows$Timepoint == "T1"]
+  t2_id <- rows$Col_ID[rows$Timepoint == "T2"]
+  if (length(t1_id) == 1 && length(t2_id) == 1) {
+    m1 <- pct_missing[t1_id]
+    m2 <- pct_missing[t2_id]
+    delta_missing <- bind_rows(delta_missing, tibble(
+      Col_ID = c(t1_id, t2_id),
+      Subject_ID = subj,
+      pct_missing = c(m1, m2),
+      delta_missing = m2 - m1  # positive = more missing at T2
+    ))
+  }
+}
+
+# For unpaired samples (PPS), add with delta = NA
+unpaired_ids <- dal$metadata %>%
+  filter(Group == "PPS") %>%
+  pull(Col_ID)
+
+delta_missing <- bind_rows(delta_missing, tibble(
+  Col_ID = unpaired_ids,
+  Subject_ID = dal$metadata$Subject_ID[match(unpaired_ids, dal$metadata$Col_ID)],
+  pct_missing = pct_missing[unpaired_ids],
+  delta_missing = NA_real_
+))
+
+# Also add unpaired CR subjects
+unpaired_cr <- setdiff(dal$metadata$Col_ID, delta_missing$Col_ID)
+if (length(unpaired_cr) > 0) {
+  delta_missing <- bind_rows(delta_missing, tibble(
+    Col_ID = unpaired_cr,
+    Subject_ID = dal$metadata$Subject_ID[match(unpaired_cr, dal$metadata$Col_ID)],
+    pct_missing = pct_missing[unpaired_cr],
+    delta_missing = NA_real_
+  ))
+}
+
+# IQR-based flags
+miss_q3  <- quantile(pct_missing, 0.75)
+miss_iqr <- IQR(pct_missing)
+miss_threshold <- miss_q3 + 1.5 * miss_iqr
+
+delta_vals <- delta_missing$delta_missing[!is.na(delta_missing$delta_missing)]
+if (length(delta_vals) > 2) {
+  delta_q3  <- quantile(delta_vals, 0.75)
+  delta_iqr <- IQR(delta_vals)
+  delta_threshold <- delta_q3 + 1.5 * delta_iqr
+  delta_lower     <- quantile(delta_vals, 0.25) - 1.5 * delta_iqr
+} else {
+  delta_threshold <- Inf
+  delta_lower <- -Inf
+}
+
+delta_missing <- delta_missing %>%
+  mutate(
+    miss_flag = pct_missing > miss_threshold |
+      (!is.na(delta_missing) & (delta_missing > delta_threshold | delta_missing < delta_lower))
+  )
+```
+
+```{r outlier-pca}
+#| label: outlier-pca
+
+# PCA on log2-transformed, median-imputed data
+data_for_pca <- dal$data
+# Impute NAs with column medians (temporary — for PCA only)
+for (j in seq_len(ncol(data_for_pca))) {
+  nas <- is.na(data_for_pca[, j])
+  if (any(nas)) {
+    data_for_pca[nas, j] <- median(data_for_pca[, j], na.rm = TRUE)
+  }
+}
+data_log2 <- log2(data_for_pca + 1)
+
+pca_res <- prcomp(t(data_log2), center = TRUE, scale. = TRUE)
+pc_scores <- pca_res$x[, 1:3]
+
+# Mahalanobis distance
+center <- colMeans(pc_scores)
+cov_mat <- cov(pc_scores)
+mahal_dist <- mahalanobis(pc_scores, center, cov_mat)
+
+# Chi-squared threshold (p < 0.01, df = 3)
+mahal_threshold <- qchisq(0.99, df = 3)
+
+pca_flags <- tibble(
+  Col_ID = colnames(dal$data),
+  mahal_dist = mahal_dist,
+  pca_flag = mahal_dist > mahal_threshold
+)
+```
+
+```{r outlier-mad}
+#| label: outlier-mad
+
+# Per-sample median log2 intensity
+sample_medians <- apply(log2(dal$data + 1), 2, median, na.rm = TRUE)
+global_median  <- median(sample_medians)
+mad_val        <- mad(sample_medians)
+
+mad_flags <- tibble(
+  Col_ID = names(sample_medians),
+  sample_median = sample_medians,
+  mad_deviation = abs(sample_medians - global_median),
+  mad_flag = abs(sample_medians - global_median) > 3 * mad_val
+)
+```
+
+```{r outlier-consensus}
+#| label: outlier-consensus
+
+# Combine all flags
+outlier_diag <- delta_missing %>%
+  select(Col_ID, pct_missing, delta_missing, miss_flag) %>%
+  left_join(pca_flags, by = "Col_ID") %>%
+  left_join(mad_flags, by = "Col_ID") %>%
+  mutate(
+    n_flags = miss_flag + pca_flag + mad_flag,
+    consensus_outlier = n_flags >= 2
+  )
+
+write_csv(outlier_diag, file.path(data_dir, "04_outlier_diagnostics.csv"))
+
+n_outliers <- sum(outlier_diag$consensus_outlier)
+cat(sprintf("Outlier consensus: %d sample(s) flagged by >= 2 methods\n", n_outliers))
+
+if (n_outliers > 0) {
+  outlier_diag %>%
+    filter(consensus_outlier) %>%
+    select(Col_ID, pct_missing, delta_missing, mahal_dist, miss_flag, pca_flag, mad_flag) %>%
+    kable(caption = "Samples flagged as consensus outliers")
+}
+```
+
+```{r outlier-plots}
+#| label: outlier-plots
+#| fig-cap: "Outlier diagnostic panels"
+
+# Panel 1: Paired missingness
+p1 <- ggplot(outlier_diag %>% filter(!is.na(delta_missing)),
+             aes(x = pct_missing, y = delta_missing)) +
+  geom_point(aes(color = consensus_outlier), size = 3) +
+  geom_hline(yintercept = c(delta_lower, delta_threshold),
+             linetype = "dashed", color = "red", alpha = 0.5) +
+  geom_vline(xintercept = miss_threshold,
+             linetype = "dashed", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("FALSE" = "gray40", "TRUE" = "red")) +
+  labs(x = "% Missing", y = "Delta Missing (T2 - T1)",
+       title = "A: Paired Missingness") +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "none")
+
+# Panel 2: PCA with Mahalanobis
+pc_df <- as.data.frame(pca_res$x[, 1:2])
+pc_df$Col_ID <- rownames(pc_df)
+pc_df <- left_join(pc_df, outlier_diag %>% select(Col_ID, consensus_outlier), by = "Col_ID")
+var_explained <- round(summary(pca_res)$importance[2, 1:2] * 100, 1)
+
+p2 <- ggplot(pc_df, aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = consensus_outlier), size = 3) +
+  scale_color_manual(values = c("FALSE" = "gray40", "TRUE" = "red")) +
+  labs(x = sprintf("PC1 (%.1f%%)", var_explained[1]),
+       y = sprintf("PC2 (%.1f%%)", var_explained[2]),
+       title = "B: PCA Outliers (Mahalanobis)") +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "none")
+
+# Panel 3: MAD
+p3 <- ggplot(outlier_diag, aes(x = reorder(Col_ID, sample_median), y = sample_median)) +
+  geom_point(aes(color = consensus_outlier), size = 2.5) +
+  geom_hline(yintercept = global_median, color = "black") +
+  geom_hline(yintercept = global_median + c(-3, 3) * mad_val,
+             linetype = "dashed", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("FALSE" = "gray40", "TRUE" = "red")) +
+  labs(x = "Sample", y = "Median log2 intensity",
+       title = "C: MAD Intensity Outliers") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+        legend.position = "none")
+
+p_outlier <- p1 + p2 + p3 + plot_layout(ncol = 1)
+p_outlier
+
+ggsave(file.path(report_dir, "04_outlier_diagnostics.pdf"),
+       p_outlier, width = 10, height = 12)
+```
+
+```{r remove-outliers}
+#| label: remove-outliers
+
+if (n_outliers > 0) {
+  outlier_ids <- outlier_diag %>%
+    filter(consensus_outlier) %>%
+    pull(Col_ID)
+
+  cat(sprintf("Removing %d outlier sample(s): %s\n",
+              length(outlier_ids), paste(outlier_ids, collapse = ", ")))
+
+  # Build condition dynamically
+  dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
+
+  cat(sprintf("After outlier removal: %d samples remain\n", ncol(dal$data)))
+} else {
+  cat("No outlier samples removed.\n")
+}
+```
+
+
+# 6 — Normalization {#sec-normalization}
+
+Normalization corrects for systematic technical variation (e.g., sample
+loading differences, LC-MS run effects) while preserving biological
+differences. We use the `proteoDA` normalization report to visually
+compare eight available methods, then apply cyclic loess (`cycloess`)
+normalization.
+
+Cyclic loess was recommended by Välikangas et al. (2018) as one of the
+best-performing methods for label-free quantitative proteomics data,
+particularly with small sample sizes. It applies a series of pairwise
+loess regressions between all sample pairs, iteratively adjusting
+intensity distributions without assuming equal protein loading across
+conditions — an important property for tissues with potentially
+different total protein composition (e.g., cancer survivor vs. healthy
+muscle).
+
+```{r norm-report}
+#| label: norm-report
+
+write_norm_report(
+  dal,
+  grouping_column = "Group_Time",
+  output_dir = report_dir,
+  filename = "01_normalization_report.pdf",
+  overwrite = TRUE
+)
+
+cat("Normalization report saved to b_reports/01_normalization_report.pdf\n")
+cat("Review this report to confirm cycloess is appropriate for this dataset.\n")
+```
+
+```{r normalize}
+#| label: normalize
+
+dal <- normalize_data(dal, norm_method = "cycloess")
+
+cat(sprintf("Normalization complete (cycloess): %d proteins x %d samples\n",
+            nrow(dal$data), ncol(dal$data)))
+```
+
+
+# 7 — Post-Normalization QC {#sec-qc}
+
+After normalization, we generate a quality control report to assess
+sample clustering, correlation structure, and the distribution of
+normalized intensities. The PCA and hierarchical clustering should show
+samples grouping primarily by biological condition (`Group_Time`) rather
+than technical factors.
+
+```{r qc-report}
+#| label: qc-report
+
+write_qc_report(
+  dal,
+  color_column = "Group_Time",
+  label_column = "Col_ID",
+  output_dir = report_dir,
+  filename = "02_qc_report.pdf",
+  overwrite = TRUE
+)
+
+cat("QC report saved to b_reports/02_qc_report.pdf\n")
+```
+
+```{r custom-pca}
+#| label: custom-pca
+#| fig-cap: "Post-normalization PCA — CvH dataset"
+#| fig-height: 14
+
+# PCA on normalized data
+norm_mat <- dal$data
+# Impute remaining NAs with column medians for PCA
+for (j in seq_len(ncol(norm_mat))) {
+  nas <- is.na(norm_mat[, j])
+  if (any(nas)) {
+    norm_mat[nas, j] <- median(norm_mat[, j], na.rm = TRUE)
+  }
+}
+
+pca_norm <- prcomp(t(norm_mat), center = TRUE, scale. = TRUE)
+pc_df <- as.data.frame(pca_norm$x[, 1:3])
+pc_df$Col_ID <- rownames(pc_df)
+pc_df <- left_join(pc_df, dal$metadata, by = "Col_ID")
+
+var_exp <- round(summary(pca_norm)$importance[2, 1:3] * 100, 1)
+
+# Panel 1: Colored by Group
+p_pca1 <- ggplot(pc_df, aes(x = PC1, y = PC2, color = Group, shape = Timepoint)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  stat_ellipse(aes(group = Group), type = "norm", level = 0.68,
+               linetype = "solid", linewidth = 0.7) +
+  scale_color_manual(values = pal_group) +
+  scale_shape_manual(values = shape_tp) +
+  labs(x = sprintf("PC1 (%.1f%%)", var_exp[1]),
+       y = sprintf("PC2 (%.1f%%)", var_exp[2]),
+       title = "A: By Group") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+# Panel 2: Colored by Group_Time
+p_pca2 <- ggplot(pc_df, aes(x = PC1, y = PC2, color = Group_Time, shape = Timepoint)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  stat_ellipse(aes(group = Group_Time), type = "norm", level = 0.68,
+               linetype = "solid", linewidth = 0.7) +
+  scale_color_manual(values = pal_group_time) +
+  scale_shape_manual(values = shape_tp) +
+  labs(x = sprintf("PC1 (%.1f%%)", var_exp[1]),
+       y = sprintf("PC2 (%.1f%%)", var_exp[2]),
+       title = "B: By Group x Timepoint") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+# Panel 3: Colored by Supplement
+pc_df$Supplement_label <- replace_na(pc_df$Supplement, "NA")
+
+p_pca3 <- ggplot(pc_df, aes(x = PC1, y = PC2,
+                              color = Supplement_label, shape = Timepoint)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  stat_ellipse(aes(group = Supplement_label), type = "norm", level = 0.68,
+               linetype = "solid", linewidth = 0.7) +
+  scale_color_manual(values = pal_supplement) +
+  scale_shape_manual(values = shape_tp) +
+  labs(x = sprintf("PC1 (%.1f%%)", var_exp[1]),
+       y = sprintf("PC2 (%.1f%%)", var_exp[2]),
+       title = "C: By Supplement",
+       color = "Supplement") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+p_pca_combined <- p_pca1 / p_pca2 / p_pca3
+p_pca_combined
+
+ggsave(file.path(report_dir, "05_post_norm_pca.pdf"),
+       p_pca_combined, width = 9, height = 16)
+```
+
+
+# 8 — Export {#sec-export}
+
+We export the normalized dataset in two formats: a flat CSV for
+interoperability with other tools, and an `.rds` file preserving the
+full `DAList` object for seamless continuation into the modeling phase.
+
+```{r export}
+#| label: export
+
+# CSV: annotation + normalized intensities
+export_df <- bind_cols(
+  as_tibble(dal$annotation) %>%
+    select(uniprot_id, protein, gene, description),
+  as_tibble(dal$data)
+)
+
+write_csv(export_df, file.path(data_dir, "01_normalized.csv"))
+
+# RDS: full DAList
+saveRDS(dal, file.path(data_dir, "01_DAList_normalized.rds"))
+
+cat(sprintf("Exported: %d proteins x %d samples\n",
+            nrow(dal$data), ncol(dal$data)))
+cat(sprintf("  CSV: %s\n", file.path(data_dir, "01_normalized.csv")))
+cat(sprintf("  RDS: %s\n", file.path(data_dir, "01_DAList_normalized.rds")))
+```
+
+
+# 9 — Downstream Preview {#sec-downstream}
+
+The normalized `DAList` is ready for differential abundance analysis in
+`02_modeling/`. Two parallel analytical tracks are planned:
+
+## Track A: Unimputed — proteoDA/limma
+
+The `proteoDA` pipeline continues with:
+
+- `add_design()` — specify the linear model formula with `Group_Time` as
+  the cell-means factor and `Subject_ID` as a random blocking effect
+  (via `duplicateCorrelation`)
+- `add_contrasts()` — define pairwise and interaction contrasts:
+  - CR_T2 vs CR_T1 (training effect in cancer survivors)
+  - CR_T1 vs H_T1 (cancer vs healthy at baseline)
+  - CR_T2 vs H_T1 (cancer post-training vs healthy)
+  - Supplement interaction: (CRE_T2 − CRE_T1) vs (PLA_T2 − PLA_T1)
+- `fit_limma_model()` — empirical Bayes moderated t-statistics (Smyth,
+  2004; Phipson et al., 2016)
+
+limma handles missing data natively by fitting each protein using
+available observations only. This track requires no imputation.
+
+## Track B: Imputed — alternative methods
+
+For methods that require complete data or for sensitivity analyses:
+
+- Impute the normalized `DAList` using an appropriate method (to be
+  evaluated: `msImpute`, `missForest`, `MSnbase::impute` with
+  MNAR-aware methods)
+- Re-run limma on imputed data for comparison
+- Explore `msqrob2` or `proDA` for mixed-effects models that may better
+  handle complex designs with both between-subject (CR vs PPS) and
+  within-subject (T1 vs T2) contrasts
+
+Both tracks will be documented in `02_modeling/`.
+
+
+# References {#sec-refs}
+
+1. Välikangas T, Suomi T, Elo LL (2018). A systematic evaluation of
+   normalization methods in quantitative label-free proteomics.
+   *Briefings in Bioinformatics* 19(1):1-11.
+
+2. Ritchie ME, Phipson B, Wu D, et al. (2015). limma powers
+   differential expression analyses for RNA-sequencing and microarray
+   studies. *Nucleic Acids Research* 43(7):e47.
+
+3. Mellacheruvu D, Wright Z, Couzens AL, et al. (2013). The CRAPome: a
+   contaminant repository for affinity purification-mass spectrometry
+   data. *Nature Methods* 10:730-736.
+
+4. Lazar C, Gatto L, Ferro M, et al. (2016). Accounting for the
+   multiple natures of missing values in label-free quantitative
+   proteomics data sets to compare imputation strategies. *Journal of
+   Proteome Research* 15(4):1116-1125.
+
+5. Webb-Robertson BM, Wiber HK, Matzke MM, et al. (2015). Review,
+   evaluation, and discussion of the challenges of missing value
+   imputation for mass spectrometry-based label-free global proteomics.
+   *Journal of Proteome Research* 14(3):920-930.
+
+6. Smyth GK (2004). Linear models and empirical Bayes methods for
+   assessing differential expression in microarray experiments.
+   *Statistical Applications in Genetics and Molecular Biology*
+   3(1):Article 3.
+
+7. Herbrich SM, Cole RN, West KP Jr, et al. (2013). Statistical
+   inference from multiple iTRAQ experiments without using common
+   reference standards. *Journal of Proteome Research* 12(2):594-604.
+
+8. Phipson B, Lee S, Oshlack A, et al. (2016). Robust hyperparameter
+   estimation protects against hypervariable genes and improves power to
+   detect differential expression. *Annals of Applied Statistics*
+   10(2):946-963.
+
+9. Hubert M, Rousseeuw PJ, Vanden Branden K (2005). ROBPCA: A new
+   approach to robust principal component analysis. *Technometrics*
+   47(1):64-79.
+
+10. Leys C, Ley C, Klein O, et al. (2013). Detecting outliers: Do not
+    use standard deviation around the mean, use absolute deviation around
+    the median. *Journal of Experimental Social Psychology*
+    49(4):764-766.
+
+11. Karpievitch YV, Dabney AR, Smith RD (2012). Normalization and
+    missing value imputation for label-free LC-MS analysis. *BMC
+    Bioinformatics* 13(Suppl 16):S5.
+
+
+# Session Info {#sec-session}
+
+```{r session-info}
+#| label: session-info
+
+sessionInfo()
+```

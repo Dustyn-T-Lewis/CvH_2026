@@ -1,0 +1,11 @@
+.DS_Store
+*/.DS_Store
+.RData
+.Rhistory
+.Rproj.user/
+.here
+Archive/
+archive/
+~$*
+*.tmp
+*.log
