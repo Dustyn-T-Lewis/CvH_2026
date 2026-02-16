@@ -4,12 +4,10 @@ subtitle: "limma with arrayWeights, duplicateCorrelation, and Robust eBayes"
 author: "DTL"
 date: today
 format:
-  html:
+  pdf:
     toc: true
     toc-depth: 3
     code-fold: true
-    code-summary: "Show code"
-    theme: flatly
     fig-width: 10
     fig-height: 7
 execute:

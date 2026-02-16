@@ -9,3 +9,9 @@ archive/
 ~$*
 *.tmp
 *.log
+Rplots.pdf
+.claude/
+
+# Quarto render artifacts (keep local only)
+*_files/
+*/a_script/*.html
