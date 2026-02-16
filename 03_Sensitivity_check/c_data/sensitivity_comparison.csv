@@ -1,0 +1,13 @@
+method,norm,imputation,mean_spearman,rho_Training,rho_CvH,rho_Supplement,n_DEP_Training,n_DEP_CvH,n_DEP_Supplement,n_CvH_nominal_p05,n_CvH_FDR_10,n_CvH_pi_score
+cycloess_RF,cycloess,RF,0.9554,0.9496,0.9809,0.9356,1,767,0,967,981,91
+rlr_RF,rlr,RF,0.9489,0.937,0.9834,0.9261,0,802,0,995,1014,91
+cycloess_knn,cycloess,knn,0.9455,0.9296,0.9779,0.929,1,724,0,920,923,91
+cycloess_bpca,cycloess,bpca,0.9442,0.932,0.9787,0.922,1,767,0,974,986,91
+rlr_knn,rlr,knn,0.9398,0.9198,0.9793,0.9204,0,747,0,954,963,91
+rlr_bpca,rlr,bpca,0.9388,0.9183,0.9815,0.9166,0,810,0,1005,1018,91
+rlr_none,rlr,none,0.9387,0.9182,0.978,0.92,0,624,0,865,854,91
+vsn_RF,vsn,RF,0.9384,0.9342,0.9777,0.9035,1,807,1,987,1018,91
+cycloess_none,cycloess,none,0.938,0.9208,0.9777,0.9154,1,619,0,841,813,91
+vsn_bpca,vsn,bpca,0.9315,0.9191,0.9762,0.8994,1,822,1,986,1023,91
+vsn_none,vsn,none,0.9266,0.9164,0.9716,0.8916,1,676,1,894,887,91
+vsn_knn,vsn,knn,0.9261,0.9147,0.9719,0.8919,1,749,1,947,974,91

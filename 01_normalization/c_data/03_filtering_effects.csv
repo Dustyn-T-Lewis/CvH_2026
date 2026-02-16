@@ -1,0 +1,4 @@
+step,n_before,n_after,n_removed,pct_retained
+Raw input,NA,3172,NA,100
+HPA muscle tissue filter,3172,2962,210,93.4
+Missingness filter (50% per Group_Time),2962,1829,1133,57.7
