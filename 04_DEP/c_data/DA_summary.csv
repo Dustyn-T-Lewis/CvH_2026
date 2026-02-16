@@ -1,10 +1,10 @@
 contrast,type,sig.PVal,sig.FDR,pval_thresh,lfc_thresh,p_adj_method,sig.Pi,sig.Nominal.01
-Training_CR,down,128,6,0.05,0,BH,33,39
-Training_CR,nonsig,1544,1815,0.05,0,BH,1738,1731
+Training_CR,down,127,6,0.05,0,BH,33,39
+Training_CR,nonsig,1545,1815,0.05,0,BH,1738,1731
 Training_CR,up,157,8,0.05,0,BH,58,59
-Cancer_vs_Healthy,down,333,245,0.05,0,BH,4,216
-Cancer_vs_Healthy,nonsig,1080,1247,0.05,0,BH,1738,1298
-Cancer_vs_Healthy,up,416,337,0.05,0,BH,87,315
+Cancer_vs_Healthy,down,334,245,0.05,0,BH,4,216
+Cancer_vs_Healthy,nonsig,1079,1248,0.05,0,BH,1738,1298
+Cancer_vs_Healthy,up,416,336,0.05,0,BH,87,315
 Supplement_Interaction,down,54,0,0.05,0,BH,54,17
 Supplement_Interaction,nonsig,1729,1829,0.05,0,BH,1738,1800
 Supplement_Interaction,up,46,0,0.05,0,BH,37,12

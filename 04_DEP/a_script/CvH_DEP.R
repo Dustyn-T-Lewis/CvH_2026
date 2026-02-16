@@ -6,18 +6,21 @@
 #         b_reports/ per-contrast volcanos + histograms
 
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(tidyverse, openxlsx, here)
+pacman::p_load(tidyverse, openxlsx)
 
-base_dir   <- here::here()
+# Run from project root
 
-# User config: set input path (non-imputed -> limma; imputed -> DEqMS)
-data_file  <- file.path(base_dir, "01_normalization", "c_data", "01_normalized.csv")
-# data_file <- file.path(base_dir, "02_Imputation", "c_data", "01_imputed.csv")
+# Using non-imputed data: limma handles NAs natively via na.rm in arrayWeights
+# and the sensitivity analysis confirmed concordance between imputed and
+# non-imputed pipelines. Switch to imputed data only for analyses requiring
+# complete matrices (e.g., pLIER, WGCNA).
+data_file  <- "01_normalization/c_data/01_normalized.csv"
+# data_file <- "02_Imputation/c_data/01_imputed.csv"
 
-meta_file  <- file.path(base_dir, "00_input", "CvH_meta.csv")
-raw_file   <- file.path(base_dir, "00_input", "CvH_raw.xlsx")
-report_dir <- file.path(base_dir, "04_DEP", "b_reports")
-data_dir   <- file.path(base_dir, "04_DEP", "c_data")
+meta_file  <- "00_input/CvH_meta.csv"
+raw_file   <- "00_input/CvH_raw.xlsx"
+report_dir <- "04_DEP/b_reports"
+data_dir   <- "04_DEP/c_data"
 dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(data_dir,   recursive = TRUE, showWarnings = FALSE)
 
@@ -117,7 +120,7 @@ if (METHOD == "limma") {
   fit <- lmFit(mat, design_mat, block = block_var,
                correlation = dupcor$consensus.correlation, weights = aw) |>
     contrasts.fit(contrast_mat) |>
-    eBayes(robust = TRUE)
+    eBayes(robust = TRUE, trend = TRUE)
 
   dal$eBayes_fit <- fit
   dal$eBayes_fit$correlation <- dupcor$consensus.correlation
@@ -182,7 +185,7 @@ if (METHOD == "limma") {
 
   fit <- lmFit(mat, design, block = meta$Subject_ID,
                correlation = dupcor$consensus.correlation, weights = aw) |>
-    contrasts.fit(contrast_mat) |> eBayes(robust = TRUE)
+    contrasts.fit(contrast_mat) |> eBayes(robust = TRUE, trend = TRUE)
   fit$count <- pep_count[rownames(fit$coefficients)]
   fit <- spectraCounteBayes(fit)
 

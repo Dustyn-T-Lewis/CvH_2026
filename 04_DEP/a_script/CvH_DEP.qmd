@@ -389,7 +389,6 @@ volc_labels <- c(
 
 ggplot(tcr_volc, aes(x = logFC, y = -log10(P.Value), color = sig)) +
   geom_point(alpha = 0.6, size = 1.5) +
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray40") +
   geom_text_repel(
     data = tcr_volc %>% filter(adj.P.Val < 0.05),
     aes(label = gene),
@@ -500,7 +499,6 @@ volc_labels <- c(
 
 ggplot(cvh_volc, aes(x = logFC, y = -log10(P.Value), color = sig)) +
   geom_point(alpha = 0.6, size = 1.5) +
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray40") +
   geom_text_repel(
     data = cvh_volc %>% filter(adj.P.Val < 0.05),
     aes(label = gene),
@@ -614,7 +612,6 @@ volc_labels <- c(
 
 ggplot(supp_volc, aes(x = logFC, y = -log10(P.Value), color = sig)) +
   geom_point(alpha = 0.6, size = 1.5) +
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray40") +
   geom_text_repel(
     data = supp_volc %>% filter(adj.P.Val < 0.05),
     aes(label = gene),

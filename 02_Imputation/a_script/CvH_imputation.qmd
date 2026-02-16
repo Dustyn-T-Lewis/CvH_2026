@@ -40,7 +40,7 @@ meta_path  <- file.path(here::here(), "00_input", "CvH_meta.csv")
 pal_mar <- c(MAR = "#4393C3", MNAR = "#D6604D", Complete = "#999999")
 pal_typ <- c(MNAR = "#D6604D", MAR = "#4393C3", Hybrid = "#5AAE61")
 pal_donut <- c(Complete = "#999999", MAR = "#4393C3", MNAR = "#D6604D")
-pal_bio <- c(CR_T1 = "#1B9E77", CR_T2 = "#D95F02", PPS_T1 = "#7570B3")
+pal_bio <- c(CR_T1 = "#4393C3", CR_T2 = "#2166AC", PPS_T1 = "#B2182B")
 ```
 
 
@@ -616,9 +616,10 @@ post_long <- post_mat %>%
   pivot_longer(cols = all_of(sample_cols_pca),
                names_to = "sample", values_to = "intensity_post")
 
-combined <- bind_cols(
+combined <- left_join(
   pre_long  %>% select(gene, sample, intensity_pre),
-  post_long %>% select(intensity_post)
+  post_long %>% select(gene, sample, intensity_post),
+  by = c("gene", "sample")
 )
 
 observed_vals <- combined %>%

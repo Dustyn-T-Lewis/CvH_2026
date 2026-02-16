@@ -9,14 +9,14 @@
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(MsCoreUtils, msImpute, pcaMethods, imputeLCMD, missForest,
                readr, dplyr, tidyr, tibble, stringr,
-               ggplot2, patchwork, scales, here)
+               ggplot2, patchwork, scales)
 
 # --- Paths ---
-base_dir   <- here::here()
-input_csv  <- file.path(base_dir, "01_normalization", "c_data", "01_normalized.csv")
-meta_file  <- file.path(base_dir, "00_input", "CvH_meta.csv")
-report_dir <- file.path(base_dir, "02_Imputation", "b_reports")
-data_dir   <- file.path(base_dir, "02_Imputation", "c_data")
+# Run from project root
+input_csv  <- "01_normalization/c_data/01_normalized.csv"
+meta_file  <- "00_input/CvH_meta.csv"
+report_dir <- "02_Imputation/b_reports"
+data_dir   <- "02_Imputation/c_data"
 dir.create(report_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(data_dir,   showWarnings = FALSE, recursive = TRUE)
 
@@ -39,7 +39,7 @@ df  <- read_csv(input_csv, show_col_types = FALSE)
 ann_cols <- c("uniprot_id", "protein", "gene", "description", "n_seq")
 ann <- df[, intersect(ann_cols, names(df))]
 mat <- as.matrix(df[, setdiff(names(df), ann_cols)])
-rownames(mat) <- df$gene
+rownames(mat) <- df$uniprot_id
 
 stopifnot("Metadata file not found" = file.exists(meta_file))
 meta <- read_csv(meta_file, show_col_types = FALSE) %>% filter(Col_ID %in% colnames(mat))
@@ -48,7 +48,7 @@ mat  <- mat[, meta$Col_ID]
 cat(sprintf("  %d proteins x %d samples\n", nrow(mat), ncol(mat)))
 
 stopifnot("Annotation-matrix row mismatch" = nrow(ann) == nrow(mat))
-stopifnot("Gene names must match" = identical(ann$gene, rownames(mat)))
+stopifnot("UniProt IDs must match" = identical(ann$uniprot_id, rownames(mat)))
 
 # --- 2. Missingness characterization ---
 cat("Step 2: Missingness characterization\n")
@@ -65,20 +65,21 @@ has_na <- which(prot_pct > 0 & prot_pct < 100)
 mar_result <- tryCatch({
   sf <- msImpute::selectFeatures(mat[has_na, ], method = "ebm",
                                   group = meta$Group_Time)
-  mar_genes <- rownames(mat[has_na, ])[!sf$msImpute_feature]
-  list(ok = TRUE, mar_genes = mar_genes)
+  mar_ids <- rownames(mat[has_na, ])[!sf$msImpute_feature]
+  list(ok = TRUE, mar_ids = mar_ids)
 }, error = function(e) {
   cat(sprintf("  selectFeatures failed: %s -> intensity heuristic\n", e$message))
   list(ok = FALSE)
 })
 
-miss_class <- tibble(gene = rownames(mat), n_miss = rowSums(is.na(mat)),
+miss_class <- tibble(uniprot_id = rownames(mat), gene = ann$gene,
+                     n_miss = rowSums(is.na(mat)),
                      pct_miss = prot_pct, mean_int = obs_mean)
 
 if (mar_result$ok) {
   miss_class <- miss_class %>%
     mutate(class = case_when(n_miss == 0 ~ "Complete",
-                             gene %in% mar_result$mar_genes ~ "MAR",
+                             uniprot_id %in% mar_result$mar_ids ~ "MAR",
                              TRUE ~ "MNAR"))
 } else {
   med_int <- median(obs_mean, na.rm = TRUE)
@@ -92,7 +93,7 @@ if (mar_result$ok) {
 
 print(count(miss_class, class))
 
-randna <- setNames(miss_class$class == "MNAR", miss_class$gene)
+randna <- setNames(miss_class$class == "MNAR", miss_class$uniprot_id)
 
 # --- Missingness report ---
 cat("Step 3b: Missingness report\n")
@@ -336,13 +337,14 @@ pBox <- ggplot(box_df, aes(x = Col_ID, y = log2, fill = stage)) +
   thm + theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 5))
 print(pBox)
 
-inc_genes <- miss_class$gene[miss_class$n_miss > 0]
+inc_ids <- miss_class$uniprot_id[miss_class$n_miss > 0]
 audit <- tibble(
-  gene = inc_genes,
-  pre_mean  = rowMeans(mat[inc_genes, ], na.rm = TRUE),
-  post_mean = rowMeans(mat_imp[inc_genes, ]),
-  pre_sd    = apply(mat[inc_genes, ], 1, sd, na.rm = TRUE),
-  pct_miss  = prot_pct[inc_genes]) %>%
+  uniprot_id = inc_ids,
+  gene = ann$gene[match(inc_ids, ann$uniprot_id)],
+  pre_mean  = rowMeans(mat[inc_ids, ], na.rm = TRUE),
+  post_mean = rowMeans(mat_imp[inc_ids, ]),
+  pre_sd    = apply(mat[inc_ids, ], 1, sd, na.rm = TRUE),
+  pct_miss  = prot_pct[inc_ids]) %>%
   mutate(shift    = post_mean - pre_mean,
          effect_d = shift / pre_sd)
 
@@ -378,13 +380,13 @@ write_csv(bench, file.path(data_dir, "benchmark_summary.csv"))
 # --- 7. Export ---
 cat("Step 7: Export\n")
 
-stopifnot("Gene order mismatch" = identical(ann$gene, rownames(mat_imp)))
+stopifnot("UniProt ID order mismatch" = identical(ann$uniprot_id, rownames(mat_imp)))
 stopifnot("Observed values altered" = all.equal(mat[!was_na], mat_imp[!was_na], tolerance = 1e-10))
 
 write_csv(bind_cols(ann, as_tibble(mat_imp)), file.path(data_dir, "01_imputed.csv"))
 write_csv(miss_class, file.path(data_dir, "mar_mnar_classification.csv"))
 
-dal_path <- file.path(base_dir, "01_normalization", "c_data", "01_DAList_normalized.rds")
+dal_path <- "01_normalization/c_data/01_DAList_normalized.rds"
 if (file.exists(dal_path)) {
   dal <- readRDS(dal_path)
   rownames(mat_imp) <- ann$uniprot_id
