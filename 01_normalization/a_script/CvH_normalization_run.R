@@ -8,13 +8,13 @@
 #         b_reports/02_qc_report_pre_norm.pdf, 03_qc_report_post_norm.pdf
 
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(proteoDA, readxl, readr, dplyr, tidyr, stringr, ggplot2, here)
+pacman::p_load(proteoDA, readxl, readr, dplyr, tidyr, stringr, ggplot2)
 
 # --- Paths ---
-base_dir   <- here::here()
-input_dir  <- file.path(base_dir, "00_input")
-report_dir <- file.path(base_dir, "01_normalization", "b_reports")
-data_dir   <- file.path(base_dir, "01_normalization", "c_data")
+# Run from project root
+input_dir  <- "00_input"
+report_dir <- "01_normalization/b_reports"
+data_dir   <- "01_normalization/c_data"
 dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(data_dir,   recursive = TRUE, showWarnings = FALSE)
 
@@ -78,7 +78,20 @@ cat(sprintf("  50%% filter: %d -> %d\n", counts["HPA"], counts["Miss50"]))
 
 stopifnot("Filter cascade must only remove proteins" = all(diff(counts) <= 0))
 
-filter_log <- tibble(step = names(counts), n = unname(counts))
+n_start <- counts["Raw"]
+filter_log <- bind_rows(
+  tibble(step = "Raw input", n_before = NA_integer_,
+         n_after = as.integer(counts["Raw"]), n_removed = NA_integer_),
+  tibble(step = "HPA muscle tissue filter",
+         n_before = as.integer(counts["Raw"]),
+         n_after  = as.integer(counts["HPA"]),
+         n_removed = as.integer(counts["Raw"] - counts["HPA"])),
+  tibble(step = "Missingness filter (50% per Group_Time)",
+         n_before = as.integer(counts["HPA"]),
+         n_after  = as.integer(counts["Miss50"]),
+         n_removed = as.integer(counts["HPA"] - counts["Miss50"]))
+) %>%
+  mutate(pct_retained = round(n_after / n_start * 100, 1))
 write_csv(filter_log, file.path(data_dir, "03_filtering_effects.csv"))
 
 removed <- annot_df %>%
@@ -93,6 +106,25 @@ cat("Step 4: Outlier detection\n")
 pm <- colMeans(is.na(dal$data)) * 100
 f_miss <- pm > (quantile(pm, 0.75) + 1.5 * IQR(pm))
 
+# Compute paired abs_delta for CR subjects (like QMD does)
+paired_subjects <- dal$metadata %>%
+  filter(Group != "PPS") %>%
+  count(Subject_ID) %>%
+  filter(n == 2) %>%
+  pull(Subject_ID)
+
+abs_delta_map <- setNames(rep(NA_real_, ncol(dal$data)), colnames(dal$data))
+for (subj in paired_subjects) {
+  rows <- dal$metadata %>% filter(Subject_ID == subj)
+  t1_id <- rows$Col_ID[rows$Timepoint == "T1"]
+  t2_id <- rows$Col_ID[rows$Timepoint == "T2"]
+  if (length(t1_id) == 1 && length(t2_id) == 1) {
+    d <- abs(pm[t2_id] - pm[t1_id])
+    abs_delta_map[t1_id] <- d
+    abs_delta_map[t2_id] <- d
+  }
+}
+
 tmp <- log2(dal$data)
 for (j in 1:ncol(tmp)) tmp[is.na(tmp[, j]), j] <- median(tmp[, j], na.rm = TRUE)
 pc <- prcomp(t(tmp), center = TRUE, scale. = TRUE)
@@ -100,17 +132,20 @@ md <- mahalanobis(pc$x[, 1:3], colMeans(pc$x[, 1:3]), cov(pc$x[, 1:3]))
 f_pca <- md > qchisq(0.99, df = 3)
 
 sm <- apply(log2(dal$data), 2, median, na.rm = TRUE)
-f_mad <- abs(sm - median(sm)) > 3 * mad(sm)
+mad_dev <- abs(sm - median(sm))
+f_mad <- mad_dev > 3 * mad(sm)
 
 nf <- f_miss + f_pca + f_mad
 outlier_diag <- tibble(
-  Col_ID = colnames(dal$data), pct_miss = pm, miss_flag = f_miss,
-  mahal = md, pca_flag = f_pca, samp_median = sm, mad_flag = f_mad,
+  Col_ID = colnames(dal$data), pct_missing = pm, abs_delta = abs_delta_map[colnames(dal$data)],
+  miss_flag = f_miss,
+  mahal_dist = md, pca_flag = f_pca, sample_median = sm, mad_deviation = mad_dev,
+  mad_flag = f_mad,
   n_flags = nf,
   tier = case_when(
-    nf >= 3 & pm > 50 ~ "catastrophic",
-    nf >= 2           ~ "soft_outlier",
-    TRUE              ~ "normal"
+    nf >= 3 & pct_missing > 50 ~ "catastrophic",
+    nf >= 2                    ~ "soft_outlier",
+    TRUE                       ~ "normal"
   ))
 write_csv(outlier_diag, file.path(data_dir, "04_outlier_diagnostics.csv"))
 
@@ -121,7 +156,7 @@ cat(sprintf("  Flagged: %d catastrophic, %d soft outlier\n",
             length(hard_remove), length(soft_outlier)))
 if (length(hard_remove) + length(soft_outlier) > 0) {
   print(filter(outlier_diag, tier != "normal") %>%
-        dplyr::select(Col_ID, pct_miss, mahal, samp_median, n_flags, tier))
+        dplyr::select(Col_ID, pct_missing, abs_delta, mahal_dist, n_flags, tier))
 }
 if (length(hard_remove) > 0) {
   dal <- filter_samples(dal, !(Col_ID %in% hard_remove))

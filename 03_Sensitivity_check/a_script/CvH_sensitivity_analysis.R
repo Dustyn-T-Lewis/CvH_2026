@@ -10,24 +10,26 @@
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(proteoDA, MsCoreUtils, msImpute, pcaMethods, imputeLCMD, missForest,
                limma, readr, dplyr, tidyr, tibble, stringr,
-               ggplot2, patchwork, scales, here)
+               ggplot2, patchwork, scales)
 
 # --- Paths ---
-base_dir   <- here::here()
-report_dir <- file.path(base_dir, "03_Sensitivity_check", "b_reports")
-data_dir   <- file.path(base_dir, "03_Sensitivity_check", "c_data")
+# Run from project root
+report_dir <- "03_Sensitivity_check/b_reports"
+data_dir   <- "03_Sensitivity_check/c_data"
 dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(data_dir,   recursive = TRUE, showWarnings = FALSE)
 
-norm_scores_file <- file.path(base_dir, "01_normalization", "c_data", "05_norm_quality_scores.csv")
-bench_file       <- file.path(base_dir, "02_Imputation", "c_data", "benchmark_summary.csv")
-pre_norm_file    <- file.path(base_dir, "01_normalization", "c_data", "00_DAList_pre_norm.rds")
-dal_norm_file    <- file.path(base_dir, "01_normalization", "c_data", "01_DAList_normalized.rds")
+norm_scores_file <- "01_normalization/c_data/05_norm_quality_scores.csv"
+bench_file       <- "02_Imputation/c_data/benchmark_summary.csv"
+pre_norm_file    <- "01_normalization/c_data/00_DAList_pre_norm.rds"
+dal_norm_file    <- "01_normalization/c_data/01_DAList_normalized.rds"
+mar_mnar_file    <- "02_Imputation/c_data/mar_mnar_classification.csv"
 
 stopifnot("Norm quality scores not found — run 01_normalization first" = file.exists(norm_scores_file))
 stopifnot("Benchmark summary not found — run 02_Imputation first"     = file.exists(bench_file))
 stopifnot("Pre-norm DAList not found"    = file.exists(pre_norm_file))
 stopifnot("Normalized DAList not found"  = file.exists(dal_norm_file))
+stopifnot("MAR/MNAR classification not found — run 02_Imputation first" = file.exists(mar_mnar_file))
 
 # --- 1. Read upstream rankings ---
 cat("Step 1: Read upstream rankings\n")
@@ -64,22 +66,12 @@ cat(sprintf("  %d proteins x %d samples\n", nrow(dal_raw$data), ncol(dal_raw$dat
 
 ref_mat  <- as.matrix(dal_norm$data)
 rownames(ref_mat) <- dal_norm$annotation$gene
-prot_pct <- rowSums(is.na(ref_mat)) / ncol(ref_mat) * 100
-obs_mean <- rowMeans(ref_mat, na.rm = TRUE)
 
-randna <- tryCatch({
-  has_na <- which(prot_pct > 0 & prot_pct < 100)
-  sf <- msImpute::selectFeatures(ref_mat[has_na, ], method = "ebm",
-                                  group = dal_norm$metadata$Group_Time)
-  mnar_genes <- rownames(ref_mat[has_na, ])[sf$msImpute_feature]
-  is_mnar <- (rownames(ref_mat) %in% mnar_genes)
-  setNames(is_mnar, rownames(ref_mat))
-}, error = function(e) {
-  cat(sprintf("  selectFeatures failed: %s -> intensity heuristic\n", e$message))
-  med <- median(obs_mean, na.rm = TRUE)
-  is_mnar <- (prot_pct > 30 & obs_mean < med) | prot_pct > 50
-  setNames(is_mnar, rownames(ref_mat))
-})
+mar_mnar <- read_csv(mar_mnar_file, show_col_types = FALSE)
+cat(sprintf("  MAR/MNAR classification: %d Complete, %d MAR, %d MNAR\n",
+            sum(mar_mnar$class == "Complete"), sum(mar_mnar$class == "MAR"),
+            sum(mar_mnar$class == "MNAR")))
+randna <- setNames(mar_mnar$class == "MNAR", mar_mnar$gene)
 
 CONTRASTS <- c(
   Training_CR           = "(CRE_T2 + PLA_T2)/2 - (CRE_T1 + PLA_T1)/2",
@@ -121,8 +113,10 @@ run_pipeline <- function(dal, norm_method, imp_spec, randna_vec) {
     Supplement_Interaction = (CRE_T2 - CRE_T1) - (PLA_T2 - PLA_T1),
     levels = design)
 
+  aw <- arrayWeights(mat, design)
+
   dupcor <- tryCatch(
-    duplicateCorrelation(mat, design, block = meta$Subject_ID),
+    duplicateCorrelation(mat, design, block = meta$Subject_ID, weights = aw),
     error = function(e) {
       warning(sprintf("[%s_%s] duplicateCorrelation failed: %s\n  -> Falling back to correlation = 0.",
                       norm_method, deparse(imp_spec), e$message), call. = FALSE)
@@ -130,8 +124,8 @@ run_pipeline <- function(dal, norm_method, imp_spec, randna_vec) {
     })
 
   fit <- lmFit(mat, design, block = meta$Subject_ID,
-               correlation = dupcor$consensus.correlation) |>
-    contrasts.fit(contrast_mat) |> eBayes()
+               correlation = dupcor$consensus.correlation, weights = aw) |>
+    contrasts.fit(contrast_mat) |> eBayes(robust = TRUE, trend = TRUE)
 
   dep_results <- list()
   for (i in seq_along(CONTRASTS)) {
@@ -150,6 +144,7 @@ imp_clustered_order <- combos %>%
   arrange(factor(imp, levels = names(IMP_SPECS)), norm) %>%
   pull(label)
 
+set.seed(42)
 all_results <- list()
 for (i in seq_len(nrow(combos))) {
   lab <- combos$label[i]

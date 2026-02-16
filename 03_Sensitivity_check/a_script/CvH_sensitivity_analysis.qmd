@@ -139,7 +139,7 @@ accommodate missing values without meaningful information loss.
 
 The resulting 3 x 4 = 12 combinations each run the full DEP pipeline:
 normalization, optional imputation, then limma with `arrayWeights()`,
-`duplicateCorrelation()`, and `eBayes()` (Ritchie et al., 2015). All
+`duplicateCorrelation()`, and `eBayes(robust = TRUE, trend = TRUE)` (Ritchie et al., 2015). All
 three contrasts are extracted from each run. This end-to-end approach
 captures interactions between preprocessing steps that step-isolated
 evaluations would miss.
@@ -526,8 +526,14 @@ in the next section.
 
 # 6 --- Pipeline Selection and Justification {#sec-selection}
 
-Based on the results above, the recommended pipeline is cycloess
-normalization with no imputation (cycloess + none).
+```{r top-pipeline}
+top_pipe <- sensitivity %>%
+  arrange(desc(mean_spearman)) %>%
+  slice(1)
+```
+
+Based on the mean Spearman rho across all contrasts, the top-ranked
+pipeline is `r top_pipe$method` (rho = `r round(top_pipe$mean_spearman, 4)`).
 
 This selection is justified on three grounds. First, cycloess + none
 produces protein rankings concordant with all other competitive
