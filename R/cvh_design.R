@@ -5,6 +5,27 @@ suppressPackageStartupMessages({
   library(tibble)
 })
 
+# Plasma blood contaminants to filter from skeletal muscle proteomics.
+# Source 1: Top abundant plasma proteins (Geyer et al. 2016, PMID 27135364)
+# Source 2: HPA "Immunoglobulin genes" protein class (added at use site)
+BLOOD_CONTAMINANTS <- c(
+  # Hemoglobins
+  "HBA1", "HBA2", "HBB",
+  # Serum carrier / transport
+  "ALB", "TF", "HP", "HPX", "GC",
+  # Apolipoproteins
+  "APOA1", "APOA2", "APOB", "APOC1", "APOC2", "APOC3",
+  # Coagulation / fibrinolysis
+  "FGA", "FGB", "FGG", "F2", "PLG",
+  # Complement cascade
+  "C3", "C4A", "C4B", "C5", "C6", "C7", "C8A", "C8B", "C8G", "C9",
+  "CFB", "CFH", "CFI", "C1QB", "C1QC", "C1R", "C1S", "C2",
+  # Acute-phase / protease inhibitors
+  "SERPINA1", "SERPINA3", "A2M", "ORM1", "ORM2", "AHSG", "ITIH4",
+  # Other high-abundance plasma
+  "AGT", "AMBP", "KNG1", "HRG", "VTN"
+)
+
 normalize_cvh_subject_id <- function(x) {
   x |>
     stringr::str_trim() |>

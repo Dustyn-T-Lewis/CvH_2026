@@ -108,27 +108,8 @@ cat(sprintf("HPA: %d -> %d (-%d)\n",
 
 # =============================================================================
 # 2b. BLOOD CONTAMINANT REMOVAL
-#     Source 1: top abundant plasma proteins (Geyer et al. 2016, PMID 27135364)
-#     Source 2: HPA "Immunoglobulin genes" protein class
+#     BLOOD_CONTAMINANTS list lives in R/cvh_design.R (Geyer 2016 + HPA Ig)
 # =============================================================================
-
-BLOOD_CONTAMINANTS <- c(
-  # Hemoglobins
-  "HBA1", "HBA2", "HBB",
-  # Serum carrier / transport
-  "ALB", "TF", "HP", "HPX", "GC",
-  # Apolipoproteins
-  "APOA1", "APOA2", "APOB", "APOC1", "APOC2", "APOC3",
-  # Coagulation / fibrinolysis
-  "FGA", "FGB", "FGG", "F2", "PLG",
-  # Complement cascade
-  "C3", "C4A", "C4B", "C5", "C6", "C7", "C8A", "C8B", "C8G", "C9",
-  "CFB", "CFH", "CFI", "C1QB", "C1QC", "C1R", "C1S", "C2",
-  # Acute-phase / protease inhibitors
-  "SERPINA1", "SERPINA3", "A2M", "ORM1", "ORM2", "AHSG", "ITIH4",
-  # Other high-abundance plasma
-  "AGT", "AMBP", "KNG1", "HRG", "VTN"
-)
 
 hpa_ig <- hpa$Gene[grepl("Immunoglobulin genes", hpa$Protein_class, fixed = TRUE)]
 blood_genes <- unique(c(BLOOD_CONTAMINANTS, hpa_ig))

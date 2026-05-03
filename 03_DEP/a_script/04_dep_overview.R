@@ -15,16 +15,7 @@ source("R/cvh_design.R")
 
 `%||%` <- function(x, y) if (!is.null(x)) x else y
 
-BLOOD_CONTAMINANTS <- c(
-  "HBA1", "HBA2", "HBB",
-  "ALB", "TF", "HP", "HPX", "GC",
-  "APOA1", "APOA2", "APOB", "APOC1", "APOC2", "APOC3",
-  "FGA", "FGB", "FGG", "F2", "PLG",
-  "C3", "C4A", "C4B", "C5", "C6", "C7", "C8A", "C8B", "C8G", "C9",
-  "CFB", "CFH", "CFI", "C1QB", "C1QC", "C1R", "C1S", "C2",
-  "SERPINA1", "SERPINA3", "A2M", "ORM1", "ORM2", "AHSG", "ITIH4",
-  "AGT", "AMBP", "KNG1", "HRG", "VTN"
-)
+# BLOOD_CONTAMINANTS sourced from R/cvh_design.R (Geyer 2016 + HPA Ig)
 
 compute_pi_scores <- function(results_list, pi_thresh = 0.05) {
   lapply(names(results_list), function(cname) {
