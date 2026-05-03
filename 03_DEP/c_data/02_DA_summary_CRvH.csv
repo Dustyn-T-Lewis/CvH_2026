@@ -1,0 +1,7 @@
+contrast,type,sig.PVal,sig.FDR,sig.Pi,sig.FDR.05,sig.FDR.10,pval_thresh,lfc_thresh,p_adj_method
+Cancer_vs_Healthy,up,570,424,371,329,424,0.1,0,BH
+Cancer_vs_Healthy,down,521,305,146,183,305,0.1,0,BH
+Cancer_vs_Healthy,nonsig,1317,1679,2025,1896,1679,0.1,0,BH
+Training_CR,up,150,3,20,0,3,0.1,0,BH
+Training_CR,down,122,0,13,0,0,0.1,0,BH
+Training_CR,nonsig,2129,2398,2509,2401,2398,0.1,0,BH

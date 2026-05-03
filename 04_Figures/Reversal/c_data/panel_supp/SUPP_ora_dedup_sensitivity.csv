@@ -1,0 +1,9 @@
+jaccard_cutoff,quadrant,n_sig
+0.3,Cancer Up / Training Down,11
+0.3,Cancer Down / Training Up,24
+0.5,Cancer Up / Training Down,11
+0.5,Cancer Down / Training Up,32
+0.7,Cancer Up / Training Down,12
+0.7,Cancer Down / Training Up,41
+1,Cancer Up / Training Down,12
+1,Cancer Down / Training Up,52

@@ -1,0 +1,5 @@
+test,statistic,p_value,interpretation
+Kolmogorov-Smirnov,0.1324448146605579,1.0224766703546075e-18,Distributions differ significantly (shape/location)
+Fligner-Killeen,104.74333992034074,1.3902660014045945e-24,Variance differs (consistent with differential response)
+Wilcoxon signed-rank,1056774,8.974681845500463e-30,Paired |logFC| shift significant (CRE vs PLA response differs)
+Cliff's delta,-0.1961682632236568,NA,Small effect (delta = -0.196; >0 = CRE responds more)

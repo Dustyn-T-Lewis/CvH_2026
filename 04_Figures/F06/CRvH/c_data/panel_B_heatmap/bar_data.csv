@@ -1,0 +1,42 @@
+pathway,quadrant,n_seg,xmin,xmax
+Amino Acid & Cofactor Metabolism,Discordant,31,3.3,8.879999999999999
+Amino Acid & Cofactor Metabolism,Concordant Up,7,8.879999999999999,10.14
+Amino Acid & Cofactor Metabolism,Concordant Down,3,10.14,10.68
+Carbohydrate & Energy Metabolism,Discordant,29,3.3,8.52
+Carbohydrate & Energy Metabolism,Concordant Down,6,8.52,9.6
+Carbohydrate & Energy Metabolism,Concordant Up,4,9.6,10.32
+Circulatory System,Discordant,4,3.3,4.02
+Circulatory System,Concordant Up,3,4.02,4.56
+Circulatory System,Concordant Down,2,4.56,4.92
+Cytoskeleton & Motility,Concordant Up,25,3.3,7.8
+Cytoskeleton & Motility,Discordant,24,7.8,12.120000000000001
+Cytoskeleton & Motility,Concordant Down,2,12.120000000000001,12.48
+DNA & Cell Cycle,Discordant,22,3.3,7.26
+DNA & Cell Cycle,Concordant Up,14,7.26,9.78
+DNA & Cell Cycle,Concordant Down,3,9.78,10.32
+Development,Concordant Up,8,3.3,4.74
+Development,Concordant Down,3,4.74,5.279999999999999
+Development,Discordant,3,5.279999999999999,5.82
+ECM & Adhesion,Concordant Up,29,3.3,8.52
+ECM & Adhesion,Discordant,20,8.52,12.120000000000001
+Immune & Inflammation,Discordant,22,3.3,7.26
+Immune & Inflammation,Concordant Up,6,7.26,8.34
+Immune & Inflammation,Concordant Down,1,8.34,8.52
+Lipid Metabolism,Discordant,23,3.3,7.4399999999999995
+Lipid Metabolism,Concordant Up,3,7.4399999999999995,7.9799999999999995
+Lipid Metabolism,Concordant Down,3,7.9799999999999995,8.52
+Mitochondria & Energy,Discordant,15,3.3,6
+Mitochondria & Energy,Concordant Up,3,6,6.539999999999999
+Muscle & Contractile,Concordant Up,7,3.3,4.56
+Muscle & Contractile,Discordant,4,4.56,5.279999999999999
+Muscle & Contractile,Concordant Down,3,5.279999999999999,5.82
+Protein Homeostasis,Discordant,34,3.3,9.42
+Protein Homeostasis,Concordant Up,21,9.42,13.2
+Transcription & Chromatin,Discordant,16,3.3,6.18
+Transcription & Chromatin,Concordant Up,8,6.18,7.62
+Transcription & Chromatin,Concordant Down,3,7.62,8.16
+Translation & Ribosome,Discordant,17,3.3,6.359999999999999
+Translation & Ribosome,Concordant Up,3,6.359999999999999,6.8999999999999995
+Transport,Discordant,36,3.3,9.78
+Transport,Concordant Up,18,9.78,13.02
+Transport,Concordant Down,2,13.02,13.379999999999999

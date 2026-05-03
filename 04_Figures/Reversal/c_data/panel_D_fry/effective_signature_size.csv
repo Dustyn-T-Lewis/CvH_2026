@@ -1,0 +1,5 @@
+set,n_nominal,mean_pairwise_r,n_effective,pct_of_nominal
+cancer_up,371,0.5359,1.9,0.5
+cancer_down,146,0.4415,2.2,1.5
+training_up,20,0.1443,5.3,26.5
+training_down,13,0.2386,3.4,26.2

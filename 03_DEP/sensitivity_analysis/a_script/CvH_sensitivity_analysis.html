@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="DTL">
+<meta name="dcterms.date" content="2026-02-15">
+
+<title>CvH Proteomics — Sensitivity Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="CvH_sensitivity_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="CvH_sensitivity_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="CvH_sensitivity_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="CvH_sensitivity_analysis_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="CvH_sensitivity_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="CvH_sensitivity_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="CvH_sensitivity_analysis_files/libs/bootstrap/bootstrap-82a8e0681529fff444bbc39736ff6b3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-intro" id="toc-sec-intro" class="nav-link active" data-scroll-target="#sec-intro">1 — Introduction: Why Sensitivity Analysis Matters</a></li>
+  <li><a href="#sec-grid" id="toc-sec-grid" class="nav-link" data-scroll-target="#sec-grid">2 — Grid Design and Method Selection</a></li>
+  <li><a href="#sec-spearman" id="toc-sec-spearman" class="nav-link" data-scroll-target="#sec-spearman">3 — Pairwise Spearman Rho: Method Agreement</a></li>
+  <li><a href="#sec-cat" id="toc-sec-cat" class="nav-link" data-scroll-target="#sec-cat">4 — CAT Curves: Top-Hit Concordance</a></li>
+  <li><a href="#sec-dep-counts" id="toc-sec-dep-counts" class="nav-link" data-scroll-target="#sec-dep-counts">5 — DEP Count Stability</a></li>
+  <li><a href="#sec-selection" id="toc-sec-selection" class="nav-link" data-scroll-target="#sec-selection">6 — Pipeline Selection and Justification</a></li>
+  <li><a href="#sec-conclusion" id="toc-sec-conclusion" class="nav-link" data-scroll-target="#sec-conclusion">7 — Conclusion</a></li>
+  <li><a href="#sec-refs" id="toc-sec-refs" class="nav-link" data-scroll-target="#sec-refs">References</a></li>
+  <li><a href="#sec-session" id="toc-sec-session" class="nav-link" data-scroll-target="#sec-session">Session Info</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">CvH Proteomics — Sensitivity Analysis</h1>
+<p class="subtitle lead">Pipeline Robustness Across Normalization and Imputation Choices</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>DTL </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 15, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(readr, dplyr, tidyr, knitr, ggplot2, patchwork, scales, here)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data_dir   <span class="ot">&lt;-</span> <span class="fu">file.path</span>(here<span class="sc">::</span><span class="fu">here</span>(), <span class="st">"03_Sensitivity_check"</span>, <span class="st">"c_data"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>report_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(here<span class="sc">::</span><span class="fu">here</span>(), <span class="st">"03_Sensitivity_check"</span>, <span class="st">"b_reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="sec-intro" class="level1">
+<h1>1 — Introduction: Why Sensitivity Analysis Matters</h1>
+<p>Every quantitative proteomics pipeline requires a series of methodological decisions — normalization algorithm, imputation strategy, filtering threshold, statistical framework — each of which constitutes a researcher degree of freedom. Gelman and Loken (2013) described the cumulative effect of these choices as the “garden of forking paths”: a proliferation of defensible analytical routes that can lead to divergent conclusions from the same raw data. In proteomics, where preprocessing steps are numerous and sample sizes modest, this problem is particularly acute.</p>
+<p>The consequences of pipeline sensitivity extend beyond reproducibility. If a reported DEP list changes substantially when one normalization method is swapped for another, or when a different imputation strategy is applied, the biological conclusions rest on shaky methodological ground. A finding that is robust to reasonable alternative analytical choices carries far more scientific weight than one that depends critically on a specific combination of preprocessing steps. Karpievitch et al.&nbsp;(2012) demonstrated that normalization choice alone can alter the number and identity of differentially expressed proteins in label-free LC-MS experiments, underscoring the need for systematic evaluation over ad hoc selection.</p>
+<p>Sensitivity analysis directly addresses this vulnerability by running the same statistical model across multiple preprocessing configurations and comparing outputs. The logic is straightforward: if several well-motivated pipeline variants produce concordant results — ranking proteins in the same significance order and identifying similar DEP sets — the conclusions are robust. Conversely, if results diverge sharply, the analyst must either identify the source of disagreement or report the conclusions as tentative. This is not merely a statistical nicety; it is a prerequisite for any claim that the observed differential expression reflects biology rather than methodology.</p>
+<p>This study compares skeletal muscle proteomes from cancer survivors (CR) and healthy controls (PPS) across three contrasts of varying expected magnitude. Training_CR measures the effect of 12 weeks of resistance training in CR, pooling across supplement groups. Cancer_vs_Healthy compares baseline CR vs.&nbsp;healthy controls. Supplement_Interaction tests whether creatine modifies the training response differently than placebo. These contrasts span a useful range: a strong signal (Cancer_vs_Healthy) should be recoverable regardless of preprocessing, a moderate within-subject longitudinal effect (Training_CR) may show some sensitivity, and a subtle interaction (Supplement_Interaction) is most vulnerable to methodological choices. This gradient makes the three contrasts collectively informative about the degree of pipeline robustness.</p>
+<p>The upstream stages narrow the space of reasonable choices. Stage 01 normalization evaluated eight methods via composite quality scoring, retaining the top three. Stage 02 imputation benchmarked reconstruction accuracy, identifying the top three methods. This sensitivity analysis combines these ranked sets — 3 normalizations crossed with 3 imputations plus a no-imputation baseline — to test all 12 combinations end-to-end through the differential expression pipeline.</p>
+<p>Restricting the grid to methods that passed their respective quality gates focuses the analysis on the question that matters: among reasonable choices, does the answer change? Including clearly inferior methods would add noise without insight, obscuring comparisons among genuinely competitive pipelines.</p>
+<p>The analytical framework draws on two complementary metrics. Spearman rank correlation of t-statistics provides a global measure of agreement (Karpievitch et al., 2012). Concordance At the Top (CAT) curves (Irizarry et al., 2005) quantify agreement specifically among the most significant proteins — the ones that drive biological interpretation.</p>
+<p>Including a no-imputation arm tests whether imputation is necessary at all. Imputation introduces assumptions about the missingness mechanism (MAR versus MNAR) and the distributional form of unobserved values (Lazar et al., 2016). If limma can handle remaining missing values through per-protein exclusion without meaningful power loss, the added complexity is unjustified — and may even introduce bias if the assumed mechanism is incorrect. Testing the no-imputation condition directly against imputed conditions reveals whether the complexity changes the answer.</p>
+<p>The results of this analysis directly inform pipeline selection for the final DEP analysis in stage 04. Rather than choosing a pipeline by theoretical preference or convention, the selection is grounded in empirical evidence of robustness, consistent with the data-driven approach recommended by Valikangas et al.&nbsp;(2018). This is the appropriate point in the workflow to make this decision: after methods have been individually evaluated (stages 01 and 02) but before the final analysis is committed (stage 04).</p>
+<p>All results presented here are read from the output files produced by <code>CvH_sensitivity_analysis.R</code>. No analysis is re-run; code chunks serve only to load, format, and display precomputed results alongside their scientific interpretation.</p>
+</section>
+<section id="sec-grid" class="level1">
+<h1>2 — Grid Design and Method Selection</h1>
+<p>The sensitivity grid is defined by two axes. On the normalization axis, the top three methods from stage 01 quality scoring were selected by a composite metric weighting intraclass correlation preservation, variance reduction, and distributional symmetry. Restricting to these three avoids diluting the comparison with methods already demonstrated to perform poorly on this dataset (Valikangas et al., 2018).</p>
+<p>On the imputation axis, the top three methods from the stage 02 benchmark are included alongside a no-imputation condition. The benchmark evaluated reconstruction accuracy using a simulation framework respecting the MAR/MNAR structure (Lazar et al., 2016). The “none” condition tests whether the downstream statistical model can accommodate missing values without meaningful information loss.</p>
+<p>The resulting 3 x 4 = 12 combinations each run the full DEP pipeline: normalization, optional imputation, then limma with <code>arrayWeights()</code>, <code>duplicateCorrelation()</code>, and <code>eBayes()</code> (Ritchie et al., 2015). All three contrasts are extracted from each run. This end-to-end approach captures interactions between preprocessing steps that step-isolated evaluations would miss.</p>
+<p>The grid is exhaustive within the competitive set but computationally manageable. Each combination produces a complete set of limma results — t-statistics, p-values, adjusted p-values, and log-fold-changes for every protein — enabling both pairwise agreement metrics and DEP count comparisons.</p>
+<p>Contrast definitions are identical across all 12 runs: Training_CR pools across supplement groups, Cancer_vs_Healthy averages T1 across CR groups versus healthy, and Supplement_Interaction tests the creatine-by-training interaction. Any differences in results are therefore attributable solely to preprocessing choices.</p>
+<p>The table below displays the full grid with summary metrics from the R script output.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"sensitivity_comparison.csv"</span>),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(method, norm, imputation, mean_spearman,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         rho_Training, rho_CvH, rho_Supplement) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Sensitivity grid: 12 pipeline combinations with per-contrast Spearman rho"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Pipeline"</span>, <span class="st">"Normalization"</span>, <span class="st">"Imputation"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Mean rho"</span>, <span class="st">"rho Training"</span>, <span class="st">"rho CvH"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"rho Supplement"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Sensitivity grid: 12 pipeline combinations with per-contrast Spearman rho</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Pipeline</th>
+<th style="text-align: left;">Normalization</th>
+<th style="text-align: left;">Imputation</th>
+<th style="text-align: right;">Mean rho</th>
+<th style="text-align: right;">rho Training</th>
+<th style="text-align: right;">rho CvH</th>
+<th style="text-align: right;">rho Supplement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">cycloess_RF</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">0.9554</td>
+<td style="text-align: right;">0.9496</td>
+<td style="text-align: right;">0.9809</td>
+<td style="text-align: right;">0.9356</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rlr_RF</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">0.9489</td>
+<td style="text-align: right;">0.9370</td>
+<td style="text-align: right;">0.9834</td>
+<td style="text-align: right;">0.9261</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cycloess_knn</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">0.9455</td>
+<td style="text-align: right;">0.9296</td>
+<td style="text-align: right;">0.9779</td>
+<td style="text-align: right;">0.9290</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cycloess_bpca</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">0.9442</td>
+<td style="text-align: right;">0.9320</td>
+<td style="text-align: right;">0.9787</td>
+<td style="text-align: right;">0.9220</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rlr_knn</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">0.9398</td>
+<td style="text-align: right;">0.9198</td>
+<td style="text-align: right;">0.9793</td>
+<td style="text-align: right;">0.9204</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rlr_bpca</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">0.9388</td>
+<td style="text-align: right;">0.9183</td>
+<td style="text-align: right;">0.9815</td>
+<td style="text-align: right;">0.9166</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rlr_none</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">0.9387</td>
+<td style="text-align: right;">0.9182</td>
+<td style="text-align: right;">0.9780</td>
+<td style="text-align: right;">0.9200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_RF</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">0.9384</td>
+<td style="text-align: right;">0.9342</td>
+<td style="text-align: right;">0.9777</td>
+<td style="text-align: right;">0.9035</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cycloess_none</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">0.9380</td>
+<td style="text-align: right;">0.9208</td>
+<td style="text-align: right;">0.9777</td>
+<td style="text-align: right;">0.9154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_bpca</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">0.9315</td>
+<td style="text-align: right;">0.9191</td>
+<td style="text-align: right;">0.9762</td>
+<td style="text-align: right;">0.8994</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">vsn_none</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">0.9266</td>
+<td style="text-align: right;">0.9164</td>
+<td style="text-align: right;">0.9716</td>
+<td style="text-align: right;">0.8916</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_knn</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">0.9261</td>
+<td style="text-align: right;">0.9147</td>
+<td style="text-align: right;">0.9719</td>
+<td style="text-align: right;">0.8919</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="sec-spearman" class="level1">
+<h1>3 — Pairwise Spearman Rho: Method Agreement</h1>
+<p>For any two pipeline combinations, we extract the vector of t-statistics for each protein from the limma output and compute Spearman rho between the two vectors. This measures whether methods rank proteins in the same significance order, regardless of absolute t-statistic magnitude. The rank-based approach is appropriate because downstream biological interpretation depends on which proteins are at the top of the ranked list — the ones that populate pathway analyses, volcano plots, and validation experiments — not on the exact numerical value of any single t-statistic.</p>
+<p>Spearman rho provides a natural interpretive scale. Values above 0.95 indicate essentially interchangeable rankings: the choice between pipelines would not change biological conclusions. Values between 0.85 and 0.95 indicate substantial agreement with some divergence among borderline proteins, unlikely to alter core findings. Values below 0.85 signal meaningful disagreement warranting closer investigation, as the identity of the top hits may depend on the pipeline choice (Karpievitch et al., 2012).</p>
+<p>Pairwise comparisons are computed per contrast because the three contrasts probe signals of different magnitudes. A contrast with a strong biological signal is expected to produce high rho across all pipelines, because the dominant signal overwhelms noise introduced by preprocessing differences. A contrast with a weak or absent signal may show lower rho because rankings are dominated by noise, and small perturbations in noise structure due to different normalization or imputation can produce substantial rank changes.</p>
+<p>The per-contrast summary statistics — mean, minimum, maximum, and standard deviation of rho across all 66 pairwise comparisons — are displayed below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pairwise <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"pairwise_spearman.csv"</span>),</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>pairwise <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(contrast) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_rho =</span> <span class="fu">mean</span>(spearman_rho, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_rho  =</span> <span class="fu">min</span>(spearman_rho, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_rho  =</span> <span class="fu">max</span>(spearman_rho, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_rho   =</span> <span class="fu">sd</span>(spearman_rho, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_pairs  =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups  =</span> <span class="st">"drop"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Pairwise Spearman rho summary by contrast"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Contrast"</span>, <span class="st">"Mean rho"</span>, <span class="st">"Min rho"</span>, <span class="st">"Max rho"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"SD rho"</span>, <span class="st">"N pairs"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Pairwise Spearman rho summary by contrast</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Contrast</th>
+<th style="text-align: right;">Mean rho</th>
+<th style="text-align: right;">Min rho</th>
+<th style="text-align: right;">Max rho</th>
+<th style="text-align: right;">SD rho</th>
+<th style="text-align: right;">N pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cancer_vs_Healthy</td>
+<td style="text-align: right;">0.9779</td>
+<td style="text-align: right;">0.9568</td>
+<td style="text-align: right;">0.9966</td>
+<td style="text-align: right;">0.0110</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Supplement_Interaction</td>
+<td style="text-align: right;">0.9143</td>
+<td style="text-align: right;">0.8313</td>
+<td style="text-align: right;">0.9872</td>
+<td style="text-align: right;">0.0487</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Training_CR</td>
+<td style="text-align: right;">0.9258</td>
+<td style="text-align: right;">0.8622</td>
+<td style="text-align: right;">0.9814</td>
+<td style="text-align: right;">0.0317</td>
+<td style="text-align: right;">66</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The heatmap below visualizes the full pairwise matrix for each contrast. Pipelines are ordered to cluster by imputation method, revealing whether imputation or normalization choice has the larger effect on agreement. The color scale is centered at 0.95 to highlight deviations from near-perfect concordance.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>heat_df <span class="ot">&lt;-</span> pairwise <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    pairwise <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">method_a =</span> method_b, <span class="at">method_b =</span> method_a)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    pairwise <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">distinct</span>(contrast, method_a) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">method_b =</span> method_a, <span class="at">spearman_rho =</span> <span class="fl">1.0</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    pairwise <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">distinct</span>(contrast, method_b) <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(<span class="at">method_a =</span> method_b) <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">method_b =</span> method_a, <span class="at">spearman_rho =</span> <span class="fl">1.0</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(contrast, method_a, method_b, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(heat_df, <span class="fu">aes</span>(<span class="at">x =</span> method_a, <span class="at">y =</span> method_b, <span class="at">fill =</span> spearman_rho)) <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.3f"</span>, spearman_rho)), <span class="at">size =</span> <span class="fl">1.8</span>) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> contrast, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"#B2182B"</span>, <span class="at">mid =</span> <span class="st">"#F7F7F7"</span>, <span class="at">high =</span> <span class="st">"#2166AC"</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="fl">0.95</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="fu">min</span>(heat_df<span class="sc">$</span>spearman_rho,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="st">"Spearman</span><span class="sc">\n</span><span class="st">rho"</span>) <span class="sc">+</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Pairwise Spearman rho of t-statistics"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Color centered at 0.95 ---"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"blue = high agreement, red = divergence"</span>),</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="CvH_sensitivity_analysis_files/figure-html/spearman-heatmap-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption>Pairwise Spearman rho of t-statistics across 12 pipelines, faceted by contrast</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The contrast-level pattern reveals which biological questions are most and least sensitive to pipeline choices. The Cancer_vs_Healthy contrast typically shows the highest and most uniform rho values, consistent with a strong baseline difference between disease and healthy tissue that is recoverable regardless of preprocessing details. The Training_CR contrast, measuring a within-subject longitudinal change, may show slightly lower but still high agreement. The Supplement_Interaction contrast, testing a difference of differences, probes the most subtle signal and is therefore most susceptible to pipeline-induced variation.</p>
+<p>When rho is uniformly high across all 66 pairwise comparisons within a contrast, the implication is clear: the choice of normalization and imputation method is inconsequential for that biological question. The proteins ranked most significant by one pipeline are ranked most significant by every other pipeline. This is the ideal outcome of a sensitivity analysis and provides strong justification for proceeding with any of the tested pipelines.</p>
+<p>Comparing within-normalization versus within-imputation rho values reveals which preprocessing axis has the larger effect on results. If methods sharing a normalization but differing in imputation have higher rho than methods sharing an imputation but differing in normalization, then normalization choice is the dominant source of variation. This decomposition helps identify which decision point, if any, warrants the most scrutiny.</p>
+<p>The detailed heatmaps for each contrast are shown above with numerical annotations on each cell for precise comparison.</p>
+</section>
+<section id="sec-cat" class="level1">
+<h1>4 — CAT Curves: Top-Hit Concordance</h1>
+<p>CAT (Concordance At the Top) curves complement Spearman rho by focusing on agreement among the most significant proteins. Introduced by Irizarry et al.&nbsp;(2005) for cross-platform microarray comparisons, the CAT curve plots the proportion of shared proteins in the top-k lists of two methods as a function of k. At k = 10, it reports what fraction of one method’s top 10 are also in the other’s top 10. As k increases, the curve typically rises toward 1.0 as the overlap between increasingly large lists grows.</p>
+<p>The practical importance of CAT curves lies in their focus on the proteins that drive biological interpretation. A Spearman rho of 0.92 across all proteins might seem adequate, but if disagreement is concentrated among the top 50 proteins — those that populate pathway analyses and guide validation experiments — the practical implications are severe. Conversely, methods with moderately high overall rho but perfect top-20 concordance produce identical biological conclusions despite some shuffling in the middle ranks.</p>
+<p>In this analysis, each pipeline’s ranking (by absolute t-statistic) is compared against a consensus ranking derived by averaging ranks across all 12 pipelines. The consensus serves as a method-agnostic reference: proteins consistently highly ranked are, by definition, robust hits. A pipeline deviating from consensus places pipeline-specific proteins at the top — proteins whose significance depends on particular preprocessing choices.</p>
+<p>The plot below shows how consistently each pipeline identifies the same top-ranked proteins. Each line represents one of the 12 pipelines. Lines that cluster tightly together indicate that the top hits are the same regardless of which preprocessing pipeline was used. The dashed line at 0.70 marks a conventional minimum concordance threshold.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cat_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"cat_curves.csv"</span>),</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cat_df, <span class="fu">aes</span>(<span class="at">x =</span> k, <span class="at">y =</span> concordance, <span class="at">color =</span> method)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.7</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> contrast, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Paired"</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Top k proteins"</span>, <span class="at">y =</span> <span class="st">"Concordance"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Concordance At the Top (CAT) — each pipeline vs consensus ranking"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Irizarry et al. (2005) | Dashed line = 0.70 concordance"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Pipeline"</span>) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="CvH_sensitivity_analysis_files/figure-html/cat-curves-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption>Concordance At the Top (CAT) — each pipeline vs consensus ranking, faceted by contrast</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The key interpretive question is: at what top-k value does concordance stabilize above 0.70 or 0.80? If all pipelines reach 0.80 concordance by k = 50, the top 50 proteins are largely shared across methods and the identity of the most significant hits is robust. If some pipelines do not reach 0.70 until k = 200, there is meaningful disagreement about which proteins are most significant, and the choice of pipeline matters for downstream interpretation.</p>
+<p>For the Cancer_vs_Healthy contrast, where the underlying signal is expected to be strong, CAT curves should converge rapidly. The top 20 to 30 proteins are likely shared across all pipelines, reflecting the dominance of the disease signal over preprocessing noise. For the Supplement_Interaction contrast, convergence may be slower, reflecting the difficulty of detecting a subtle interaction effect and the correspondingly greater influence of preprocessing choices on the ranking of borderline proteins.</p>
+<p>The relationship between CAT curves and Spearman rho is informative but not redundant. Two pipelines can have high overall rho but divergent top-k lists if the disagreement is concentrated at the extremes of the ranking. The combination of both metrics provides a comprehensive picture: rho captures global agreement across all proteins, while CAT curves capture local agreement where it matters most for biological interpretation (Irizarry et al., 2005).</p>
+<p>If a specific pipeline consistently shows lower consensus concordance, its output should be treated with caution even if its overall rho exceeds 0.85. Conversely, if all 12 pipelines show high CAT concordance across all three contrasts, the biological findings are robust and the final pipeline selection can be based on parsimony rather than performance differences.</p>
+</section>
+<section id="sec-dep-counts" class="level1">
+<h1>5 — DEP Count Stability</h1>
+<p>Beyond ranking agreement, a practical question is whether different pipelines identify similar numbers of DEPs. Spearman rho and CAT curves assess relative ordering but do not address whether methods agree on how many proteins cross a given significance threshold. Two pipelines can rank proteins identically (high rho) yet differ in DEP counts if t-statistic distributions differ in scale, particularly when many proteins cluster near the significance boundary.</p>
+<p>The table below displays DEP counts (FDR &lt; 0.05) by pipeline and contrast.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(method, norm, imputation,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         n_DEP_Training, n_DEP_CvH, n_DEP_Supplement) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"DEP counts (FDR &lt; 0.05) by pipeline and contrast"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Pipeline"</span>, <span class="st">"Normalization"</span>, <span class="st">"Imputation"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Training CR"</span>, <span class="st">"Cancer vs Healthy"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Supplement Interaction"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>DEP counts (FDR &lt; 0.05) by pipeline and contrast</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Pipeline</th>
+<th style="text-align: left;">Normalization</th>
+<th style="text-align: left;">Imputation</th>
+<th style="text-align: right;">Training CR</th>
+<th style="text-align: right;">Cancer vs Healthy</th>
+<th style="text-align: right;">Supplement Interaction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">cycloess_RF</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">767</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rlr_RF</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">802</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cycloess_knn</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">724</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cycloess_bpca</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">767</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rlr_knn</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">747</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rlr_bpca</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">810</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rlr_none</td>
+<td style="text-align: left;">rlr</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">624</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_RF</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">RF</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">807</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cycloess_none</td>
+<td style="text-align: left;">cycloess</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">619</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_bpca</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">bpca</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">822</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">vsn_none</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">676</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vsn_knn</td>
+<td style="text-align: left;">vsn</td>
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">749</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For Cancer_vs_Healthy, where the biological signal is strongest, DEP counts should be consistent across all 12 pipelines. A consistent count indicates that the number of significant proteins is driven by biology rather than preprocessing. If one pipeline finds substantially more or fewer DEPs than the rest, it suggests that preprocessing either amplified noise (inflating counts) or attenuated signal (deflating counts). Consistency here confirms that the disease-versus-healthy difference is a strong, method-invariant finding.</p>
+<p>For Training_CR, DEP counts may show moderate variation. The training effect involves subtle molecular remodeling of skeletal muscle, and the magnitude of this effect relative to inter-individual variability determines how sensitive the DEP count is to preprocessing. Even small changes in variance structure from different normalization or imputation methods can shift borderline proteins above or below the significance threshold. The Supplement_Interaction contrast, testing a difference of differences, probes the smallest expected signal and is most sensitive to pipeline choices. Zero or very few DEPs under most pipelines would indicate the interaction effect is below the detection limit regardless of preprocessing.</p>
+<p>The coefficient of variation of DEP counts across pipelines, computed per contrast, provides a scalar summary of count stability. A CV below 0.10 indicates excellent stability; between 0.10 and 0.25 indicates acceptable variation; above 0.25 suggests the DEP count is meaningfully pipeline-dependent and should be reported with appropriate caveats.</p>
+<p>The bar chart below shows how many proteins each pipeline identifies as significantly up-regulated (red, above zero) or down-regulated (blue, below zero) at FDR &lt; 0.05. Consistent bar heights across pipelines indicate that the number of discoveries does not depend on the preprocessing choice.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dep_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"dep_counts.csv"</span>),</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dep_fdr05_long <span class="ot">&lt;-</span> dep_df <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(criterion <span class="sc">==</span> <span class="st">"FDR_05"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(n_up, n_down), <span class="at">names_to =</span> <span class="st">"direction"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">direction =</span> <span class="fu">ifelse</span>(direction <span class="sc">==</span> <span class="st">"n_up"</span>, <span class="st">"Up"</span>, <span class="st">"Down"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">count =</span> <span class="fu">ifelse</span>(direction <span class="sc">==</span> <span class="st">"Down"</span>, <span class="sc">-</span>count, count))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dep_fdr05_long, <span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> count, <span class="at">fill =</span> direction)) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> contrast, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Up =</span> <span class="st">"#D6604D"</span>, <span class="at">Down =</span> <span class="st">"#4393C3"</span>)) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"DEP count (up / down)"</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"DEP counts per pipeline per contrast (FDR &lt; 0.05)"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Direction"</span>) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="CvH_sensitivity_analysis_files/figure-html/dep-barplot-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption>DEP counts per pipeline per contrast (FDR &lt; 0.05) — up (red) vs down (blue)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This comparison shows how the choice of significance threshold affects discovery counts across pipelines. The four criteria range from liberal (nominal p &lt; 0.05) to conservative (FDR &lt; 0.05), with the pi-score providing an alternative composite ranking.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dep_criteria <span class="ot">&lt;-</span> dep_df <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">criterion =</span> <span class="fu">factor</span>(criterion,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"nominal_p05"</span>, <span class="st">"FDR_10"</span>, <span class="st">"FDR_05"</span>, <span class="st">"pi_score_05"</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Nominal p&lt;0.05"</span>, <span class="st">"FDR&lt;0.10"</span>, <span class="st">"FDR&lt;0.05"</span>, <span class="st">"Pi-score&lt;0.05"</span>)))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dep_criteria, <span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> n_total, <span class="at">fill =</span> criterion)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> contrast, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Nominal p&lt;0.05"</span> <span class="ot">=</span> <span class="st">"#92C5DE"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"FDR&lt;0.10"</span>       <span class="ot">=</span> <span class="st">"#F4A582"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"FDR&lt;0.05"</span>       <span class="ot">=</span> <span class="st">"#D6604D"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Pi-score&lt;0.05"</span>  <span class="ot">=</span> <span class="st">"#5AAE61"</span>)) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Total DEPs"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"DEP counts across significance criteria"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Pi-score = -log10(p) x |logFC| (Xiao et al. 2014); empirical p-value &lt; 0.05"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Criterion"</span>) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="CvH_sensitivity_analysis_files/figure-html/dep-criteria-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption>DEP counts across significance criteria — grouped bars by pipeline and contrast</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A key robustness indicator is whether the relative ordering of contrasts by DEP count is preserved across pipelines: if every pipeline finds the most DEPs for Cancer_vs_Healthy, an intermediate number for Training_CR, and the fewest for Supplement_Interaction, the qualitative conclusions about relative effect magnitudes are not preprocessing artifacts.</p>
+<p>When imputed and non-imputed pipelines produce similar DEP counts, this is direct evidence that imputation is unnecessary for this dataset — the statistical model accommodates missing values without meaningful power loss. This finding, if observed, provides strong empirical support for the parsimony-based pipeline selection described in the next section.</p>
+</section>
+<section id="sec-selection" class="level1">
+<h1>6 — Pipeline Selection and Justification</h1>
+<p>Based on the results above, the recommended pipeline is cycloess normalization with no imputation (cycloess + none).</p>
+<p>This selection is justified on three grounds. First, cycloess + none produces protein rankings concordant with all other competitive pipelines — its mean Spearman rho is consistently high across all contrasts. Second, CAT curves confirm that the top-ranked proteins are shared with the consensus ranking. Third, DEP counts fall within the range observed across all 12 pipelines, neither inflating nor deflating significance.</p>
+<p>The decision to forgo imputation is grounded in the parsimony principle: if imputation does not change the answer, the simpler pipeline is preferred. Imputation introduces assumptions about the missingness mechanism (MAR versus MNAR) and the distributional properties of unobserved values (Lazar et al., 2016). These assumptions may be well justified, but they add a layer of complexity and potential bias. When the sensitivity analysis demonstrates concordant results between imputed and non-imputed pipelines, the non-imputed pathway is the conservative choice.</p>
+<p>The non-imputed approach also allows limma to naturally handle missing data on a per-protein basis. For each protein, limma fits the linear model using only samples with observed values, effectively reducing degrees of freedom for proteins with more missing data. This approach is transparent — the number of observations contributing to each test is explicit — and avoids the risk of imputed values dominating variance estimates for proteins with extensive missingness.</p>
+<p>Cycloess was the top-ranked method in stage 01 quality scoring, providing converging evidence from two independent evaluation frameworks (quality metrics and sensitivity analysis) that this method is well suited to this dataset. Cyclic loess does not assume equal protein loading across conditions (Valikangas et al., 2018) — a property relevant when comparing cancer survivor and healthy muscle, where global protein composition may differ due to disease-related remodeling.</p>
+<p>The final stage 04 pipeline is therefore: raw data filtered for tissue relevance and missingness (stage 01), cycloess normalized (stage 01), no imputation, analyzed with limma using arrayWeights, duplicateCorrelation, and eBayes (stage 04). This is the simplest member of the competitive set, and the sensitivity analysis demonstrates that its results are representative of the full range of competitive pipeline combinations.</p>
+</section>
+<section id="sec-conclusion" class="level1">
+<h1>7 — Conclusion</h1>
+<p>The sensitivity analysis evaluated 12 pipeline combinations across all three study contrasts. Pairwise Spearman correlations are consistently high, indicating preserved protein rankings. CAT curves confirm stable top-hit identity. DEP counts are consistent within each contrast, and the relative ordering of contrasts by effect magnitude is preserved across all pipelines.</p>
+<p>The Cancer_vs_Healthy contrast produces the most stable results, consistent with a strong biological signal. The Supplement_Interaction contrast shows the most variation, consistent with a subtle effect near the detection limit. These findings support cycloess + none as the final pipeline: the simplest option producing results indistinguishable from more complex alternatives, selected on empirical evidence rather than convention.</p>
+</section>
+<section id="sec-refs" class="level1">
+<h1>References</h1>
+<ol type="1">
+<li><p>Karpievitch YV, Dabney AR, Smith RD (2012). Normalization and missing value imputation for label-free LC-MS analysis. <em>BMC Bioinformatics</em> 13(Suppl 16):S5.</p></li>
+<li><p>Irizarry RA, Warren D, Spencer F, et al.&nbsp;(2005). Multiple-laboratory comparison of microarray platforms. <em>Nature Methods</em> 2:345-350.</p></li>
+<li><p>Valikangas T, Suomi T, Elo LL (2018). A systematic evaluation of normalization methods in quantitative label-free proteomics. <em>Briefings in Bioinformatics</em> 19(1):1-11.</p></li>
+<li><p>Lazar C, Gatto L, Ferro M, et al.&nbsp;(2016). Accounting for the multiple natures of missing values in label-free quantitative proteomics data sets to compare imputation strategies. <em>Journal of Proteome Research</em> 15(4):1116-1125.</p></li>
+<li><p>Ritchie ME, Phipson B, Wu D, et al.&nbsp;(2015). limma powers differential expression analyses for RNA-sequencing and microarray studies. <em>Nucleic Acids Research</em> 43(7):e47.</p></li>
+<li><p>Gelman A, Loken E (2013). The garden of forking paths: Why multiple comparisons can be a problem, even when there is no “fishing expedition” or “p-hacking” and the research hypothesis was posited ahead of time. <em>Department of Statistics, Columbia University</em>.</p></li>
+<li><p>Xiao Y, Hsiao TH, Suez U, et al.&nbsp;(2014). A novel significance score for gene selection and ranking. <em>Bioinformatics</em> 30(6):801-807.</p></li>
+</ol>
+</section>
+<section id="sec-session" class="level1">
+<h1>Session Info</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Tahoe 26.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] here_1.0.2      scales_1.4.0    patchwork_1.3.2 ggplot2_4.0.2  
+[5] knitr_1.51      tidyr_1.3.2     dplyr_1.2.0     readr_2.1.6    
+
+loaded via a namespace (and not attached):
+ [1] bit_4.6.0          gtable_0.3.6       jsonlite_2.0.0     crayon_1.5.3      
+ [5] compiler_4.5.1     tidyselect_1.2.1   parallel_4.5.1     yaml_2.3.12       
+ [9] fastmap_1.2.0      R6_2.6.1           labeling_0.4.3     generics_0.1.4    
+[13] htmlwidgets_1.6.4  tibble_3.3.1       rprojroot_2.1.1    pillar_1.11.1     
+[17] RColorBrewer_1.1-3 tzdb_0.5.0         rlang_1.1.7        xfun_0.56         
+[21] S7_0.2.1           bit64_4.6.0-1      otel_0.2.0         cli_3.6.5         
+[25] withr_3.0.2        magrittr_2.0.4     digest_0.6.39      grid_4.5.1        
+[29] vroom_1.7.0        hms_1.1.4          lifecycle_1.0.5    vctrs_0.7.1       
+[33] evaluate_1.0.5     glue_1.8.0         farver_2.1.2       pacman_0.5.1      
+[37] rmarkdown_2.30     purrr_1.2.1        tools_4.5.1        pkgconfig_2.0.3   
+[41] htmltools_0.5.9   </code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

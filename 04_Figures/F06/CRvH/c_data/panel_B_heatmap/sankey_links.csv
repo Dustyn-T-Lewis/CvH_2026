@@ -1,0 +1,42 @@
+quadrant,pathway,n_flow
+Concordant Up,Amino Acid & Cofactor Metabolism,7
+Concordant Up,Carbohydrate & Energy Metabolism,4
+Concordant Up,Circulatory System,3
+Concordant Up,Cytoskeleton & Motility,25
+Concordant Up,DNA & Cell Cycle,14
+Concordant Up,Development,8
+Concordant Up,ECM & Adhesion,29
+Concordant Up,Immune & Inflammation,6
+Concordant Up,Lipid Metabolism,3
+Concordant Up,Mitochondria & Energy,3
+Concordant Up,Muscle & Contractile,7
+Concordant Up,Protein Homeostasis,21
+Concordant Up,Transcription & Chromatin,8
+Concordant Up,Translation & Ribosome,3
+Concordant Up,Transport,18
+Concordant Down,Amino Acid & Cofactor Metabolism,3
+Concordant Down,Carbohydrate & Energy Metabolism,6
+Concordant Down,Circulatory System,2
+Concordant Down,Cytoskeleton & Motility,2
+Concordant Down,DNA & Cell Cycle,3
+Concordant Down,Development,3
+Concordant Down,Immune & Inflammation,1
+Concordant Down,Lipid Metabolism,3
+Concordant Down,Muscle & Contractile,3
+Concordant Down,Transcription & Chromatin,3
+Concordant Down,Transport,2
+Discordant,Amino Acid & Cofactor Metabolism,31
+Discordant,Carbohydrate & Energy Metabolism,29
+Discordant,Circulatory System,4
+Discordant,Cytoskeleton & Motility,24
+Discordant,DNA & Cell Cycle,22
+Discordant,Development,3
+Discordant,ECM & Adhesion,20
+Discordant,Immune & Inflammation,22
+Discordant,Lipid Metabolism,23
+Discordant,Mitochondria & Energy,15
+Discordant,Muscle & Contractile,4
+Discordant,Protein Homeostasis,34
+Discordant,Transcription & Chromatin,16
+Discordant,Translation & Ribosome,17
+Discordant,Transport,36

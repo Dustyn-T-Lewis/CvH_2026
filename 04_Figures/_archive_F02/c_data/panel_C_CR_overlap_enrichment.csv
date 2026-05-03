@@ -1,0 +1,7 @@
+"set_A","set_B","n_A","n_B","overlap","expected","odds_ratio","p_value","p_bh"
+"Baseline_Supplement","Training_CRE",212,69,28,5.7,8.63,6.22106407797052e-14,7.46527689356462e-14
+"Baseline_Supplement","Training_PLA",212,188,72,15.4,9.97,3.36150717596857e-34,6.72301435193714e-34
+"Baseline_Supplement","Supplement_Interaction",212,279,124,22.9,20.07,1.13103970038679e-74,3.39311910116037e-74
+"Training_CRE","Training_PLA",69,188,13,5,3.1,0.00109477551984864,0.00109477551984864
+"Training_CRE","Supplement_Interaction",69,279,40,7.5,13.09,2.32186403705597e-22,3.48279605558396e-22
+"Training_PLA","Supplement_Interaction",188,279,126,20.3,29.65,5.67413603736316e-87,3.4044816224179e-86

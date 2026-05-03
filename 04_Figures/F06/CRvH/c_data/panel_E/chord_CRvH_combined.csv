@@ -1,0 +1,1119 @@
+gene,pathway_label,pathway_padj,pathway_db,primary_contrast,display_logFC
+ADD1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.73709048461522
+ALAD,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.01060606967645
+ANK1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.62566958554534
+BLVRA,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.766650809014266
+BLVRB,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.68150470230198
+BPGM,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.10454421345483
+CA2,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.86177563255215
+CAST,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.615960884821536
+CAT,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.79859057459828
+CLIC2,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.962629384721106
+DCUN1D1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.698203334286706
+DMTN,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.86527639842077
+EPB41,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.18741458869188
+FBXO7,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.72141265502231
+GAPVD1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.767462793001533
+GCLC,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.22103538649375
+GCLM,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.933646088582929
+GYPC,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.990109812152333
+HEBP1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.4583621403395
+HMBS,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.1228856118181
+MPP1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.29641153889937
+PGLS,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.743026489769989
+PICALM,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.00894840975391
+PRDX2,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.99706666866736
+PSMD9,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.562961833031903
+SDCBP,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.735971860588512
+SELENBP1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.1024312291512
+SLC2A1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.84936394137929
+SNCA,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,3.69965895111177
+SPTB,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,2.12699336971905
+TNS1,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,0.88725883744937994
+UROD,Heme Metabolism,6.693518612321511e-9,Hallmark,Cancer_vs_Healthy,1.48996644881451
+ACTN4,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.55458726926722
+ANXA5,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.37495599677111
+ARRB1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.6447420272077
+CALM1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.771012708629357
+CAP1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.29130580377629
+CD36,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.26444135011575
+CD9,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.88304433783598
+CFL1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.645837953271297
+CLEC3B,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.66773486980836
+CLU,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,3.03340421072831
+COL1A2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.77812073856066
+F13A1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.52721688387596
+FLNA,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.26299775496226
+FN1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.5661810586055
+GNAI1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNAQ,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.939392868202848
+GNB1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.18674069509387
+LGALS3BP,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.67441959234462
+MGLL,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.40721256292138
+PPBP,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.81638722626497
+PPIA,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.11062725085068
+PROS1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.07300332257681
+RAP1B,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.28137525972958
+RHOG,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.978352842149466
+SERPINF2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.18487070711746
+SERPING1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,3.05703430161384
+SOD1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.0552290078898
+SPARC,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.29538766331821
+TAGLN2,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.3220536456676
+THBS1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,2.63732015348373
+TLN1,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,1.12972715784282
+YWHAZ,Platelet Activation Signal..,9.705152897699151e-8,Reactome,Cancer_vs_Healthy,0.857888231163315
+BGN,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.48441807120801
+CALD1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.3595903050749
+CAPG,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.48027448958949
+CD44,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.77118565395032
+COL12A1,EMT,1.5326576096223792e-7,Hallmark,Training_CR,1.06187659332068
+COL1A2,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.77812073856066
+COL6A2,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.13673113336764
+COL6A3,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.21226793623315
+COMP,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,3.6044224856376
+DCN,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.86292667444177
+FBLN1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.9353613362502
+FBLN2,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.03338091711082
+FBN1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.98934251200624
+FLNA,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.26299775496226
+FN1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.5661810586055
+ITGB1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,0.684037906369099
+LAMC1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.12997708058068
+LGALS1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.18288364491768
+LUM,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.8170560975672
+MYL9,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,0.809224526439793
+PPIB,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.05601920311384
+SPARC,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.29538766331821
+TAGLN,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.37282900081741
+TGFBI,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.19410532132821
+THBS1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.63732015348373
+THY1,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.40084527437348
+TPM4,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,1.47328185509118
+VIM,EMT,1.5326576096223792e-7,Hallmark,Cancer_vs_Healthy,2.73008494764978
+ACTB,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.45934123081213
+ACTN4,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.55458726926722
+CAP1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.29130580377629
+CD34,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.69355730728778
+CNN2,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.3494218072472
+CTNNA1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.686887586314258
+EPB41L2,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.18665144669352
+FBN1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.98934251200624
+FSCN1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.4834552381662
+GNAI1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.20518431523039
+ITGB1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.684037906369099
+MSN,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.11842400376132
+MYH10,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.65460910848538
+MYH9,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.744627290914682
+MYL9,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.809224526439793
+PARVA,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.862980325103052
+RRAS,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.852486550764688
+RSU1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.667510311626884
+TGFBI,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,1.19410532132821
+THY1,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,2.40084527437348
+ZYX,Apical Junction,5.4666693331755325e-6,Hallmark,Cancer_vs_Healthy,0.530571967860105
+ACTB,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.45934123081213
+ASPN,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.44829207417414
+BGN,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.48441807120801
+CAST,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,0.615960884821536
+CD44,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.77118565395032
+COL12A1,ECM Organization,1.4691962165413383e-5,Reactome,Training_CR,1.06187659332068
+COL1A2,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.77812073856066
+COL6A1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.89166370022154
+COL6A2,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.13673113336764
+COL6A3,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.21226793623315
+COMP,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,3.6044224856376
+CTSD,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,0.788008737874737
+CTSG,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,0.998721111466935
+DCN,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.86292667444177
+EFEMP1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.65146379411572
+FBLN1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.9353613362502
+FBLN2,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.03338091711082
+FBN1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.98934251200624
+FN1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.5661810586055
+ITGA1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.16193987091138
+ITGB1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,0.684037906369099
+KLKB1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.85160646469582
+LAMB2,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.22924299104842
+LAMC1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.12997708058068
+LUM,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.8170560975672
+MFAP4,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.98838502510846
+NID1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.20124083424983
+PPIB,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,1.05601920311384
+SPARC,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.29538766331821
+THBS1,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.63732015348373
+TNXB,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,0.990714943785164
+TTR,ECM Organization,1.4691962165413383e-5,Reactome,Cancer_vs_Healthy,2.35076553386145
+ASPN,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.44829207417414
+BGN,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.48441807120801
+COL1A2,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.77812073856066
+COL6A1,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.89166370022154
+COL6A2,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.13673113336764
+COL6A3,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.21226793623315
+COMP,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,3.6044224856376
+DCN,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.86292667444177
+FN1,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.5661810586055
+ITGB1,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.684037906369099
+LAMB2,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.22924299104842
+LAMC1,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.12997708058068
+LUM,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.8170560975672
+SPARC,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.29538766331821
+TNXB,Ecm Proteoglycans,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.990714943785164
+ANXA2,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.89882617030562
+ARF1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.872726312387147
+BOLA2,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.724394944818656
+CFL1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.645837953271297
+CNN2,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.3494218072472
+HNRNPA2B1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.914426393317143
+HNRNPF,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.838129521939024
+LCP1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.77580671429317
+MSN,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.11842400376132
+PITPNA,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.914230936432869
+PPIA,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.11062725085068
+PSME2,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.701983309680472
+RAP1B,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.28137525972958
+SOD1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.0552290078898
+TALDO1,Gene And Protein Expressio..,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.772865710377186
+ARRB1,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.6447420272077
+FN1,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.5661810586055
+GNAI1,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNAS,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.64074935765256
+GNB1,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,2.18674069509387
+ITGB1,G Alpha S Signalling Events,7.688133594010123e-5,Reactome,Cancer_vs_Healthy,0.684037906369099
+ACTB,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.45934123081213
+CD9,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.88304433783598
+CLIC1,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.56940601387666
+COMP,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,3.6044224856376
+CSRP1,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.70543948776047
+CTSG,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.998721111466935
+FLNA,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.26299775496226
+GNAS,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.64074935765256
+ILK,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.774927528549881
+MYH9,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.861656391892517
+MYL9,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.809224526439793
+PDIA3,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,0.916287139713937
+PPIA,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.11062725085068
+TLN1,Platelet Aggregation,1.583693111609482e-4,GO:BP,Cancer_vs_Healthy,1.12972715784282
+ANXA2,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.89882617030562
+AP2A1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.632159077404328
+AP2A2,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.13628136273223
+AP2B1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.495521028489943
+ARF1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.872726312387147
+ARRB1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.6447420272077
+CAV1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CD36,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.26444135011575
+CD81,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.7801865335292
+CD9,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.88304433783598
+CLTC,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.68253784752125
+EPS15,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.17439417528768
+ITGB1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.684037906369099
+PICALM,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,1.00894840975391
+SDCBP,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.735971860588512
+SNCA,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,3.69965895111177
+SNX1,Receptor Internalization,1.914443564154257e-4,GO:BP,Cancer_vs_Healthy,0.842020486961758
+ACLY,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.92598248791126
+ACTR2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.596223791403077
+ALAD,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.01060606967645
+ANXA2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.89882617030562
+AP2A2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.13628136273223
+ARPC5,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.18344505849887
+B2M,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.50523332697839
+CAND1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.04724875201848
+CAP1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.29130580377629
+CAT,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.79859057459828
+CD36,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.26444135011575
+CD44,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.77118565395032
+CD58,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.3528431612485
+CNN2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.3494218072472
+CST3,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.08589928581121
+CTSD,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.788008737874737
+CTSG,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.998721111466935
+CTSZ,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.765378275879172
+CYFIP1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.913791169133944
+DBNL,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.929981279429857
+ENPP4,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Training_CR,0.901435426537261
+FTL,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Training_CR,1.88281235051924
+GSN,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.40701361783093
+HLA-B,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.752315263454106
+IDH1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.676777561095186
+IQGAP1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.83567835897345
+LAMP1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.97420346908353
+LGALS3,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.21998048955439
+LRG1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.86080223546785
+LTF,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.70665183730155
+LYZ,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.19074708018535
+MGST1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,3.17852453030096
+NME2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.811773468301464
+NPC2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.865131521934067
+PAFAH1B2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.947710257019015
+PDXK,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.83896759481339
+PGAM1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.603431921403082
+PGM2,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.38293732759783
+PNP,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.78846760724161
+PPBP,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.81638722626497
+PPIA,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.11062725085068
+PYGL,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.830733453893199
+RAP1B,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.28137525972958
+RHOG,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.978352842149466
+S100A11,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.09993236592588
+S100A8,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.31044262426685
+S100A9,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.67094942867346
+SDCBP,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.735971860588512
+SNAP23,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.41872744578782
+SPTAN1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.47411170317937
+STOM,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.37394543422005
+TTR,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,2.35076553386145
+TUBB,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,0.750173987320242
+VAT1,Neutrophil Degranulation,2.0155954800183036e-4,Reactome,Cancer_vs_Healthy,1.52706483430713
+ANXA1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.43402555578179
+CD9,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.88304433783598
+CLU,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,3.03340421072831
+COMP,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,3.6044224856376
+CRIP2,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.53998566274774
+CSRP1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.70543948776047
+FBN1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.98934251200624
+FN1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.5661810586055
+GNB2,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.640536835590961
+GNG12,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.957827973571813
+GSN,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.40701361783093
+KLKB1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.85160646469582
+PROS1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.07300332257681
+S100A13,Coagulation,2.1354015937787414e-4,Hallmark,Training_CR,0.72554438366417
+SERPING1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,3.05703430161384
+SPARC,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.29538766331821
+THBS1,Coagulation,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.63732015348373
+ANXA5,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.37495599677111
+CA2,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.86177563255215
+CALM1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.771012708629357
+CD36,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.26444135011575
+CLU,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,3.03340421072831
+CP,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.7178060679856
+CSRP1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.70543948776047
+CTSD,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.788008737874737
+EHD1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.25534414292826
+FN1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.5661810586055
+GNAI2,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.71270874909773
+GNB2,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.640536835590961
+GNG2,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.18674069509387
+KLKB1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.85160646469582
+LGALS3,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.21998048955439
+LTF,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,1.70665183730155
+RHOG,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,0.978352842149466
+S100A13,Complement,2.1354015937787414e-4,Hallmark,Training_CR,0.72554438366417
+S100A9,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,2.67094942867346
+SERPING1,Complement,2.1354015937787414e-4,Hallmark,Cancer_vs_Healthy,3.05703430161384
+ACTB,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,1.45934123081213
+ACTR2,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.603600831903403
+AP2A1,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.632159077404328
+AP2A2,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,1.13628136273223
+AP2B1,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.495521028489943
+ARPC1B,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,1.51562829959613
+ARPC3,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.792512818254224
+ARPC5,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,2.18344505849887
+CFL1,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.645837953271297
+CLTC,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.68253784752125
+MYH10,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,1.65460910848538
+MYH9,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.744627290914682
+MYL9,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.809224526439793
+SDCBP,Eph Ephrin Signaling,2.4046122672671905e-4,Reactome,Cancer_vs_Healthy,0.735971860588512
+ADH1C,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.26282349695436
+AKR1C2,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.68626198051991
+AKR1C3,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.55939031121029
+AOX1,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.39391113631396
+APOE,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,2.66632549570232
+BLVRB,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.68150470230198
+CA2,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.86177563255215
+CAT,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,2.79859057459828
+CD36,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.26444135011575
+CYB5A,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.04705384667346
+DDAH2,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.50237622910435
+DDT,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,0.983857785405295
+FAH,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.31570785459309
+FBLN1,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.9353613362502
+GCLC,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.22103538649375
+GSS,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,0.52105497562891
+HPRT1,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.66602683864298
+IDH1,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,0.676777561095186
+PGD,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.17724864458594
+PROS1,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,2.07300332257681
+PTGDS,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,1.32492204657901
+RBP4,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,2.2264450610274
+RETSAT,Xenobiotic Metabolism,2.5275180112383264e-4,Hallmark,Cancer_vs_Healthy,3.0310061320009
+ACTB,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.45934123081213
+ANK1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,2.62566958554534
+AP2A1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.632159077404328
+AP2A2,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.13628136273223
+AP2B1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.495521028489943
+CLTC,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.68253784752125
+DPYSL2,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.939202089093307
+ITGA1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.16193987091138
+ITGB1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.684037906369099
+LAMC1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.12997708058068
+MSN,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.11842400376132
+SDCBP,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,0.735971860588512
+SPTAN1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.47411170317937
+SPTB,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,2.12699336971905
+SPTBN1,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.58113021030879
+TUBA1C,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,2.25704978303759
+TUBB2B,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,2.66155648284639
+TUBB4A,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.68027627924798
+TUBB6,L1cam Interactions,4.928370036283402e-4,Reactome,Cancer_vs_Healthy,1.63380301913851
+CD36,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,1.26444135011575
+GNAI1,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAQ,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,0.939392868202848
+GNAS,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,0.64074935765256
+GNB1,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,2.18674069509387
+IQGAP1,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,0.83567835897345
+MARCKS,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,1.38049439263566
+SLC2A1,Regulation Of Insulin Secr..,9.437346223665102e-4,Reactome,Cancer_vs_Healthy,2.84936394137929
+ANXA1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,2.43402555578179
+CD36,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,1.26444135011575
+COL1A2,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,2.77812073856066
+F13A1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,1.52721688387596
+FN1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,2.5661810586055
+FSCN1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,1.4834552381662
+HSP90B1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,0.73052466142353
+IL18,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Training_CR,0.894026216462475
+ITGB1,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,0.684037906369099
+VIM,IL-4/IL-13 Signaling,0.0010309336790366459,Reactome,Cancer_vs_Healthy,2.73008494764978
+ADD1,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.73709048461522
+ANXA1,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,2.43402555578179
+BGN,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.48441807120801
+CAV1,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.87414064595121
+CD44,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.77118565395032
+CLU,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,3.03340421072831
+DCN,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.86292667444177
+GPX3,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.64836399948248
+GSN,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.40701361783093
+IL18,Apoptosis,0.0017318144533420934,Hallmark,Training_CR,0.894026216462475
+LGALS3,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.21998048955439
+LUM,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.8170560975672
+PEA15,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.6052919388106
+RETSAT,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,3.0310061320009
+SOD1,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.0552290078898
+SPTAN1,Apoptosis,0.0017318144533420934,Hallmark,Cancer_vs_Healthy,1.47411170317937
+ACTB,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.45934123081213
+ACTR2,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.603600831903403
+ARPC1B,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.51562829959613
+ARPC3,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.792512818254224
+ARPC5,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,2.18344505849887
+CALM1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.771012708629357
+CFL1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.645837953271297
+CTNNA1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.686887586314258
+CTTN,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.11011956106942
+CYFIP1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.913791169133944
+DYNC1LI2,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.30740177876407
+FLNA,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.26299775496226
+IQGAP1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.83567835897345
+ITGB1,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.684037906369099
+MYH10,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.65460910848538
+MYH9,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.744627290914682
+MYL9,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.809224526439793
+PPP1R12B,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.00289117643017
+RHOG,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.978352842149466
+S100A8,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,2.31044262426685
+S100A9,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,2.67094942867346
+TUBA1C,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,2.25704978303759
+TUBB2B,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,2.66155648284639
+TUBB4A,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.68027627924798
+TUBB6,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,1.63380301913851
+YWHAZ,Rho Gtpase Effectors,0.001772099841698099,Reactome,Cancer_vs_Healthy,0.857888231163315
+AKAP12,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.4438677805447
+APOD,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.76901995648944
+BPGM,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,2.10454421345483
+CA2,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.86177563255215
+F13A1,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.52721688387596
+GPNMB,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.64277430910762
+GYPC,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,0.990109812152333
+LCP1,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,1.77580671429317
+PPBP,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,2.81638722626497
+RBP4,KRAS Signaling Up,0.002128403918979313,Hallmark,Cancer_vs_Healthy,2.2264450610274
+APOE,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,2.66632549570232
+B2M,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.50523332697839
+CST3,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.08589928581121
+GSN,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.40701361783093
+LTF,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.70665183730155
+LYZ,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.19074708018535
+SNCA,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,3.69965895111177
+TGFBI,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,1.19410532132821
+TTR,Amyloid Fiber Formation,0.0034170496071893475,Reactome,Cancer_vs_Healthy,2.35076553386145
+ACTB,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.45934123081213
+ANXA1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,2.43402555578179
+AP3B1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.25407807426084
+B2M,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.50523332697839
+CAV1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CD44,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.77118565395032
+CD81,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.7801865335292
+CTSG,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,0.998721111466935
+FLOT2,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,0.916863364528147
+GPNMB,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.64277430910762
+IL18,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Training_CR,0.894026216462475
+ITGB1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,0.684037906369099
+LGALS1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.18288364491768
+LGALS3,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.21998048955439
+LRG1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.86080223546785
+MSN,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.11842400376132
+PNP,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,2.78846760724161
+PRDX2,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,1.99706666866736
+S100A8,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,2.31044262426685
+S100A9,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,2.67094942867346
+THY1,Leukocyte Cell Cell Adhesion,0.0034239434816733206,GO:BP,Cancer_vs_Healthy,2.40084527437348
+ANXA1,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,2.43402555578179
+CD44,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.77118565395032
+CFL1,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CORO1B,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.18987039079704
+CORO1C,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.72858312031951
+CYFIP1,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.913791169133944
+DMTN,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.86527639842077
+FN1,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,2.5661810586055
+MSN,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.11842400376132
+MYH10,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,1.65460910848538
+MYH9,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.744627290914682
+PARVA,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.862980325103052
+RHOG,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.978352842149466
+S100B,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,2.28244384244162
+SEPTIN7,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,0.74385582215946
+SPARC,Regulation Of Cell Morphog..,0.004395665875358442,GO:BP,Cancer_vs_Healthy,2.29538766331821
+ANXA2,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,1.89882617030562
+CLEC3B,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,1.66773486980836
+CTSZ,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,0.765378275879172
+GSN,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,1.40701361783093
+KLKB1,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,1.85160646469582
+MYH9,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,0.861656391892517
+S100A10,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,1.53899912603882
+SERPINF2,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,2.18487070711746
+THBS1,Regulation Of Protein Matu..,0.0053848796040398975,GO:BP,Cancer_vs_Healthy,2.63732015348373
+AHNAK,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.38027142442205
+ANXA4,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.00485750883599
+CA2,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.86177563255215
+CAPG,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.48027448958949
+CD44,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.77118565395032
+CD81,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.7801865335292
+COL6A1,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.89166370022154
+CTSZ,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,0.765378275879172
+CYFIP1,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,0.913791169133944
+FAH,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.31570785459309
+GLIPR2,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.76883029524178
+MYO1C,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.32456096793946
+NDRG1,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,1.8911985429095
+PNP,IL2 Stat5 Signaling,0.00644891665320308,Hallmark,Cancer_vs_Healthy,2.78846760724161
+APOE,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.66632549570232
+APOL1,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.96381933416137
+CD163,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.44801356881375
+CD36,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.26444135011575
+COL1A2,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.77812073856066
+FTL,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Training_CR,1.88281235051924
+HPR,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.17321358965007
+HSP90B1,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,0.73052466142353
+JCHAIN,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.74228803344776
+SPARC,Scavenger Receptor Uptake,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.29538766331821
+CALM1,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,0.771012708629357
+CAV1,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.87414064595121
+CAV2,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.51262703351915
+GNAI1,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNB1,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Extra Nuclear Estrogen Sig..,0.007505287567780532,Reactome,Cancer_vs_Healthy,2.18674069509387
+ITGA1,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,1.16193987091138
+LGALS3,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,1.21998048955439
+MPP1,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,1.29641153889937
+PPBP,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,2.81638722626497
+PPIA,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,1.11062725085068
+PPIB,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,1.05601920311384
+S100A8,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,2.31044262426685
+S100A9,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,2.67094942867346
+THBS4,Neutrophil Chemotaxis,0.007853155304197855,GO:BP,Cancer_vs_Healthy,2.61766833535654
+ANXA1,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.43402555578179
+ANXA2,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.89882617030562
+AQP1,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.03758262322209
+CA2,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.86177563255215
+COL1A2,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.77812073856066
+FN1,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.5661810586055
+LAMB2,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.22924299104842
+LAMC1,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.12997708058068
+YAP1,Developmental Cell Lineage..,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.70733189053975
+AKR1C1,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.05009907258878
+AKR1C3,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.55939031121029
+APOE,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.66632549570232
+APOM,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.77406109891799
+CALM1,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,0.771012708629357
+GNB1,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,1.08426086186027
+RBP4,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.2264450610274
+RETSAT,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,3.0310061320009
+TTR,Visual Phototransduction,0.008187223592453174,Reactome,Cancer_vs_Healthy,2.35076553386145
+CAT,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,2.79859057459828
+FTL,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Training_CR,1.88281235051924
+G6PD,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,1.30564529065711
+GCLC,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,1.22103538649375
+GCLM,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,0.933646088582929
+GPX3,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,1.64836399948248
+MGST1,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,3.17852453030096
+PRDX2,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,1.99706666866736
+PTPA,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,0.834464559893583
+SOD1,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,1.0552290078898
+TXN,Reactive Oxygen Species Pa..,0.00894205902053756,Hallmark,Cancer_vs_Healthy,0.671990765545598
+APOE,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,2.66632549570232
+APOL1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,2.96381933416137
+CP,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,2.7178060679856
+CST3,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,1.08589928581121
+CTSG,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,0.998721111466935
+FBN1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,1.98934251200624
+FN1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,2.5661810586055
+HSP90B1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,0.73052466142353
+LAMB2,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,1.22924299104842
+LAMC1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,1.12997708058068
+LGALS1,Regulation Of Insulin Like..,0.011390624121971978,Reactome,Cancer_vs_Healthy,1.18288364491768
+DARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.50049210392131
+EPRS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.600021554243604
+FARSB,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.792992612892839
+GARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.587734543263661
+KARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.514302809872333
+LARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.521645586917341
+RARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.658764486517363
+VARS1,Cytosolic Trna Aminoacylat..,0.011751553008103387,Reactome,Cancer_vs_Healthy,-0.536460989710442
+AQP1,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.03758262322209
+B2M,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.50523332697839
+CD36,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.26444135011575
+CTSG,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,0.998721111466935
+DEFA3,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,2.31089836987518
+IL18,Defense Response To Bacter..,0.013022332064381473,GO:BP,Training_CR,0.894026216462475
+JCHAIN,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,2.74228803344776
+LTF,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.70665183730155
+LYZ,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.19074708018535
+PPBP,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,2.81638722626497
+RAB1A,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,1.04621246673758
+S100A8,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,2.31044262426685
+S100A9,Defense Response To Bacter..,0.013022332064381473,GO:BP,Cancer_vs_Healthy,2.67094942867346
+ANXA2,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.89882617030562
+CALM1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.771012708629357
+FN1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.5661810586055
+GNAQ,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.939392868202848
+GNAS,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.64074935765256
+GNB1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.18674069509387
+ITGB1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.684037906369099
+TLN1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.12972715784282
+YAP1,Cellular Responses To Mech..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.70733189053975
+ACTB,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.45934123081213
+ACTR2,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.603600831903403
+AGFG1,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.964243800844791
+AP2A1,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.632159077404328
+AP2A2,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.13628136273223
+AP2B1,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.495521028489943
+ARPC3,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.792512818254224
+ARPC5,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.18344505849887
+ARRB1,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.6447420272077
+CLTC,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.68253784752125
+CTTN,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.11011956106942
+EPS15,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.17439417528768
+GAPVD1,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.767462793001533
+PACSIN2,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.611472607608652
+PICALM,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.00894840975391
+STAM,Clathrin Mediated Endocyto..,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.777332929702027
+ANXA1,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.43402555578179
+CALM1,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.771012708629357
+GNAI1,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNAQ,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.939392868202848
+GNAS,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.64074935765256
+GNB1,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.18674069509387
+HEBP1,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.4583621403395
+PPBP,G Alpha I Signalling Events,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.81638722626497
+ACTB,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.45934123081213
+CALM1,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.771012708629357
+CTNNA1,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.686887586314258
+IQGAP1,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.83567835897345
+TUBA1C,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.25704978303759
+TUBB2B,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,2.66155648284639
+TUBB4A,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.68027627924798
+TUBB6,Rho Gtpases Activate Iqgaps,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.63380301913851
+CFL1,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.645837953271297
+DPYSL2,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.939202089093307
+ITGA1,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.16193987091138
+ITGB1,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.684037906369099
+MYH10,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.65460910848538
+MYH9,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.744627290914682
+MYL9,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.809224526439793
+RRAS,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,0.852486550764688
+TLN1,Semaphorin Interactions,0.013753805103821895,Reactome,Cancer_vs_Healthy,1.12972715784282
+AKAP12,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.4438677805447
+ANXA2,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.89882617030562
+BGN,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.48441807120801
+CAV1,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.87414064595121
+CAVIN1,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.40091936187795
+CAVIN3,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,2.81098009174441
+CP,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,2.7178060679856
+DCN,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.86292667444177
+HDLBP,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.07679467693541
+LXN,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,2.42948431225836
+MYH9,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,0.861656391892517
+NDRG1,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.8911985429095
+PGM2,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.38293732759783
+S100A4,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,2.20607943058965
+SELENBP1,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.1024312291512
+SLC2A1,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,2.84936394137929
+TGFBI,Hypoxia,0.018414529629343274,Hallmark,Cancer_vs_Healthy,1.19410532132821
+AKAP12,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.4438677805447
+ATP2B4,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.832535099643071
+FLNA,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.26299775496226
+GNAI1,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.71270874909773
+GNAQ,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.939392868202848
+GNAS,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.64074935765256
+GNB1,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.08426086186027
+GNG2,Adenylate Cyclase Modulati..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.18674069509387
+APOE,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.66632549570232
+CAV2,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.51262703351915
+CFL1,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.645837953271297
+FASN,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.67145472467098
+FBLN1,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.9353613362502
+GSN,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.40701361783093
+IFITM1,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.947424265448948
+LTF,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.70665183730155
+PPIB,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.05601920311384
+STOM,Modulation Of Process Of A..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.37394543422005
+ADD1,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.73709048461522
+CAPG,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.48027448958949
+CFL1,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CORO1B,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.18987039079704
+DMTN,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.86527639842077
+GSN,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.40701361783093
+MTPN,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.496540461800759
+SNCA,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,3.69965895111177
+SPTAN1,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.47411170317937
+SPTB,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.12699336971905
+SPTBN1,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.58113021030879
+TMOD1,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.22198664354272
+TMOD3,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.76297198931464
+TMOD4,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Training_CR,0.976508714791544
+TUBB4A,Negative Regulation Of Cyt..,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.68027627924798
+AKR1C1,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.05009907258878
+APOE,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.66632549570232
+APOM,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.77406109891799
+CAV1,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.87414064595121
+EHD1,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,1.25534414292826
+FABP4,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,2.4376162108068
+IL18,Sterol Homeostasis,0.01929264079581853,GO:BP,Training_CR,0.894026216462475
+NPC2,Sterol Homeostasis,0.01929264079581853,GO:BP,Cancer_vs_Healthy,0.865131521934067
+AP2A1,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.632159077404328
+AP2A2,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.13628136273223
+AP2B1,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.495521028489943
+CALM1,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.771012708629357
+GNAI1,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNB1,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.18674069509387
+TUBA1C,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.25704978303759
+TUBB2B,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.66155648284639
+TUBB4A,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.68027627924798
+TUBB6,Neurotransmitter Receptors..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.63380301913851
+CALM1,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.771012708629357
+CTTN,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.11011956106942
+FLNA,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.26299775496226
+MYH10,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.65460910848538
+MYH9,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYL12B,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.744627290914682
+MYL9,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.809224526439793
+PPP1R12B,Rho Gtpases Activate Paks,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.00289117643017
+ADH1C,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.26282349695436
+AKR1C3,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.55939031121029
+APOD,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.76901995648944
+APOE,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.66632549570232
+CALM1,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.771012708629357
+CAV1,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.87414064595121
+CAV2,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.51262703351915
+CTSD,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.788008737874737
+FASN,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.67145472467098
+GNAI1,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.30883966364327
+GNAI2,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.20518431523039
+GNAI3,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.71270874909773
+GNB1,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,2.18674069509387
+PLIN1,Signaling By Nuclear Recep..,0.019626705534375673,Reactome,Cancer_vs_Healthy,3.90758028080713
+COL1A2,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.77812073856066
+COL6A1,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.89166370022154
+CST3,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.08589928581121
+ITGB1,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,0.684037906369099
+MFAP4,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.98838502510846
+RCN3,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.12102130055464
+SERPINF2,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.18487070711746
+TNXB,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,0.990714943785164
+VIM,Collagen Metabolic Process,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.73008494764978
+ACTB,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.45934123081213
+ANXA1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.43402555578179
+AP3B1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.25407807426084
+B2M,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.50523332697839
+FBN1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.98934251200624
+FBXO7,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.72141265502231
+HLA-B,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,0.752315263454106
+IL18,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Training_CR,0.894026216462475
+LGALS1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.18288364491768
+LGALS3,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.21998048955439
+LTF,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.70665183730155
+PITHD1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.11948318012212
+PNP,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,2.78846760724161
+PRDX2,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.99706666866736
+SOD1,Regulation Of Hemopoiesis,0.021508029949417095,GO:BP,Cancer_vs_Healthy,1.0552290078898
+APOD,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.76901995648944
+CFL1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CORO1C,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.72858312031951
+CTTN,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.11011956106942
+DMTN,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.86527639842077
+FN1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,2.5661810586055
+LAMC1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.12997708058068
+S100A10,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.53899912603882
+SORBS1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.27052385928292
+THBS1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,2.63732015348373
+THY1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,2.40084527437348
+TLN1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,1.12972715784282
+TNS1,Cell Substrate Junction Or..,0.02282168375773316,GO:BP,Cancer_vs_Healthy,0.88725883744937994
+ANXA1,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,2.43402555578179
+CLU,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,3.03340421072831
+CTSG,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,0.998721111466935
+FN1,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,2.5661810586055
+HSPA12A,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,2.41128063302049
+IL18,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Training_CR,0.894026216462475
+NDRG1,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,1.8911985429095
+PTGDS,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,1.32492204657901
+S100A13,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Training_CR,0.72554438366417
+SNAP23,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,1.41872744578782
+SNCA,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,3.69965895111177
+THBS1,Myeloid Leukocyte Activation,0.0233757810602951,GO:BP,Cancer_vs_Healthy,2.63732015348373
+ARHGAP1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,1.31980993159742
+ARHGDIA,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.702445346911102
+ARHGDIB,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.935821264400282
+CAV1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,1.87414064595121
+CYFIP1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.913791169133944
+ESYT1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.849613924507224
+IQGAP1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.83567835897345
+ITGB1,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,0.684037906369099
+MCAM,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,2.40773293886942
+SNAP23,Rac1 Gtpase Cycle,0.023528518327819683,Reactome,Cancer_vs_Healthy,1.41872744578782
+ANXA1,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,2.43402555578179
+APOD,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.76901995648944
+CD81,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.7801865335292
+CD9,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.88304433783598
+COL6A1,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.89166370022154
+MUSTN1,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.12006467159888
+MYOZ1,Tissue Regeneration,0.02551777927820856,GO:BP,Training_CR,1.31363294044006
+YAP1,Tissue Regeneration,0.02551777927820856,GO:BP,Cancer_vs_Healthy,1.70733189053975
+ACAT2,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.84483783768162
+ANXA5,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.37495599677111
+CD9,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.88304433783598
+CLU,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,3.03340421072831
+FASN,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,2.67145472467098
+GNAI1,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.30883966364327
+LGALS3,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.21998048955439
+S100A11,Cholesterol Homeostasis,0.027168752582974964,Hallmark,Cancer_vs_Healthy,2.09993236592588
+ACTN4,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.55458726926722
+ARHGDIA,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,0.702445346911102
+CTTN,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.11011956106942
+EPB41,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,2.18741458869188
+EPB41L2,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.18665144669352
+FLNA,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.26299775496226
+FSCN1,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.4834552381662
+GSN,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.40701361783093
+MARCKS,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.38049439263566
+MYH10,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.65460910848538
+MYH9,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,0.861656391892517
+SPTAN1,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.47411170317937
+SPTBN1,Mitotic Spindle,0.027168752582974964,Hallmark,Cancer_vs_Healthy,1.58113021030879
+AKAP12,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.4438677805447
+AQP1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.03758262322209
+ARHGDIB,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.935821264400282
+CAP1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.29130580377629
+CFL1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CORO1C,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.72858312031951
+DMTN,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.86527639842077
+FN1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,2.5661810586055
+GLIPR2,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.76883029524178
+ILK,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.774927528549881
+IQGAP1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.83567835897345
+ITGB1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.684037906369099
+LRG1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,1.86080223546785
+THBS1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,2.63732015348373
+TNS1,Ameboidal Type Cell Migrat..,0.029629123663458042,GO:BP,Cancer_vs_Healthy,0.88725883744937994
+ACTB,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.45934123081213
+ACTR2,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.603600831903403
+ARPC1B,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.51562829959613
+ARPC3,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.792512818254224
+ARPC5,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,2.18344505849887
+CFL1,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.645837953271297
+CYFIP1,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.913791169133944
+MYH9,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYO1C,Fcgamma Receptor Fcgr Depe..,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.32456096793946
+ANXA1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,2.43402555578179
+ANXA2,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.89882617030562
+CALD1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.3595903050749
+CALM1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.771012708629357
+ITGA1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.16193987091138
+MYL12B,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.744627290914682
+MYL9,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,0.809224526439793
+SORBS1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.27052385928292
+TLN1,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.12972715784282
+TPM4,Smooth Muscle Contraction,0.02974887123048539,Reactome,Cancer_vs_Healthy,1.47328185509118
+ACTB,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.45934123081213
+ANXA2,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.89882617030562
+AP2A1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.632159077404328
+AP2B1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.495521028489943
+APOE,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,2.66632549570232
+ARF1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.872726312387147
+ARPC3,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.792512818254224
+ARRB1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.6447420272077
+ATG3,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.868979068900403
+B2M,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.50523332697839
+CAV1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CD36,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.26444135011575
+CLU,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,3.03340421072831
+CNN2,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.3494218072472
+EHD4,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.847446952539165
+LGALS3,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.21998048955439
+PACSIN2,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.611472607608652
+PICALM,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.00894840975391
+SDCBP,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,0.735971860588512
+SNCA,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,3.69965895111177
+SOD1,Regulation Of Endocytosis,0.030934092563592714,GO:BP,Cancer_vs_Healthy,1.0552290078898
+BGN,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.48441807120801
+CD44,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.77118565395032
+CSPG4,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.901070120648882
+DCN,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.86292667444177
+LUM,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.8170560975672
+OGN,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.92987990645142
+PRELP,Glycosaminoglycan Metabolism,0.032117136920568695,Reactome,Cancer_vs_Healthy,2.51894380406729
+AP2A1,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.632159077404328
+AP2A2,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.13628136273223
+AP2B1,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.495521028489943
+APOE,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,2.66632549570232
+CLTC,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.68253784752125
+HDLBP,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.07679467693541
+NPC2,Plasma Lipoprotein Assembl..,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.865131521934067
+ACTB,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.45934123081213
+AKAP12,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.4438677805447
+ARHGAP1,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.31980993159742
+CAV1,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.87414064595121
+ESYT1,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,0.849613924507224
+MCAM,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,2.40773293886942
+SNAP23,Rhof Gtpase Cycle,0.032117136920568695,Reactome,Cancer_vs_Healthy,1.41872744578782
+ACTB,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.45934123081213
+ANK1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,2.62566958554534
+ATP2B4,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.832535099643071
+CAV1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CD81,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.7801865335292
+CLTC,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.68253784752125
+EHD1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.25534414292826
+EHD2,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.72612338984373
+EHD4,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.847446952539165
+EPB41,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,2.18741458869188
+EPB41L2,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.18665144669352
+FLNA,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.26299775496226
+FLOT2,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.916863364528147
+GNAI1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.30883966364327
+HSP90B1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.73052466142353
+ILK,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.774927528549881
+ITGB1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.684037906369099
+LGALS3,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.21998048955439
+PICALM,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.00894840975391
+RAB8A,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.70407739224722
+RHOG,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,0.978352842149466
+S100A10,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.53899912603882
+SNCA,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,3.69965895111177
+SORBS1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.27052385928292
+SPTBN1,Protein Localization To Ce..,0.03302246295349985,GO:BP,Cancer_vs_Healthy,1.58113021030879
+AKAP12,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.4438677805447
+APOE,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,2.66632549570232
+ATP2B4,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,0.832535099643071
+CAV1,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CD36,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.26444135011575
+COMP,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,3.6044224856376
+GCLC,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.22103538649375
+GCLM,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,0.933646088582929
+ITGA1,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.16193987091138
+ITGB1,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,0.684037906369099
+SERPINF2,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,2.18487070711746
+SLC2A1,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,2.84936394137929
+SOD1,Vascular Process In Circul..,0.03387373868285889,GO:BP,Cancer_vs_Healthy,1.0552290078898
+ARHGAP1,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.31980993159742
+ARHGDIA,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,0.702445346911102
+CAV1,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.87414064595121
+CAVIN1,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.40091936187795
+FLOT2,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,0.916863364528147
+IQGAP1,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,0.83567835897345
+MCAM,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,2.40773293886942
+STOM,Rhoc Gtpase Cycle,0.03483807994351807,Reactome,Cancer_vs_Healthy,2.37394543422005
+ACTB,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.45934123081213
+GSN,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.40701361783093
+MPP1,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.29641153889937
+MSN,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.11842400376132
+MYH9,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,0.861656391892517
+MYO1C,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.32456096793946
+SPTAN1,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.47411170317937
+SPTBN1,Sensory Processing Of Sound,0.03483807994351807,Reactome,Cancer_vs_Healthy,1.58113021030879
+APOD,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.76901995648944
+APOE,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,2.66632549570232
+ARHGDIB,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.935821264400282
+ATP2B4,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.832535099643071
+CFL1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CLIC4,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.641749724783953
+CNN2,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.3494218072472
+CORO1B,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.18987039079704
+CORO1C,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.72858312031951
+CTNNA1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.686887586314258
+DCN,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.86292667444177
+DDT,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.983857785405295
+FBLN1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,1.9353613362502
+IFITM1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.947424265448948
+RRAS,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,0.852486550764688
+SERPINF1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,2.01234926760307
+THBS1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,2.63732015348373
+THY1,Negative Regulation Of Loc..,0.03675309220284656,GO:BP,Cancer_vs_Healthy,2.40084527437348
+BGN,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.48441807120801
+CD44,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.77118565395032
+COL6A1,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.89166370022154
+COMP,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,3.6044224856376
+EFEMP1,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.65146379411572
+LUM,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.8170560975672
+MUSTN1,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.12006467159888
+OGN,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.92987990645142
+TGFBI,Cartilage Development,0.03711398304828215,GO:BP,Cancer_vs_Healthy,1.19410532132821
+ANXA2,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.89882617030562
+ANXA4,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.00485750883599
+ATP2B4,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,0.832535099643071
+CAV1,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.87414064595121
+COL1A2,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,2.77812073856066
+EFEMP1,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.65146379411572
+LAMC1,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.12997708058068
+MGLL,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.40721256292138
+SRI,UV Response Dn,0.04097815128513659,Hallmark,Cancer_vs_Healthy,1.39871714636472
+CAVIN3,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,2.81098009174441
+EHD2,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.72612338984373
+EPB41,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,2.18741458869188
+EPB41L2,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.18665144669352
+IQGAP1,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.83567835897345
+LCP1,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.77580671429317
+TLN1,Cortical Actin Cytoskeleto..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.12972715784282
+CAPG,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.48027448958949
+CST3,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.08589928581121
+CTSG,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.998721111466935
+FSCN1,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.4834552381662
+GSN,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.40701361783093
+LAMC1,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.12997708058068
+LCP1,Extracellular Matrix Disas..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.77580671429317
+ARHGAP1,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.31980993159742
+B2M,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.50523332697839
+CLTC,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.68253784752125
+CYBRD1,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.7896529961534
+FTL,Iron Ion Transport,0.04176845384006368,GO:BP,Training_CR,1.88281235051924
+LTF,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.70665183730155
+STEAP4,Iron Ion Transport,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.907717969844684
+CD44,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.77118565395032
+GCLC,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,1.22103538649375
+GCLM,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.933646088582929
+IQGAP1,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.83567835897345
+ITGB1,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,0.684037906369099
+SNCA,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,3.69965895111177
+THBS1,Response To Fibroblast Gro..,0.04176845384006368,GO:BP,Cancer_vs_Healthy,2.63732015348373
+ADD1,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.73709048461522
+CLIC4,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,0.641749724783953
+FASN,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,2.67145472467098
+FLNA,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.26299775496226
+IQGAP1,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,0.83567835897345
+LAMB2,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.22924299104842
+MSN,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.11842400376132
+RAB1A,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.04621246673758
+RAP1B,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.28137525972958
+TMOD1,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.22198664354272
+VIM,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,2.73008494764978
+YAP1,Epithelial Cell Development,0.042002821378974584,GO:BP,Cancer_vs_Healthy,1.70733189053975
+CD81,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,1.7801865335292
+DDT,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,0.983857785405295
+FABP4,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,2.4376162108068
+IL18,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Training_CR,0.894026216462475
+LGALS1,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,1.18288364491768
+S100A8,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,2.31044262426685
+S100A9,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,2.67094942867346
+SNCA,Positive Regulation Of Inf..,0.0453528611477161,GO:BP,Cancer_vs_Healthy,3.69965895111177
+ANXA1,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,2.43402555578179
+GNAQ,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.939392868202848
+GNB1,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,1.08426086186027
+GNB2,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.640536835590961
+GNG12,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.957827973571813
+GNG2,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,2.18674069509387
+MGLL,G Alpha Q Signalling Events,0.04550918401285335,Reactome,Cancer_vs_Healthy,1.40721256292138
+ACTB,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,1.45934123081213
+ACTR2,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.603600831903403
+ARPC1B,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,1.51562829959613
+ARPC3,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.792512818254224
+ARPC5,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,2.18344505849887
+CYFIP1,Rho Gtpases Activate Wasps..,0.04550918401285335,Reactome,Cancer_vs_Healthy,0.913791169133944
+AKR1C2,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.68626198051991
+AKR1C3,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.55939031121029
+AQP1,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.03758262322209
+GNAI1,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.30883966364327
+GNAS,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,0.64074935765256
+GNB1,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.08426086186027
+GNG2,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,2.18674069509387
+MSN,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,1.11842400376132
+SERPINF1,Cellular Response To Ketone,0.046203903900403125,GO:BP,Cancer_vs_Healthy,2.01234926760307
+ACTR2,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.596223791403077
+ACTR3,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.603600831903403
+ATG3,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.868979068900403
+CAV1,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.87414064595121
+CFL1,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.645837953271297
+CORO1C,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.72858312031951
+CTTN,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.11011956106942
+CYFIP1,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.913791169133944
+DMTN,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.86527639842077
+FSCN1,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.4834552381662
+RHOG,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.978352842149466
+SEPTIN7,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,0.74385582215946
+YAP1,Regulation Of Cell Project..,0.04678364857536108,GO:BP,Cancer_vs_Healthy,1.70733189053975
+DARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.50049210392131
+EPRS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.600021554243604
+FARSB,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.792992612892839
+GARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.587734543263661
+KARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.514302809872333
+LARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.521645586917341
+LRRC47,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.707767551171802
+RARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.658764486517363
+VARS1,Amino Acid Activation,0.047447285387176096,GO:BP,Cancer_vs_Healthy,-0.536460989710442

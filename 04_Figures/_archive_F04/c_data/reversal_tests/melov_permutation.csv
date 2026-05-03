@@ -1,0 +1,2 @@
+d_pre,d_post,reversal_pct,reversal_pct_ci_lower,reversal_pct_ci_upper,observed_delta,p_value,p_value_ci_lower,p_value_ci_upper,n_cancer_proteins,n_permutations,n_boot_reversal_pct
+33.05872804568108,33.453080053359166,-1.19,-2.5,0.23,-0.3943520076780871,0.5157,0.505852,0.525539,946,10000,2000

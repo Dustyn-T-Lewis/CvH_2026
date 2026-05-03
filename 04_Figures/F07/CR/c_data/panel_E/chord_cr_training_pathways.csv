@@ -1,0 +1,4 @@
+pathway_label,pathway_padj,pathway_db,n_overlap,mean_logFC,direction
+Collagen Biosynthesis,2.6273032502994184e-4,Reactome,8,1.811513914191355,Up
+EMT,0.003962694041405008,Hallmark,12,1.5951065946346583,Up
+Binding And Uptake Of Liga..,0.008328224836112067,Reactome,7,1.5875144326061736,Up

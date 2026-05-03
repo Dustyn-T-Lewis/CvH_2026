@@ -1,0 +1,61 @@
+pathway,pattern,n,total,fraction
+Amino Acid & Cofactor Metabolism,Shared,0,30,0
+Amino Acid & Cofactor Metabolism,CRE-specific,4,30,0.1333
+Amino Acid & Cofactor Metabolism,PLA-specific,16,30,0.5333
+Amino Acid & Cofactor Metabolism,Interaction,10,30,0.3333
+Carbohydrate & Energy Metabolism,Shared,0,21,0
+Carbohydrate & Energy Metabolism,CRE-specific,2,21,0.0952
+Carbohydrate & Energy Metabolism,PLA-specific,13,21,0.619
+Carbohydrate & Energy Metabolism,Interaction,6,21,0.2857
+Circulatory System,Shared,0,5,0
+Circulatory System,CRE-specific,1,5,0.2
+Circulatory System,PLA-specific,1,5,0.2
+Circulatory System,Interaction,3,5,0.6
+Cytoskeleton & Motility,Shared,1,26,0.0385
+Cytoskeleton & Motility,CRE-specific,2,26,0.0769
+Cytoskeleton & Motility,PLA-specific,10,26,0.3846
+Cytoskeleton & Motility,Interaction,13,26,0.5
+DNA & Cell Cycle,Shared,0,26,0
+DNA & Cell Cycle,CRE-specific,4,26,0.1538
+DNA & Cell Cycle,PLA-specific,11,26,0.4231
+DNA & Cell Cycle,Interaction,11,26,0.4231
+Development,Shared,0,3,0
+Development,CRE-specific,0,3,0
+Development,PLA-specific,2,3,0.6667
+Development,Interaction,1,3,0.3333
+ECM & Adhesion,Shared,0,25,0
+ECM & Adhesion,CRE-specific,6,25,0.24
+ECM & Adhesion,PLA-specific,8,25,0.32
+ECM & Adhesion,Interaction,11,25,0.44
+Immune & Inflammation,Shared,0,14,0
+Immune & Inflammation,CRE-specific,2,14,0.1429
+Immune & Inflammation,PLA-specific,9,14,0.6429
+Immune & Inflammation,Interaction,3,14,0.2143
+Lipid Metabolism,Shared,0,19,0
+Lipid Metabolism,CRE-specific,1,19,0.0526
+Lipid Metabolism,PLA-specific,10,19,0.5263
+Lipid Metabolism,Interaction,8,19,0.4211
+Mitochondria & Energy,Shared,0,12,0
+Mitochondria & Energy,CRE-specific,0,12,0
+Mitochondria & Energy,PLA-specific,11,12,0.9167
+Mitochondria & Energy,Interaction,1,12,0.0833
+Muscle & Contractile,Shared,0,8,0
+Muscle & Contractile,CRE-specific,0,8,0
+Muscle & Contractile,PLA-specific,4,8,0.5
+Muscle & Contractile,Interaction,4,8,0.5
+Protein Homeostasis,Shared,0,40,0
+Protein Homeostasis,CRE-specific,4,40,0.1
+Protein Homeostasis,PLA-specific,17,40,0.425
+Protein Homeostasis,Interaction,19,40,0.475
+Transcription & Chromatin,Shared,1,18,0.0556
+Transcription & Chromatin,CRE-specific,6,18,0.3333
+Transcription & Chromatin,PLA-specific,8,18,0.4444
+Transcription & Chromatin,Interaction,3,18,0.1667
+Translation & Ribosome,Shared,0,14,0
+Translation & Ribosome,CRE-specific,1,14,0.0714
+Translation & Ribosome,PLA-specific,6,14,0.4286
+Translation & Ribosome,Interaction,7,14,0.5
+Transport,Shared,1,44,0.0227
+Transport,CRE-specific,7,44,0.1591
+Transport,PLA-specific,19,44,0.4318
+Transport,Interaction,17,44,0.3864

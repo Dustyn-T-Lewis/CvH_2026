@@ -1,0 +1,13 @@
+n_proteins = 2542
+n_samples = 38
+pct_missing = 17.9
+n_complete = 891
+n_mar_proteins = 844
+n_mnar_proteins = 807
+n_mar_values = 4644
+n_mnar_values = 12642
+pct_mar_values = 26.9
+classification_method = 3-method consensus (kmeans + logistic + left-tail)
+n_unreliable = 357
+best_method = missForest
+oob_error = 0.1639

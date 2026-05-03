@@ -1,0 +1,9 @@
+metric,value,interpretation
+observed_r_all,-0.18032444894134805,Pearson r across all proteins
+observed_r_dep,-0.2914295001443151,Pearson r within cancer-DEPs (Pi<0.05)
+structural_r_analytical,-0.4564354645876384,Expected r from shared CR_T1 (simple formula)
+structural_r_design_matrix,-0.4540766091864999,Expected r from limma contrast covariance (exact)
+excess_r_all,0.2737521602451518,Biology-only r (all proteins)
+excess_r_dep,0.16264710904218477,Biology-only r (cancer-DEPs)
+null_sim_p,1,Observed r more negative than structural? (n_sim=10000)
+fisher_z_corrected_p,2.2298770796334204e-4,Is corrected cancer-DEP r ≠ 0?

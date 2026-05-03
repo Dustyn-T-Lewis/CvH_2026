@@ -1,0 +1,6 @@
+model,contrast,n_subjects,within_cor,effective_sigma,min_detectable_d,min_detectable_logFC,power,alpha
+CRvH,Cancer_vs_Healthy,10,NA,0.9271,1.1563,1.072,0.8,0.1
+CRvH,Training_CR,14,0.2463175820442955,0.8048,0.702,0.565,0.8,0.1
+CR,Training_CRE,7,0.28311079572402237,0.8514,1.0666,0.9082,0.8,0.1
+CR,Training_PLA,7,0.28311079572402237,0.8514,1.0666,0.9082,0.8,0.1
+CR,Supplement_Interaction,7,0.28311079572402237,0.8514,1.0666,0.9082,0.8,0.1

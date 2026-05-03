@@ -1,0 +1,5 @@
+quadrant,max_neg_log10_pvalue,n_hotspot_genes,n_ora_pathways,matrix_rows,matrix_cols,n_shared_genes
+Concordant_Up,0.47,1,0,215,215,2350
+Concordant_Down,0.03,2,0,215,215,2350
+Discordant_CancerUp_TrainDown,0.69,2,0,215,215,2350
+Discordant_CancerDown_TrainUp,0.4,1,0,215,215,2350

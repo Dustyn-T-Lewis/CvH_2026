@@ -1,0 +1,8 @@
+"test","comparison","statistic","p_value","shapiro_p","n"
+"mixed_anova_supp","Supplement",4.221,0.059,NA,16
+"mixed_anova_time","Time",18.371,0.000753,NA,16
+"mixed_anova_int","Supp:Time",4.482,0.053,NA,16
+"baseline_CR_vs_H","CR(BL) vs H",0.0982522953417075,0.922794740432428,NA,26
+"paired_t_CRE","CRE Pre vs Post",4.12880927322514,0.00330386816236877,0.819855990933607,9
+"paired_t_PLA","PLA Pre vs Post",2.043382825531,0.0870357656934212,0.0197994194296243,7
+"unpaired_t_delta","CRE delta vs PLA delta",2.25295502744849,0.0416851548304285,NA,16
