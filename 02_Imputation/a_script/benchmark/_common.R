@@ -58,28 +58,25 @@ cat(sprintf("Classifiers: km (%d MNAR) vs logistic (%d MNAR), %.1f%% agreement\n
             sum(is_mnar_km, na.rm = TRUE), sum(is_mnar_logistic),
             agree * 100))
 
-# --- Method registry ---
-HYBRID_METHODS <- c("BPCA_QRILC", "KNN_QRILC", "imp4p_mixed", "msImpute_v2_mnar")
-
+# --- Method registry (17 methods: 9 MAR + 4 MNAR + 1 ensemble + 1 model-free + 2 controls)
+# Mirrors A_YvO_2026/02_Imputation/a_script/benchmark/_common.R for direct
+# cross-pipeline comparability. CvH-only hybrids (BPCA_QRILC, KNN_QRILC,
+# imp4p_mixed, msImpute_v2_mnar, MAI, RF_MsCoreUtils) remain in methods/
+# as a library and can be re-registered here if needed.
 BASE_METHODS <- c(
-  "BPCA_QRILC", "KNN_QRILC", "MinProb", "MICE", "ProJect",
-  "missForest", "imp4p_RF", "imp4p_mixed", "GSimp", "DreamAI",
-  "msImpute_v2", "msImpute_v2_mnar", "MAI", "Half_minimum",
-  "imputePCA", "Non_imputed",
-  "MinDet", "QRILC", "zero", "knn_standalone", "bpca_standalone",
-  "RF_MsCoreUtils", "SVD"
+  "MinProb", "MICE", "ProJect", "missForest", "imp4p_RF",
+  "GSimp", "DreamAI", "msImpute_v2", "Half_minimum", "imputePCA",
+  "Non_imputed", "MinDet", "QRILC", "zero",
+  "knn_standalone", "bpca_standalone", "SVD"
 )
 
 METHOD_CLASS <- c(
-  BPCA_QRILC = "Hybrid", KNN_QRILC = "Hybrid", MinProb = "MNAR",
-  MICE = "MAR", ProJect = "Model-free", missForest = "MAR",
-  imp4p_RF = "MAR", imp4p_mixed = "Hybrid", GSimp = "MNAR",
-  DreamAI = "Ensemble", msImpute_v2 = "MAR", msImpute_v2_mnar = "Hybrid",
-  MAI = "Hybrid", Half_minimum = "MNAR", imputePCA = "MAR",
-  Non_imputed = "Reference",
+  MinProb = "MNAR", MICE = "MAR", ProJect = "Model-free",
+  missForest = "MAR", imp4p_RF = "MAR", GSimp = "MNAR",
+  DreamAI = "Ensemble", msImpute_v2 = "MAR", Half_minimum = "MNAR",
+  imputePCA = "MAR", Non_imputed = "Reference",
   MinDet = "MNAR", QRILC = "MNAR", zero = "Baseline",
-  knn_standalone = "MAR", bpca_standalone = "MAR",
-  RF_MsCoreUtils = "MAR", SVD = "MAR"
+  knn_standalone = "MAR", bpca_standalone = "MAR", SVD = "MAR"
 )
 
 # --- Ensure output directory ---

@@ -27,11 +27,20 @@ obs_vals_all <- norm_mat[obs_idx]
 q1_threshold <- quantile(obs_vals_all, 0.25)
 q1_idx <- obs_idx[obs_vals_all <= q1_threshold]
 
+# GSimp excluded from reconstruction: ~132 min per imputation x 10 calls = ~22 hrs.
+# Its downstream/stability metrics are computed from the cached imputation.
+SKIP_RECON <- c("GSimp")
+
 results <- vector("list", length(eval_methods))
 names(results) <- eval_methods
 
 for (mname in eval_methods) {
   cat(sprintf("  Reconstruct: %s ", mname))
+
+  if (mname %in% SKIP_RECON) {
+    cat("SKIP (too slow for repeated re-imputation)\n")
+    next
+  }
 
   info <- find_method_fn(mname)
   if (is.null(info)) {
