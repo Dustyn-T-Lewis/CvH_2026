@@ -374,4 +374,7 @@ saveRDS(intermediates, file.path(cfg$data_dir, "00_report_intermediates.rds"))
 cat(sprintf("Done: %d proteins x %d samples -> %s/\n",
             nrow(dal$data), ncol(dal$data), cfg$data_dir))
 
+# proteoDA QC routines open an empty default device under Rscript; clean it up.
+if (file.exists("Rplots.pdf")) file.remove("Rplots.pdf")
+
 writeLines(capture.output(sessionInfo()), file.path(cfg$data_dir, "sessionInfo.txt"))
