@@ -11,11 +11,9 @@ library(proteoDA)
 library(openxlsx)
 library(stringr)
 
-set.seed(42)
 setwd(rprojroot::find_rstudio_root_file())
 source("R/cvh_design.R")
-
-`%||%` <- function(x, y) if (!is.null(x)) x else y
+set.seed(42)
 
 cfg <- list(
   sam_rds     = "02-03_Sam's_Results/01_normalized_DAList_SURV_stringent_muscle.RDS",
@@ -35,14 +33,45 @@ mat_all <- sam$data
 
 ann_sam <- as.data.frame(sam$annotation)[, c("uniprot_id", "protein", "gene", "description")]
 
+# Build CvH-schema metadata from Sam's columns and validate the
+# repeated-measures structure before fitting. derive_cvh_analysis_metadata
+# defaults to rejecting T2-only singletons; Sam's data has them (CR007_T2
+# etc), so we replicate the derivation and pass the flag explicitly.
 md <- as.data.frame(sam$metadata)
-meta_all <- tibble::tibble(
-  sample_id = normalize_cvh_col_id(md$sample_id),
-  subject   = normalize_cvh_subject_id(md$pid),
-  group     = ifelse(md$cancer == "CTL", "H_T1", md$supp_time),
-  timepoint = md$timepoint,
-  supplement = dplyr::na_if(as.character(md$supp), "")
+cvh_meta <- tibble::tibble(
+  Col_ID     = normalize_cvh_col_id(md$sample_id),
+  Subject_ID = normalize_cvh_subject_id(md$pid),
+  Timepoint  = stringr::str_trim(md$timepoint),
+  Supplement = dplyr::na_if(stringr::str_trim(md$supp), ""),
+  Cancer     = stringr::str_trim(md$cancer),
+  Group = dplyr::case_when(
+    md$cancer == "SURV" & md$supp == "CRE" ~ "CR_CRE",
+    md$cancer == "SURV" & md$supp == "PLA" ~ "CR_PLA",
+    md$cancer == "CTL"                     ~ "PPS",
+    TRUE ~ NA_character_
+  ),
+  Group_Time = dplyr::case_when(
+    md$cancer == "SURV" & md$supp == "CRE" ~ paste0("CRE_", md$timepoint),
+    md$cancer == "SURV" & md$supp == "PLA" ~ paste0("PLA_", md$timepoint),
+    md$cancer == "CTL"  & md$timepoint == "T1" ~ "H_T1",
+    TRUE ~ NA_character_
+  )
 )
+stopifnot(all(!is.na(cvh_meta$Group)), all(!is.na(cvh_meta$Group_Time)))
+assert_cvh_design_rules(
+  cvh_meta[, c("Col_ID", "Subject_ID", "Group", "Timepoint", "Group_Time", "Supplement")],
+  context = "Sam's reconciled metadata",
+  allow_t2_only_singletons = TRUE
+)
+
+meta_all <- tibble::tibble(
+  sample_id  = cvh_meta$Col_ID,
+  subject    = cvh_meta$Subject_ID,
+  group      = cvh_meta$Group_Time,
+  timepoint  = cvh_meta$Timepoint,
+  supplement = cvh_meta$Supplement
+)
+
 colnames(mat_all) <- normalize_cvh_col_id(colnames(mat_all))
 stopifnot(setequal(meta_all$sample_id, colnames(mat_all)))
 mat_all <- mat_all[, meta_all$sample_id]

@@ -40,19 +40,22 @@ read_ours <- function(dir, cname) {
     warning("Missing: ", f)
     return(NULL)
   }
-  read_csv(f, show_col_types = FALSE) |>
-    select(uniprot_id, gene = any_of("gene"), logFC, t,
-           P.Value, adj.P.Val) |>
+  out <- read_csv(f, show_col_types = FALSE) |>
     distinct(uniprot_id, .keep_all = TRUE)
+  if (!"gene" %in% names(out)) out$gene <- NA_character_
+  out |> select(uniprot_id, gene, logFC, t, P.Value, adj.P.Val)
 }
 
 # Helper -- read Sam's limma sheet
 read_sam <- function(sheet) {
-  read_xlsx(cfg$sam_xlsx, sheet = sheet) |>
-    select(uniprot_id, gene = any_of("gene"), logFC,
-           t, P.Value, adj.P.Val) |>
+  out <- read_xlsx(cfg$sam_xlsx, sheet = sheet) |>
     distinct(uniprot_id, .keep_all = TRUE)
+  if (!"gene" %in% names(out)) out$gene <- NA_character_
+  out |> select(uniprot_id, gene, logFC, t, P.Value, adj.P.Val)
 }
+
+# Sheet-name uniqueness guard (substr 31 is Excel's hard limit)
+stopifnot(!any(duplicated(substr(names(contrast_map), 1, 31))))
 
 cat("Sheets in Sam's xlsx:\n")
 print(excel_sheets(cfg$sam_xlsx))
@@ -80,6 +83,9 @@ for (sam_c in names(contrast_map)) {
                 select(-any_of("gene")),
               by = "uniprot_id")
 
+  n_sam_total <- sum(!is.na(three$sam_logFC))
+  n_oh_total  <- sum(!is.na(three$oh_logFC))
+  n_oo_total  <- sum(!is.na(three$oo_logFC))
   matched <- three |> filter(!is.na(sam_logFC) & !is.na(oh_logFC) & !is.na(oo_logFC))
 
   # Significance flags at FDR < 0.10
@@ -87,14 +93,17 @@ for (sam_c in names(contrast_map)) {
   oh_sig  <- which(matched$oh_adj  < cfg$fdr_thresh & !is.na(matched$oh_adj))
   oo_sig  <- which(matched$oo_adj  < cfg$fdr_thresh & !is.na(matched$oo_adj))
 
-  rho_sam_oh <- suppressWarnings(cor(matched$sam_logFC, matched$oh_logFC, method = "spearman"))
-  rho_sam_oo <- suppressWarnings(cor(matched$sam_logFC, matched$oo_logFC, method = "spearman"))
-  rho_oh_oo  <- suppressWarnings(cor(matched$oh_logFC,  matched$oo_logFC, method = "spearman"))
+  rho_sam_oh <- cor(matched$sam_logFC, matched$oh_logFC, method = "spearman", use = "complete.obs")
+  rho_sam_oo <- cor(matched$sam_logFC, matched$oo_logFC, method = "spearman", use = "complete.obs")
+  rho_oh_oo  <- cor(matched$oh_logFC,  matched$oo_logFC, method = "spearman", use = "complete.obs")
 
   summary_rows[[sam_c]] <- tibble(
     sam_contrast = sam_c,
     our_contrast = ours_c,
-    n_proteins   = nrow(matched),
+    n_sam_total  = n_sam_total,
+    n_oh_total   = n_oh_total,
+    n_oo_total   = n_oo_total,
+    n_matched    = nrow(matched),
     n_sig_sam    = length(sam_sig),
     n_sig_oh     = length(oh_sig),
     n_sig_oo     = length(oo_sig),
@@ -106,14 +115,20 @@ for (sam_c in names(contrast_map)) {
     rho_oh_oo  = round(rho_oh_oo,  3)
   )
 
-  cat(sprintf("  N matched = %d | sig (Sam %d, OurOnHis %d, OurOnOurs %d)\n",
-              nrow(matched), length(sam_sig), length(oh_sig), length(oo_sig)))
+  cat(sprintf("  Totals: Sam=%d, OurOnHis=%d, OurOnOurs=%d | matched=%d (dropped Sam=%d, OnHis=%d, OnOurs=%d)\n",
+              n_sam_total, n_oh_total, n_oo_total, nrow(matched),
+              n_sam_total - nrow(matched),
+              n_oh_total  - nrow(matched),
+              n_oo_total  - nrow(matched)))
+  cat(sprintf("  Sig (FDR<%.2f): Sam=%d, OurOnHis=%d, OurOnOurs=%d\n",
+              cfg$fdr_thresh, length(sam_sig), length(oh_sig), length(oo_sig)))
   cat(sprintf("  rho: Sam-OurOnHis = %.3f, Sam-OurOnOurs = %.3f, OurOnHis-OurOnOurs = %.3f\n",
               rho_sam_oh, rho_sam_oo, rho_oh_oo))
 
   # Sheet: per-protein 3-way table, sorted by min adj.P
   sheet_df <- matched |>
-    mutate(min_adj = pmin(sam_adj, oh_adj, oo_adj, na.rm = TRUE)) |>
+    mutate(min_adj = suppressWarnings(pmin(sam_adj, oh_adj, oo_adj, na.rm = TRUE)),
+           min_adj = ifelse(is.infinite(min_adj), NA_real_, min_adj)) |>
     arrange(min_adj) |>
     select(uniprot_id, gene,
            sam_logFC, sam_adj,

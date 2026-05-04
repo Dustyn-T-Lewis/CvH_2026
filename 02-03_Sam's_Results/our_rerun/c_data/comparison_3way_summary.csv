@@ -1,6 +1,6 @@
-sam_contrast,our_contrast,n_proteins,n_sig_sam,n_sig_oh,n_sig_oo,overlap_sam_oh,overlap_sam_oo,overlap_oh_oo,rho_sam_oh,rho_sam_oo,rho_oh_oo
-Baseline_SURVvCTL,Cancer_vs_Healthy,1928,532,466,616,429,457,449,0.955,0.903,0.973
-Baseline_CREvPLA,Baseline_Supplement,1802,0,0,0,0,0,0,0.653,0.257,0.773
-Training_CRE,Training_CRE,1802,4,2,0,2,0,0,0.852,0.82,0.901
-Training_PLA,Training_PLA,1802,21,0,0,0,0,0,0.861,0.358,0.651
-Interaction_supp,Supplement_Interaction,1802,3,1,0,1,0,0,0.795,0.368,0.657
+sam_contrast,our_contrast,n_sam_total,n_oh_total,n_oo_total,n_matched,n_sig_sam,n_sig_oh,n_sig_oo,overlap_sam_oh,overlap_sam_oo,overlap_oh_oo,rho_sam_oh,rho_sam_oo,rho_oh_oo
+Baseline_SURVvCTL,Cancer_vs_Healthy,1944,1944,2408,1928,532,466,616,429,457,449,0.955,0.903,0.973
+Baseline_CREvPLA,Baseline_Supplement,1871,1944,2465,1802,0,0,0,0,0,0,0.653,0.257,0.773
+Training_CRE,Training_CRE,1871,1944,2500,1802,4,2,0,2,0,0,0.852,0.82,0.901
+Training_PLA,Training_PLA,1871,1943,2416,1802,21,0,0,0,0,0,0.861,0.358,0.651
+Interaction_supp,Supplement_Interaction,1871,1943,2401,1802,3,1,0,1,0,0,0.795,0.368,0.657
