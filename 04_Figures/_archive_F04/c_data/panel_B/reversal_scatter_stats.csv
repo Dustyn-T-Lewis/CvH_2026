@@ -1,8 +1,0 @@
-metric,estimate,ci_lower,ci_upper,p_value,n,note
-Pearson_r,-0.2700055499458414,-0.3067564774786973,-0.23245070433478085,2.9998765753516884e-41,2393,95% CI from cor.test()
-Spearman_rho,-0.31612205298578827,-0.35173637529206464,-0.27959390714927973,1.113301399594409e-56,2393,95% CI via Fisher z-transformation
-Reversal_pct,62.348516506477225,60.342666109486,64.27078980359381,NA,2393,"95% BCa bootstrap CI (10000 replicates, all proteins)"
-Pearson_r_sig,-0.3438658963621569,-0.4121132433677731,-0.2717814980295996,2.5678608783849344e-18,608,Sig proteins only -- 95% CI from cor.test()
-Spearman_rho_sig,-0.33763869495929216,-0.40867507159405864,-0.26029403529128875,1.1496000691968184e-17,608,Sig proteins only -- 95% BCa bootstrap CI (10000 replicates)
-Reversal_pct_sig,68.0921052631579,NA,NA,NA,608,Sig proteins only -- no CI
-Melov_magnitude_reversal_pct,-1.19,-2.5,0.23,0.5157,946,Melov permutation test (10000 perms)

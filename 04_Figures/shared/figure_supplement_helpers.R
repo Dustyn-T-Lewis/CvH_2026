@@ -1,4 +1,4 @@
-# Excel supplement helpers used by every figure's 90_stitch_figure.R.
+# Excel supplement helpers used by every figure's 90_stitch_F0x.R.
 # Pattern: panel scripts write clean per-panel CSVs; the stitcher reads them
 # via safe_read() and writes one panel-labeled workbook to c_data/F0X_supplementary.xlsx.
 # After the workbook is saved, cleanup_after_workbook() removes the consumed

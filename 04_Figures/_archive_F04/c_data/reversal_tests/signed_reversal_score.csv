@@ -1,2 +1,0 @@
-r,ci_lower,ci_upper,p_value,n_proteins,interpretation
--0.2701,-0.3068,-0.2325,3.0193837978415345e-41,2392,Negative: training opposes cancer signature globally

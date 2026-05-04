@@ -1,2 +1,0 @@
-cancer_up_training_down,cancer_up_training_up,cancer_down_training_up,cancer_down_training_down,n_reversed,n_exacerbated,n_negligible,pct_reversed,pct_reversed_ci_lower,pct_reversed_ci_upper,fisher_or,fisher_or_ci_lower,fisher_or_ci_upper,fisher_p,n_cancer_proteins
-322,188,327,96,301,86,546,32.3,29.3,35.4,0.172,0.127,0.231,3.748164070933024e-36,933
