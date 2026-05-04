@@ -1,19 +1,24 @@
 # CvH 2026 -- Cancer Recovery Skeletal Muscle Proteomics
 
-This repository contains the CvH proteomics analysis adapted from the validated
-`A_YvO_2026` workflow, but rederived for the actual CvH experimental design
-rather than copied from YvO assumptions.
+Adapted from the validated `A_YvO_2026` workflow, rederived for the actual CvH
+experimental design rather than copied from YvO assumptions.
 
-The current pipeline is organized as:
+## Pipeline layout
 
-`00_input -> 01_normalization -> 02_Imputation -> 03_DEP -> 05_WGCNA -> 04_Figures`
+```
+00_input        raw matrix + metadata + HPA annotations
+01_normalization HPA filter, blood removal, dedup, missingness, outliers, cycloess
+02_Imputation    MAR/MNAR consensus + missForest (live); 17-method benchmark (manual)
+03_DEP           two-model proteoDA/limma + sensitivity arms in xlsx supplement
+04_Figures       per-figure F01..F08 panel scripts (live); F00 supp QC TBD
+02-03_Sam's_Results  collaborator outputs + our DEP rerun on his data
+```
 
-`04_Figures` consumes outputs from the upstream analysis stages; `05_WGCNA`
-feeds the module-level figure streams.
+Each stage uses the `a_script/` + `b_reports/` + `c_data/` triple to mirror YvO.
 
 ## Study design
 
-### Factors present in CvH
+### Factors
 
 | Factor | Levels |
 | --- | --- |
@@ -22,34 +27,33 @@ feeds the module-level figure streams.
 | Timepoint | `T1`, `T2` for cancer-recovery subjects only |
 | Supplement | `CRE`, `PLA` for cancer-recovery subjects; healthy controls baseline-only |
 
-### Design consequences
+### Two-model rationale
 
-- Cancer-recovery subjects support repeated-measures analyses.
-- Healthy controls are baseline-only and support cross-sectional baseline comparisons.
-- There is no healthy `T2`, so YvO's symmetric repeated-measures 2 x 2 design does not transfer directly.
-- CvH therefore uses two valid limma/LMM model families:
-  - `CRvH`: all subjects, for baseline cancer-vs-healthy and pooled survivor training response
-  - `CR`: cancer-recovery subjects only, for creatine-vs-placebo baseline and training contrasts
+There is no healthy `T2`, so YvO's symmetric repeated-measures 2x2 design does
+not transfer. CvH uses two limma/LMM model families:
 
-### Planned contrasts
+- **CRvH** (all subjects): baseline cancer-vs-healthy and pooled survivor training response
+- **CR** (cancer-recovery only): creatine-vs-placebo baseline, per-arm training, supplement-by-time interaction
 
-#### CRvH model
+Diverges from YvO's single full-cohort model -- intentional and documented.
+
+#### CRvH model contrasts
 
 - `Cancer_vs_Healthy = (CRE_T1 + PLA_T1)/2 - H_T1`
 - `Training_CR = (CRE_T2 + PLA_T2)/2 - (CRE_T1 + PLA_T1)/2`
 
-#### CR model
+#### CR model contrasts
 
 - `Baseline_Supplement = CRE_T1 - PLA_T1`
 - `Training_CRE = CRE_T2 - CRE_T1`
 - `Training_PLA = PLA_T2 - PLA_T1`
 - `Supplement_Interaction = (CRE_T2 - CRE_T1) - (PLA_T2 - PLA_T1)`
 
-Primary significance framing remains YvO-style exploratory proteomics:
+Significance framing (YvO-style exploratory proteomics):
 
-- nominal `p <= 0.10`
+- nominal `p < 0.10`
 - Benjamini-Hochberg adjusted `p`
-- Pi-score threshold `Pi < 0.05`
+- Pi-score threshold `Pi < 0.05` (Xiao et al. 2014, PMID 24478644)
 
 ## Inputs
 
@@ -60,141 +64,131 @@ Primary significance framing remains YvO-style exploratory proteomics:
 | `00_input/CRm_meta.csv` | Source phenotype/clinical metadata used for cross-checking and phenotype figures |
 | `00_input/HPA_skeletal_muscle_annotations.tsv` | Skeletal muscle tissue reference |
 
-## Shared validation
+## Shared utilities
 
 `R/cvh_design.R` is the shared entrypoint for:
 
 - sample-ID harmonization (`CR006_T1 -> CR6_T1`)
 - consistency checks between `CvH_meta.csv` and `CRm_meta.csv`
-- repeated-measures design validation for cancer-recovery subjects
+- repeated-measures design validation
 - enforcement of healthy baseline-only structure
+- `BLOOD_CONTAMINANTS` plasma-protein gene list (Geyer 2016, PMID 27135364)
 
-Core analysis stages should source this helper instead of carrying local,
-inconsistent metadata assumptions.
+Core analysis stages source this helper instead of carrying local copies.
 
 ## Stage 01 -- Normalization
 
-Script:
+Scripts: `01_normalization/a_script/01_run_normalization.R` and `02_norm_reports.R`
 
-- `01_normalization/a_script/01_run_normalization.R`
-
-Main logic:
-
-- HPA skeletal-muscle filter
-- blood/immunoglobulin contaminant removal
-- UniProt deduplication
-- missingness filtering by `Group_Time`
-- 4-method outlier consensus
-- cycloess normalization
+Pipeline: HPA skeletal-muscle filter -> blood/Ig contaminant removal ->
+UniProt deduplication -> missingness filter by `Group_Time` -> 4-method
+outlier consensus -> cycloess (Bolstad 2003).
 
 Key outputs:
 
-- `01_normalization/c_data/02_normalized.csv`
-- `01_normalization/c_data/03_DAList_normalized.rds`
-- `01_normalization/c_data/05_normalization_supp.xlsx`
-- `01_normalization/b_reports/01_norm_comparison.pdf`
-- `01_normalization/b_reports/02_qc_pre.pdf`
-- `01_normalization/b_reports/03_qc_post.pdf`
-- `01_normalization/b_reports/04_diagnostics.pdf`
+- `c_data/02_normalized.csv` (canonical CSV handoff to stages 02 and 03)
+- `c_data/03_DAList_normalized.rds` (DAList object for downstream)
+- `c_data/05_normalization_supp.xlsx`
+- `b_reports/01-04_*.pdf` (4 PDFs: norm comparison, QC pre, QC post, diagnostics)
 
 ## Stage 02 -- Imputation
 
-Scripts:
+Live scripts: `02_Imputation/a_script/apply_missforest.R` and `02_imputation_reports.R`
 
-- `02_Imputation/a_script/apply_missforest.R`
-- `02_Imputation/a_script/02_imputation_reports.R`
+Logic: 3-method MAR/MNAR consensus (kmeans + global-logistic + left-tail) ->
+missForest on full matrix (Stekhoven 2012, PMID 22039212) -> low-confidence
+flagging (>50 percent missing).
 
-Main logic:
+Optional 17-method benchmark in `a_script/benchmark/`, aligned with YvO's
+registry. Run manually first time:
 
-- YvO-style 3-method MAR/MNAR classification
-- missForest imputation
-- low-confidence imputation flagging
-- workbook/report generation from the active script outputs
+```
+Rscript 02_Imputation/a_script/benchmark/_run_all.R
+```
+
+Outputs go to `c_data/benchmark/`. Once present, `apply_missforest.R` and
+`02_imputation_reports.R` automatically pick up the composite ranking. Six
+CvH-only hybrid methods (BPCA_QRILC, KNN_QRILC, imp4p_mixed, msImpute_v2_mnar,
+MAI, RF_MsCoreUtils) remain in `methods/` as a library; re-register them in
+`benchmark/_common.R::BASE_METHODS` to include them in the run.
 
 Key outputs:
 
-- `02_Imputation/c_data/01_imputed.csv`
-- `02_Imputation/c_data/01_DAList_imputed.rds`
-- `02_Imputation/c_data/02_imputation.xlsx`
-- `02_Imputation/c_data/02_mar_mnar_classification.csv`
-- `02_Imputation/c_data/07_imputation_mask.csv`
-- `02_Imputation/c_data/08_mnar_imputation_audit.csv`
-- `02_Imputation/c_data/09_imputation_summary.txt`
-- `02_Imputation/b_reports/01_missingness_report.pdf`
-- `02_Imputation/b_reports/02_imputation_report.pdf`
+- `c_data/01_imputed.csv`, `01_DAList_imputed.rds`
+- `c_data/02_imputation.xlsx`, `02_mar_mnar_classification.csv`
+- `c_data/07_imputation_mask.csv`, `08_mnar_imputation_audit.csv`
+- `b_reports/01_missingness_report.pdf`, `02_imputation_report.pdf`
 
 ## Stage 03 -- Differential abundance
 
-Scripts:
+Scripts: `03_DEP/a_script/01_run_dep.R`, `02_dep_reports.R`, `03_dep_robustness.R`, `04_dep_overview.R`
 
-- `03_DEP/a_script/01_run_dep.R`
-- `03_DEP/a_script/02_dep_reports.R`
-- `03_DEP/a_script/03_dep_robustness.R`
-- `03_DEP/a_script/04_dep_overview.R`
+Logic: limma + duplicateCorrelation blocking on `subject` (Smyth 2005),
+`robust=TRUE, trend=TRUE` eBayes, BH multiple testing, Pi-score
+(Xiao 2014). Sensitivity arms (response differential, bootstrap BCa CIs,
+power, imputation Spearman) appended as sheets in
+`c_data/10_DEP_supplementary.xlsx` (mirrors YvO's pattern).
 
-Main logic:
-
-- limma + duplicateCorrelation blocking
-- one `CRvH` model and one `CR` model
-- per-contrast result tables, Pi-scores, reports, robustness summaries
-
-Key outputs:
-
-- `03_DEP/c_data/03_combined_results_CRvH.csv`
-- `03_DEP/c_data/03_combined_results_CR.csv`
-- `03_DEP/c_data/04_per_contrast_results/*.csv`
-- `03_DEP/c_data/05_results_CRvH.xlsx`
-- `03_DEP/c_data/05_results_CR.xlsx`
-- `03_DEP/c_data/10_DEP_supplementary.xlsx`
-- `03_DEP/b_reports/02_dep_overview.pdf`
-
-## Stage 05 -- WGCNA
-
-Script:
-
-- `05_WGCNA/a_script/01_run_wgcna.R`
-
-Main logic:
-
-- signed WGCNA network on the imputed matrix
-- module assignments and hub proteins
-- module-level enrichment
-- LMM contrast testing aligned to the same `CRvH` and `CR` model logic
+Multi-threshold overview (FDR < 0.05/0.10, Pi < 0.05, P < 0.05/0.01,
+with/without outlier removal) in `c_data/13_DEP_overview.csv` /
+`14_DEP_overview.xlsx`.
 
 Key outputs:
 
-- `05_WGCNA/c_data/wgcna/*`
-- `05_WGCNA/b_reports/soft_threshold_SUPP.pdf`
-- `04_Figures/F06/c_data/*`
+- `c_data/01_limma_DAList_{CRvH,CR}.rds`
+- `c_data/03_combined_results_{CRvH,CR}.csv`
+- `c_data/04_per_contrast_results/<contrast>.csv`
+- `c_data/05_results_{CRvH,CR}.xlsx`
+- `c_data/10_DEP_supplementary.xlsx`
+- `b_reports/01_proteoDA_CRvH/`, `02_proteoDA_CR/`
+- `b_reports/02_dep_overview.pdf`, `03_contrast_summaries/`
 
-## Figures
+## Stage 04 -- Figures
 
-Figure streams already present in this repository are CvH-specific analogues, not
-blind YvO copies.
+`04_Figures/F01..F08` per-figure directories, each with `a_script/`,
+`b_reports/`, `c_data/`. Per-figure orchestrator named
+`90_stitch_F0x[_stream].R` (YvO convention). Shared infrastructure under
+`shared/`: `style.R`, `volcano_ring.R`, `pathway_utils.R`,
+`go_slim_categories.R`, `figure_supplement_helpers.R`, frozen `fgsea_CRvH.csv`.
 
-### Direct or near-direct analogues
+`Reversal/` is a self-contained mini-stage exploring signature-reversal
+methods between cancer-vs-healthy baseline and pooled CR training response.
 
-- `04_Figures/F01`: phenotype-level summaries
-- `04_Figures/F03/CRvH` and `04_Figures/F03/CR`: DEP overview, overlap, rank, enrichment views
-- `04_Figures/Reversal`: cancer-vs-healthy baseline signal versus pooled CR training response
-- `04_Figures/F08`: WGCNA/module summaries
+`04_Figures/keys/` holds per-figure gene/protein key lists used by panel scripts.
 
-### Important non-transfers
+`04_Figures/archive/` is a gitignored on-disk safety net containing
+pre-reorg WIP (supp/ subdirs not yet tracked); triage when convenient.
 
-- YvO age-group language does not transfer.
-- YvO healthy post-training comparisons do not transfer.
-- YvO classifier-style phenotype prediction does not have a default one-to-one CvH equivalent.
+Deferred for follow-up:
 
-See `docs/yvo_to_cvh_method_mapping.md` for the full transfer matrix and rerun order.
+- `F00/` pipeline-QC supplementary figure (per YvO)
+- `shared/comparison_panels/` and `shared/print_scale_apply_380mm.R`
+- WGCNA module-trait analysis (YvO has it as F06 supp; not yet ported to CvH)
 
-## Reproducibility notes
+## Collaborator results: `02-03_Sam's_Results/`
+
+Sam's pre-DEP DAList, his limma xlsx (8 contrasts), and our two-model DEP
+rerun on his data live here. Three-way comparison artifact and narrative:
+
+- `our_rerun/c_data/comparison_3way.xlsx` -- per-contrast 3-way table
+- `our_rerun/c_data/comparison_3way_summary.csv` -- summary with rho, sig counts, overlap
+- `SAM_VS_CVH_DIFF.md` -- methodology diff and interpretation
+
+Headline: Spearman rho >= 0.795 between Sam's logFC and ours-on-his-data
+across all 5 math-equivalent contrasts (peaks at 0.955 for Cancer_vs_Healthy).
+Significance counts diverge driven by our `robust+trend` eBayes vs Sam's
+default; underlying biology agrees.
+
+## Reproducibility
 
 - All stochastic steps set `set.seed(42)`.
-- `01_normalization/c_data/02_normalized.csv` is the canonical handoff to stages 02 and 03 for deterministic float serialization.
+- `01_normalization/c_data/02_normalized.csv` is the canonical handoff for
+  deterministic float serialization across stages.
 - Metadata validation is part of the active pipeline, not a manual pre-step.
 - Raw inputs are not overwritten by stage scripts.
+- Stage 01 cleans up the stray `Rplots.pdf` produced by proteoDA QC routines.
 
-## Recommended rerun order
+## Rerun order
 
 1. `01_normalization/a_script/01_run_normalization.R`
 2. `01_normalization/a_script/02_norm_reports.R`
@@ -204,5 +198,26 @@ See `docs/yvo_to_cvh_method_mapping.md` for the full transfer matrix and rerun o
 6. `03_DEP/a_script/02_dep_reports.R`
 7. `03_DEP/a_script/03_dep_robustness.R`
 8. `03_DEP/a_script/04_dep_overview.R`
-9. `05_WGCNA/a_script/01_run_wgcna.R`
-10. Figure scripts or stitchers that consume refreshed outputs
+9. Figure scripts and `90_stitch_F0x.R` orchestrators that consume refreshed outputs
+
+Optional: `02_Imputation/a_script/benchmark/_run_all.R` to refresh the
+17-method benchmark.
+
+Optional: `02-03_Sam's_Results/our_rerun/a_script/run_dep_on_sam.R` followed
+by `compare_3way.R` to refresh the collaborator comparison.
+
+## Cross-pipeline crosswalk vs YvO_2026
+
+| Element | YvO_2026 | CvH_2026 |
+| --- | --- | --- |
+| Stage triple | a/b/c convention | matches |
+| Stage 01 normalization | cycloess + 4-method outlier | matches |
+| Stage 02 imputation | 17-method benchmark + missForest | matches (subset to YvO's 17 in audit 2026-05-04; CvH-extra hybrids in `methods/` library) |
+| Stage 03 DEP model | single full-cohort | two-model (CRvH + CR-only) |
+| Sensitivity arms | embedded in 03 (xlsx sheets) | embedded in 03 (xlsx sheets in `10_DEP_supplementary.xlsx`) |
+| Stage 04 figure layout | F00..F07 + 90_stitch_F0x.R | F01..F08 + 90_stitch_F0x.R (F00 deferred) |
+| Shared figure infra | `shared/style.R`, volcano_ring, pathway_utils, frozen fgsea cache | matches |
+| WGCNA (YvO F06) | dedicated supp + permutation cache | not yet ported |
+| Collaborator inputs | n/a | `02-03_Sam's_Results/` |
+
+See `docs/yvo_to_cvh_method_mapping.md` for the full transfer matrix.
