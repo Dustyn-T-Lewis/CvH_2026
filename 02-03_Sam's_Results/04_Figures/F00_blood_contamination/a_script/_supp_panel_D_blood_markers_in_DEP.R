@@ -48,7 +48,7 @@ p_supp_D <- ggplot(supp_D_data, aes(logFC, gene)) +
                      name = "FDR < 0.10",
                      labels = c(`FALSE` = "no", `TRUE` = "yes")) +
   scale_color_manual(values = c(`TRUE` = "firebrick", `FALSE` = "grey40"),
-                     name = "π-score < 0.05") +
+                     name = "Pi-score < 0.05") +
   scale_size_continuous(range = c(2, 6), name = "-log10 P") +
   labs(x = "logFC (Cancer vs Healthy, ours on Sam's data)",
        y = NULL,

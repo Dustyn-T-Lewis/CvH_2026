@@ -35,7 +35,7 @@ p_supp_C <- ggplot(cor_long, aes(var1, var2, fill = rho)) +
   geom_tile(color = "white") +
   geom_text(aes(label = sprintf("%.2f", rho)), size = 3) +
   scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B",
-                       midpoint = 0, limits = c(-1, 1), name = "Spearman ρ") +
+                       midpoint = 0, limits = c(-1, 1), name = "Spearman rho") +
   labs(x = NULL, y = NULL,
        title = "Inter-marker + B_M_ratio correlation (Spearman, N=35)") +
   coord_equal() +

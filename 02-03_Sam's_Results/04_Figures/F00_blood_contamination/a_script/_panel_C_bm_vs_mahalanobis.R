@@ -33,7 +33,7 @@ write_csv(joined,
 sp <- suppressWarnings(cor.test(joined$B_M_ratio, joined$mahal_dist,
                                 method = "spearman", exact = FALSE))
 pe <- cor.test(joined$B_M_ratio, joined$mahal_dist, method = "pearson")
-stats_label <- sprintf("Spearman ρ = %.2f (p = %.2g)\nPearson r = %.2f (p = %.2g)\nn = %d",
+stats_label <- sprintf("Spearman rho = %.2f (p = %.2g)\nPearson r = %.2f (p = %.2g)\nn = %d",
                       sp$estimate, sp$p.value, pe$estimate, pe$p.value, nrow(joined))
 
 p_C <- ggplot(joined, aes(B_M_ratio, mahal_dist,

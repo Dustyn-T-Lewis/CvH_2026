@@ -367,7 +367,7 @@ n2   <- sum(subj_summary$arm == "PLA")
 
 n_proteins_sc <- nrow(ann_df)
 subtitle_sc   <- sprintf(
-  "Per-subject Δlog₂FC (T2 − T1) | %s proteins | Wilcoxon CRE vs PLA %s",
+  "Per-subject Delta log2FC (T2 - T1) | %s proteins | Wilcoxon CRE vs PLA %s",
   format(n_proteins_sc, big.mark = ","), fmt_p(wt$p.value)
 )
 

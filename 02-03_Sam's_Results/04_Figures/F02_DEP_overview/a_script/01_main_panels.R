@@ -334,7 +334,7 @@ for (cname in unique(frac_df$contrast)) {
   FRAC_FILL[paste(cname, "Pi < 0.05", sep = "___")] <- col
 }
 
-THRESH_LABEL <- c("p < 0.05" = "p", "q < 0.05" = "FDR", "Pi < 0.05" = "Π")
+THRESH_LABEL <- c("p < 0.05" = "p", "q < 0.05" = "FDR", "Pi < 0.05" = "Pi")
 label_df <- frac_df |>
   arrange(contrast, threshold) |>
   mutate(
@@ -367,7 +367,7 @@ pC <- ggplot(frac_df, aes(contrast, pct, fill = fill_key)) +
                      breaks = seq(0, 30, by = 5), limits = c(0, 30)) +
   coord_flip() +
   labs(title = "DEPs per Contrast",
-       subtitle = sprintf("%s proteins | Π %d | FDR(0.10) %d",
+       subtitle = sprintf("%s proteins | Pi %d | FDR(0.10) %d",
                           format(n_total, big.mark = ","), pi_total, fdr_total),
        x = NULL, y = "% of proteome", tag = "c") +
   FIG_THEME +
@@ -379,7 +379,7 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_C_dep_counts.png"), pC,
        width = PA_W, height = PA_H, units = "mm", dpi = 300)
 
 pC_title    <- "DEPs per Contrast"
-pC_subtitle <- sprintf("%s proteins | Π %d | FDR(0.10) %d",
+pC_subtitle <- sprintf("%s proteins | Pi %d | FDR(0.10) %d",
                         format(n_total, big.mark = ","), pi_total, fdr_total)
 pC <- strip_for_composite(pC)
 
@@ -546,7 +546,7 @@ pD_bars <- ggplot(bar_long, aes(x, count, fill = direction)) +
                      breaks = scales::breaks_pretty(n = 4)) +
   coord_cartesian(xlim = c(0.5, n_int + 0.5), ylim = c(0, y_max)) +
   labs(title = "Contrast Overlap (UpSet)",
-       subtitle = sprintf("%d unique Π DEPs | %d/%d sig pairwise overlaps",
+       subtitle = sprintf("%d unique Pi DEPs | %d/%d sig pairwise overlaps",
                           n_unique_deps, n_sig_overlaps, nrow(overlap_df)),
        y = NULL) +
   FIG_THEME +
@@ -623,7 +623,7 @@ pD <- ggdraw(pD_pw) +
   draw_plot(p_key_dir_D, x = 0.87, y = 0.80, width = 0.12, height = 0.16)
 
 pD_title    <- "Contrast Overlap (UpSet)"
-pD_subtitle <- sprintf("%d unique Π DEPs | %d/%d sig overlaps",
+pD_subtitle <- sprintf("%d unique Pi DEPs | %d/%d sig overlaps",
                         n_unique_deps, n_sig_overlaps, nrow(overlap_df))
 
 # ── Panel E: fGSEA Stacked Bar (all 6 contrasts) ────────────────────────────
@@ -830,7 +830,7 @@ dep_counts <- dep_only |>
   group_by(contrast) |>
   summarise(n_up = sum(direction == "Up"), n_down = sum(direction == "Down"),
             n_total = n(), .groups = "drop") |>
-  mutate(label = sprintf("n = %d  (%d↑  %d↓)",
+  mutate(label = sprintf("n = %d  (%d Up  %d Dn)",
                           n_total, n_up, n_down))
 write.csv(dep_counts, file.path(DAT, "panel_F_barcode_counts.csv"), row.names = FALSE)
 
@@ -955,7 +955,7 @@ pF <- ggplot() +
   facet_grid(contrast ~ ., switch = "y",
              labeller = labeller(contrast = CTR_FACET_F)) +
   labs(title = "DEP Rank Location",
-       subtitle = sprintf("%s proteins | %d Π DEPs (t-ranked)",
+       subtitle = sprintf("%s proteins | %d Pi DEPs (t-ranked)",
                           format(length(unique(rank_df$gene)), big.mark = ","),
                           sum(dep_counts$n_total)),
        x = "Rank position (by t-statistic)", y = NULL, tag = "f") +
@@ -972,7 +972,7 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_F_barcode.png"), pF,
        width = PD_W_F, height = PD_H_F, units = "mm", dpi = 300)
 
 pF_title    <- "DEP Rank Location"
-pF_subtitle <- sprintf("%s proteins | %d Π DEPs (t-ranked)",
+pF_subtitle <- sprintf("%s proteins | %d Pi DEPs (t-ranked)",
                         format(length(unique(rank_df$gene)), big.mark = ","),
                         sum(dep_counts$n_total))
 pF <- strip_for_composite(pF)

@@ -248,12 +248,12 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CRE, y = logFC_PLA)) +
            color = COMP_RED, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
   annotate("label", x = xlim_range[1], y = ylim_range[2],
-           label = sprintf("Discordant\n(CRE↓ PLA↑)\n%s/%s", q_sig["TL"], q_counts["TL"]),
+           label = sprintf("Discordant\n(CRE Dn PLA Up)\n%s/%s", q_sig["TL"], q_counts["TL"]),
            hjust = 0, vjust = 1, size = txt_quad, fontface = "bold",
            color = COMP_BLUE, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
   annotate("label", x = xlim_range[2], y = ylim_range[1],
-           label = sprintf("%s/%s\nDiscordant\n(CRE↑ PLA↓)", q_sig["BR"], q_counts["BR"]),
+           label = sprintf("%s/%s\nDiscordant\n(CRE Up PLA Dn)", q_sig["BR"], q_counts["BR"]),
            hjust = 1, vjust = 0, size = txt_quad, fontface = "bold",
            color = COMP_BLUE, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
@@ -266,7 +266,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CRE, y = logFC_PLA)) +
            hjust = 0.5, vjust = -0.4, size = 1.3 * PRINT_SCALE, color = "grey30",
            fontface = "bold", angle = 90) +
   annotate("text", x = 0, y = ylim_range[1] * 0.92,
-           label = "NOTE: 0 DEPs at Π<0.05 in both arms; labels = top by |logFC|",
+           label = "NOTE: 0 DEPs at Pi<0.05 in both arms; labels = top by |logFC|",
            hjust = 0.5, vjust = 0, size = 1.1 * PRINT_SCALE, color = "grey50",
            fontface = "italic") +
   coord_cartesian(xlim = xlim_range, ylim = ylim_range, expand = FALSE) +
@@ -407,7 +407,7 @@ composite_A <- p_ul + p_scatter + p_ur + p_ll + p_lr + p_key +
   plot_annotation(
     title    = "Training Concordance: Quadrant ORA",
     subtitle = sprintf(
-      "All-protein ORA (hypergeometric) | N = %d | %d DEPs (Π<0.05; SPARSE — see caption) | %d enriched (FDR) | ρ = %.2f",
+      "All-protein ORA (hypergeometric) | N = %d | %d DEPs (Pi<0.05; SPARSE — see caption) | %d enriched (FDR) | rho = %.2f",
       n_total_A, n_sig_A, n_enrich_A, r_spear_A),
     theme = theme(plot.title    = element_text(size = FIG_TITLE_SIZE, face = "bold"),
                   plot.subtitle = element_text(size = FIG_SUBTITLE_SIZE, hjust = 0, color = "grey30")))
@@ -525,7 +525,7 @@ pD <- ggplot(fgsea_wide, aes(x = NES_CRE, y = NES_PLA)) +
                    linewidth = 0.15) +
   labs(title    = "Pathway Concordance (fGSEA NES)",
        subtitle = sprintf(
-         "ρ = %.2f [95%% CI %.2f–%.2f] | %d sig pathways (CRE+PLA combined) | primary signal carrier",
+         "rho = %.2f [95%% CI %.2f–%.2f] | %d sig pathways (CRE+PLA combined) | primary signal carrier",
          rho_D, rho_ci[1], rho_ci[2], n_sig_pw_D),
        x = "NES (Training CRE)",
        y = "NES (Training PLA)") +
@@ -686,7 +686,7 @@ pC_fry <- pC_up / pC_dn +
   plot_annotation(
     title    = "fry: Training Concordance",
     subtitle = sprintf(
-      "CRE leading-edge genes vs Training_PLA t-stats | n = %d proteins | 0 DEPs at Π<0.05 (uses pathway leading-edges)",
+      "CRE leading-edge genes vs Training_PLA t-stats | n = %d proteins | 0 DEPs at Pi<0.05 (uses pathway leading-edges)",
       n_all_C),
     theme = theme(plot.title    = element_text(size = FIG_TITLE_SIZE, face = "bold"),
                    plot.subtitle = element_text(size = FIG_SUBTITLE_SIZE, color = "grey30")))
@@ -766,10 +766,10 @@ pE_heat <- tryCatch({
              label = sprintf("Concordant Up\n%.1f", max_UU),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.75, y = nr * 0.12,
-             label = sprintf("Discordant\n(CRE↑ PLA↓)\n%.1f", max_UD),
+             label = sprintf("Discordant\n(CRE Up PLA Dn)\n%.1f", max_UD),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.25, y = nr * 0.88,
-             label = sprintf("Discordant\n(CRE↓ PLA↑)\n%.1f", max_DU),
+             label = sprintf("Discordant\n(CRE Dn PLA Up)\n%.1f", max_DU),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.75, y = nr * 0.88,
              label = sprintf("Concordant Down\n%.1f", max_DD),
@@ -797,8 +797,8 @@ pE_heat <- tryCatch({
     mutate(q = case_when(
       t_CRE > 0 & t_PLA > 0 ~ "Concordant Up",
       t_CRE < 0 & t_PLA < 0 ~ "Concordant Down",
-      t_CRE > 0 & t_PLA < 0 ~ "Discordant (CRE↑ PLA↓)",
-      TRUE                   ~ "Discordant (CRE↓ PLA↑)"
+      t_CRE > 0 & t_PLA < 0 ~ "Discordant (CRE Up PLA Dn)",
+      TRUE                   ~ "Discordant (CRE Dn PLA Up)"
     ))
   q_cnt <- dep_df2 |> count(q)
 
@@ -807,8 +807,8 @@ pE_heat <- tryCatch({
     scale_fill_manual(values = c(
       "Concordant Up"              = "#D6604D",
       "Concordant Down"            = "#F4A261",
-      "Discordant (CRE↑ PLA↓)" = "#4393C3",
-      "Discordant (CRE↓ PLA↑)" = "#74ADD1"
+      "Discordant (CRE Up PLA Dn)" = "#4393C3",
+      "Discordant (CRE Dn PLA Up)" = "#74ADD1"
     )) +
     geom_text(aes(label = n), hjust = -0.2, size = scale_text(BASE_STAT, 80)) +
     coord_flip() +
@@ -987,7 +987,7 @@ pB <- ggplot() +
   coord_cartesian(clip = "off") +
   labs(title    = "Protein-to-Pathway",
        subtitle = sprintf(
-         "%d proteins (Π<0.10 relaxed threshold — see caption) | %d patterns",
+         "%d proteins (Pi<0.10 relaxed threshold — see caption) | %d patterns",
          n_total, n_pw)) +
   FIG_THEME +
   theme(axis.text    = element_blank(),
@@ -1046,14 +1046,14 @@ TTL_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
 SUB_SZ      <- round(7  * PRINT_SCALE2 * 0.85)
 
 ttl_A <- "Quadrant ORA (Concordance)"
-sub_A <- sprintf("N = %d | %d DEPs (Π SPARSE) | %d enriched (FDR) | ρ = %.2f",
+sub_A <- sprintf("N = %d | %d DEPs (Pi SPARSE) | %d enriched (FDR) | rho = %.2f",
                  n_total_A, n_sig_A, n_enrich_A, r_spear_A)
 ttl_B <- "Protein-to-Pathway"
-sub_B <- sprintf("%d proteins (Π<0.10) | %d patterns", n_total, n_pw)
+sub_B <- sprintf("%d proteins (Pi<0.10) | %d patterns", n_total, n_pw)
 ttl_C <- "fry: Concordance"
 sub_C <- sprintf("n = %d | r = %.3f", n_all_C, cor_imp_C)
 ttl_D <- "Pathway Concordance"
-sub_D <- sprintf("ρ = %.2f | %.0f%% concordant (sig-both)", rho_D, pw_conc_D * 100)
+sub_D <- sprintf("rho = %.2f | %.0f%% concordant (sig-both)", rho_D, pw_conc_D * 100)
 ttl_E <- "RRHO2 Concordance"
 sub_E <- sprintf("%d proteins | max %.1f", n_shared_E, n_conc_E)
 

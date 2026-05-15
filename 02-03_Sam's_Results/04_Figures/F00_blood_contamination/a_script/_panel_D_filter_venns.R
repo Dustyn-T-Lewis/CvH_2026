@@ -135,7 +135,7 @@ marker_long <- panel_D_markers |>
 
 p_markers <- ggplot(marker_long, aes(pipeline, gene, fill = kept)) +
   geom_tile(color = "white", linewidth = 0.6) +
-  geom_text(aes(label = ifelse(kept, "✓", "✗")), size = 5) +
+  geom_text(aes(label = ifelse(kept, "Y", "N")), size = 5) +
   scale_fill_manual(
     values = c(`TRUE` = "#33a02c", `FALSE` = "#e31a1c"),
     guide  = "none"
