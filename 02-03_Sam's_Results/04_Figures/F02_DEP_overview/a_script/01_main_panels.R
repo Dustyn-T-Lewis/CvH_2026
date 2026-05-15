@@ -363,7 +363,7 @@ pC <- ggplot(frac_df, aes(contrast, pct, fill = fill_key)) +
             aes(x = contrast, y = label_y, label = label, color = I(text_col)),
             inherit.aes = FALSE, hjust = 0.5, size = 2.2, fontface = "bold") +
   scale_fill_manual(values = FRAC_FILL) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0)),
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)),
                      breaks = seq(0, 30, by = 5), limits = c(0, 30)) +
   coord_flip() +
   labs(title = "DEPs per Contrast",
@@ -620,7 +620,7 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_D_upset.png"), pD_standalone,
 pD <- ggdraw(pD_pw) +
   draw_label("Intersection size", x = 0.02, y = 0.58, angle = 90,
              size = 5, fontface = "bold") +
-  draw_plot(p_key_dir_D, x = 0.87, y = 0.80, width = 0.12, height = 0.16)
+  draw_plot(p_key_dir_D, x = 0.85, y = 0.92, width = 0.13, height = 0.14)
 
 pD_title    <- "Contrast Overlap (UpSet)"
 pD_subtitle <- sprintf("%d unique Pi DEPs | %d/%d sig overlaps",
@@ -979,13 +979,13 @@ pF <- strip_for_composite(pF)
 
 # ── Composite (3×2) ──────────────────────────────────────────────────────────
 layout  <- "ABC\n###\nDEF"
-ROW_TOP <- 0.458
-SPACER  <- 0.00
+ROW_TOP <- 0.46
+SPACER  <- 0.04   # breathing room between rows
 
-pA <- pA + theme(plot.margin = margin(12,   2, 12, 2))
-pB <- pB + theme(plot.margin = margin(12, -52,  0, 5))
-pC <- pC + theme(plot.margin = margin(12,   2,  0, 0))
-pF <- pF + theme(plot.margin = margin(-3,   2, -12, 0))
+pA <- pA + theme(plot.margin = margin(14,  6, 18,  6))
+pB <- pB + theme(plot.margin = margin(14,  6, 18,  6))
+pC <- pC + theme(plot.margin = margin(14, 18, 18,  4))   # extra right margin so "p" label clears edge
+pF <- pF + theme(plot.margin = margin( 6,  6,  6,  6))
 
 composite <- wrap_elements(full = pA) + pB + pC +
              wrap_elements(full = pD) +
@@ -993,11 +993,11 @@ composite <- wrap_elements(full = pA) + pB + pC +
              pF +
   plot_layout(
     design  = layout,
-    widths  = c(160, 127, 138),
+    widths  = c(155, 120, 150),   # widen col C, trim col B slightly
     heights = c(ROW_TOP, SPACER, 1 - ROW_TOP - SPACER)
   )
 
-COMP_W <- 178; COMP_H <- 115
+COMP_W <- 220; COMP_H <- 150
 txt    <- composite_text_sizes(COMP_H)
 TAG_SZ <- txt$tag
 TTL_SZ <- txt$title
@@ -1006,8 +1006,8 @@ SUB_SZ <- txt$subtitle
 TOP_Y      <- 0.985
 BOT_Y      <- 1 - ROW_TOP - SPACER + 0.025
 X_LEFT     <- 0.002
-X_MID      <- 0.372
-X_RIGHT    <- 0.630
+X_MID      <- 0.365   # col B: 155/425
+X_RIGHT    <- 0.647   # col C: 275/425
 X_TTL      <- 0.04
 SUB_OFFSET <- 0.022
 
