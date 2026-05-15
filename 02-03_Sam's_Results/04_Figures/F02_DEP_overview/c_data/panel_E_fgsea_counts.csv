@@ -1,0 +1,19 @@
+contrast,database,Down,Up
+Baseline_Supplement,GO:BP,4,7
+Baseline_Supplement,Reactome,4,2
+Cancer_vs_Healthy,GO Slim,4,4
+Cancer_vs_Healthy,GO:BP,21,55
+Cancer_vs_Healthy,Hallmark,1,10
+Cancer_vs_Healthy,KEGG,2,0
+Cancer_vs_Healthy,Reactome,17,22
+Training_CR,GO Slim,0,1
+Training_CR,GO:BP,3,11
+Training_CR,Hallmark,0,3
+Training_CR,KEGG,0,3
+Training_CR,Reactome,5,10
+Training_CRE,GO Slim,0,2
+Training_CRE,GO:BP,4,20
+Training_CRE,Hallmark,0,2
+Training_CRE,KEGG,0,1
+Training_CRE,Reactome,2,13
+Training_PLA,Reactome,0,1
