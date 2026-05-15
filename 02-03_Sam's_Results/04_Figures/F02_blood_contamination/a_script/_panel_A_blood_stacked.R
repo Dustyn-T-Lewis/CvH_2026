@@ -10,9 +10,11 @@ suppressPackageStartupMessages({
 setwd(rprojroot::find_rstudio_root_file())
 source("02-03_Sam's_Results/04_Figures/build_data_index.R")
 source("02-03_Sam's_Results/04_Figures/shared/style.R")
+source("02-03_Sam's_Results/04_Figures/F02_blood_contamination/a_script/_shared_keys.R")
 
 sam <- readRDS(sam_idx$sam$dalist_rds)
 meta <- as.data.frame(sam$metadata)
+meta$sample_id <- normalize_sample_id(meta$sample_id)
 
 # Build Group_Time from supp_time, falling back to cancer_time for control
 # samples (Sam's CTL rows have supp = NA, so supp_time is NA_T1; map to
