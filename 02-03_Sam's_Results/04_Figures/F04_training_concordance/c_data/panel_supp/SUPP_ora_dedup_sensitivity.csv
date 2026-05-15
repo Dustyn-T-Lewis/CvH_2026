@@ -1,0 +1,17 @@
+gene_set,jaccard_cutoff,n_enriched,n_total_tested,cutoff_label
+Concordant Up,0.3,20,178,J = 0.3
+Concordant Up,0.5,23,223,J = 0.5
+Concordant Up,0.7,26,273,J = 0.7
+Concordant Up,1,28,311,J = 1.0
+Concordant Down,0.3,3,498,J = 0.3
+Concordant Down,0.5,4,723,J = 0.5
+Concordant Down,0.7,4,965,J = 0.7
+Concordant Down,1,5,1177,J = 1.0
+CRE Leading Up,0.3,0,0,J = 0.3
+CRE Leading Up,0.5,0,0,J = 0.5
+CRE Leading Up,0.7,0,0,J = 0.7
+CRE Leading Up,1,0,0,J = 1.0
+CRE Leading Down,0.3,0,0,J = 0.3
+CRE Leading Down,0.5,0,0,J = 0.5
+CRE Leading Down,0.7,0,0,J = 0.7
+CRE Leading Down,1,0,0,J = 1.0
