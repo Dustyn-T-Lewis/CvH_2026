@@ -604,12 +604,12 @@ fry_sets_c <- fry_sets_c[lengths(fry_sets_c) >= 5]
 
 fry_res <- tryCatch({
   requireNamespace("limma", quietly = TRUE)
-  t_vec   <- t_PLA_named[!is.na(t_PLA_named)]
-  t_mat   <- matrix(t_vec, ncol = 1, dimnames = list(names(t_vec), "t"))
-  idx_list <- lapply(fry_sets_c, function(g) which(rownames(t_mat) %in% g))
+  t_vec    <- t_PLA_named[!is.na(t_PLA_named)]
+  # cameraPR accepts a pre-ranked named statistics vector directly (no design matrix needed)
+  idx_list <- lapply(fry_sets_c, function(g) which(names(t_vec) %in% g))
   idx_list <- idx_list[lengths(idx_list) >= 5]
-  if (length(idx_list) < 1) stop("No valid sets for fry")
-  limma::fry(t_mat, index = idx_list, geneid = rownames(t_mat))
+  if (length(idx_list) < 1) stop("No valid sets for cameraPR")
+  limma::cameraPR(t_vec, index = idx_list)
 }, error = function(e) {
   message("  fry error: ", e$message)
   NULL
