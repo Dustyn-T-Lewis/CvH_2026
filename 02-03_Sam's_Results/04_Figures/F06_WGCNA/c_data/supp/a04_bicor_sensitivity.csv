@@ -1,0 +1,5 @@
+pearson_module,bicor_module,jaccard,n_shared,n_pearson,n_bicor
+brown,brown,0.7757009345794392,166,197,183
+blue,blue,0.697841726618705,194,209,263
+turquoise,turquoise,0.6836734693877551,268,289,371
+red,yellow,0.6307692307692307,41,46,60
