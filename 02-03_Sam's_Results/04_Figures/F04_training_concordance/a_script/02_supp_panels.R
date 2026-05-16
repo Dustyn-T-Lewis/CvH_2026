@@ -90,12 +90,12 @@ cre_up_genes <- cre_fgsea |>
   filter(NES > 0, !is.na(padj), padj < 0.05) |>
   arrange(desc(NES)) |>
   head(10) |>
-  pull(leadingEdge) |> unlist() |> unique()
+  pull(leadingEdge) |> strsplit(";") |> unlist() |> unique()
 cre_dn_genes <- cre_fgsea |>
   filter(NES < 0, !is.na(padj), padj < 0.05) |>
   arrange(NES) |>
   head(10) |>
-  pull(leadingEdge) |> unlist() |> unique()
+  pull(leadingEdge) |> strsplit(";") |> unlist() |> unique()
 
 # ── Panel A: ORA Dedup Sensitivity ──────────────────────────────────────────
 message("=== SUPP Panel A: ORA dedup sensitivity ===")

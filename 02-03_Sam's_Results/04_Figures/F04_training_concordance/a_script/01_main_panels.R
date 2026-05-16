@@ -564,6 +564,7 @@ cre_up_genes <- cre_fgsea |>
   arrange(desc(NES)) |>
   head(10) |>
   pull(leadingEdge) |>
+  strsplit(";") |>
   unlist() |>
   unique()
 
@@ -572,6 +573,7 @@ cre_dn_genes <- cre_fgsea |>
   arrange(NES) |>
   head(10) |>
   pull(leadingEdge) |>
+  strsplit(";") |>
   unlist() |>
   unique()
 
