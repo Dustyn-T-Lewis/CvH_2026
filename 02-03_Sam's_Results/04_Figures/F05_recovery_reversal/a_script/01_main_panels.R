@@ -540,15 +540,14 @@ fry_sets <- fry_sets[lengths(fry_sets) >= 5]
 
 fry_res <- tryCatch({
   requireNamespace("limma", quietly = TRUE)
-  t_vec   <- t_TCR[!is.na(t_TCR)]
-  t_mat   <- matrix(t_vec, ncol = 1, dimnames = list(names(t_vec), "t"))
-  # Build index list for limma::fry
-  idx_list <- lapply(fry_sets, function(g) which(rownames(t_mat) %in% g))
+  t_vec    <- t_TCR[!is.na(t_TCR)]
+  # cameraPR accepts a pre-ranked named statistics vector directly (no design matrix needed)
+  idx_list <- lapply(fry_sets, function(g) which(names(t_vec) %in% g))
   idx_list <- idx_list[lengths(idx_list) >= 5]
-  if (length(idx_list) < 1) stop("No valid sets for fry")
-  limma::fry(t_mat, index = idx_list, geneid = rownames(t_mat))
+  if (length(idx_list) < 1) stop("No valid sets for cameraPR")
+  limma::cameraPR(t_vec, index = idx_list)
 }, error = function(e) {
-  message("  fry error: ", e$message, " — building stub from t-stats")
+  message("  cameraPR error: ", e$message, " — building stub from t-stats")
   NULL
 })
 
