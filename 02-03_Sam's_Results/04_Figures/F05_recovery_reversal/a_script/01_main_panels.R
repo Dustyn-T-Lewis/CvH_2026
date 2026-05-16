@@ -972,7 +972,7 @@ pB <- ggplot() +
         axis.title   = element_blank(),
         panel.border = element_blank(),
         panel.grid   = element_blank(),
-        plot.margin  = margin(1, -28, 8, -14, "mm"))
+        plot.margin  = margin(1, -22, 8, -10, "mm"))
 
 ggsave(file.path(PNL_PNG, "MAIN_panel_B_heatmap.png"), pB,
        width = 80, height = 120, units = "mm", dpi = 300)
@@ -1018,12 +1018,11 @@ quad_legend <- ggplot(inset_quad_df) +
         plot.margin = margin(0, 0, 0, 0, "mm"))
 
 # ── Composite ────────────────────────────────────────────────────────────────
-COMP_W      <- 460
-COMP_H      <- 360
-PRINT_SCALE2 <- 380 / 178
-TAG_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
-TTL_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
-SUB_SZ      <- round(7  * PRINT_SCALE2 * 0.85)
+COMP_W <- 420
+COMP_H <- 310
+TAG_SZ <- round(10 * PRINT_SCALE * 0.85)
+TTL_SZ <- round(10 * PRINT_SCALE * 0.85)
+SUB_SZ <- round(7  * PRINT_SCALE * 0.85)
 
 ttl_A <- "Quadrant ORA (Reversal)"
 sub_A <- sprintf("N = %d | %d DEPs (Pi) | %d enriched (FDR) | rho = %.2f",
@@ -1066,7 +1065,7 @@ pE_final <- pE_heat + theme(plot.margin = margin(-2.1, -0.2, 3.4, -3.5, "mm"),
 pB_final <- pB + coord_cartesian(xlim = c(-0.25, X_BAR_MAX + 1.75),
                                   ylim = c(BAR_YMAX + ROW_H * 6.5, -ROW_H * 0.05),
                                   expand = FALSE) +
-                 theme(plot.margin = margin(1, -28, 8, -14, "mm"))
+                 theme(plot.margin = margin(1, -22, 8, -10, "mm"))
 
 fig <- wrap_elements(full = composite_A_final) +
        wrap_elements(full = pB_final) +

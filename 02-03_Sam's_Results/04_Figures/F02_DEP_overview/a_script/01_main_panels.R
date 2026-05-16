@@ -980,8 +980,8 @@ pF <- strip_for_composite(pF)
 
 # ── Composite (3×2) ──────────────────────────────────────────────────────────
 layout  <- "ABC\n###\nDEF"
-ROW_TOP <- 0.46
-SPACER  <- 0.04   # breathing room between rows
+ROW_TOP <- 0.458
+SPACER  <- 0.00   # no inter-row gap (match YvO)
 
 pA <- pA + theme(plot.margin = margin(14,  6, 18,  6))
 pB <- pB + theme(plot.margin = margin(14,  6, 18,  6))
@@ -994,11 +994,11 @@ composite <- wrap_elements(full = pA) + pB + pC +
              pF +
   plot_layout(
     design  = layout,
-    widths  = c(155, 120, 150),   # widen col C, trim col B slightly
+    widths  = c(160, 127, 138),   # match YvO column proportions
     heights = c(ROW_TOP, SPACER, 1 - ROW_TOP - SPACER)
   )
 
-COMP_W <- 220; COMP_H <- 150
+COMP_W <- 178; COMP_H <- 115
 txt    <- composite_text_sizes(COMP_H)
 TAG_SZ <- txt$tag
 TTL_SZ <- txt$title

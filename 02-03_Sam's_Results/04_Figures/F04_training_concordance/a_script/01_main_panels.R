@@ -1060,12 +1060,11 @@ quad_legend <- ggplot(inset_quad_df) +
         plot.margin = margin(0, 0, 0, 0, "mm"))
 
 # ── Composite ────────────────────────────────────────────────────────────────
-COMP_W      <- 450
-COMP_H      <- 360
-PRINT_SCALE2 <- 380 / 178
-TAG_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
-TTL_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
-SUB_SZ      <- round(7  * PRINT_SCALE2 * 0.85)
+COMP_W <- 420
+COMP_H <- 310
+TAG_SZ <- round(10 * PRINT_SCALE * 0.85)
+TTL_SZ <- round(10 * PRINT_SCALE * 0.85)
+SUB_SZ <- round(7  * PRINT_SCALE * 0.85)
 
 ttl_A <- "Quadrant ORA (Concordance)"
 sub_A <- sprintf("N = %d | %d DEPs (Pi SPARSE) | %d enriched (FDR) | rho = %.2f",
