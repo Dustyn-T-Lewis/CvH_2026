@@ -105,9 +105,9 @@ pA_supp <- make_dist_panel("P.Value", "#5DA5DA", "p-value", NULL,
                             "p < 0.05: %d", "Raw p-value distribution", "a")
 pA_title <- "Raw p-value distribution"
 
-pB_supp <- make_dist_panel("pi_score", "#E05A4E", "Π-score", 0.05,
-                             "Π < 0.05: %d", "Π-score distribution", "b")
-pB_title <- "Π-score distribution"
+pB_supp <- make_dist_panel("pi_score", "#E05A4E", "Pi-score", 0.05,
+                             "Pi < 0.05: %d", "Pi-score distribution", "b")
+pB_title <- "Pi-score distribution"
 
 pC_supp <- make_dist_panel("adj.P.Val", "#9B7FBF", "FDR (BH)", 0.05,
                              "FDR < 0.10: %d", "FDR distribution", "c")
@@ -137,10 +137,10 @@ pD_supp <- ggplot(ma_df, aes(average_intensity, logFC, color = direction)) +
   geom_point(data = \(d) filter(d, direction == "NS"), alpha = 0.25, size = 0.6) +
   geom_point(data = \(d) filter(d, direction != "NS"), alpha = 0.85, size = 0.9) +
   geom_text(data = n_dep_ma,
-            aes(x = Inf, y = Inf, label = sprintf("Π: %d", n_dep)),
+            aes(x = Inf, y = Inf, label = sprintf("Pi: %d", n_dep)),
             inherit.aes = FALSE, hjust = 1.05, vjust = 1.5, size = 2.2,
             fontface = "bold", color = "grey20") +
-  scale_color_manual(values = DIR_COLORS, name = "Π < 0.05") +
+  scale_color_manual(values = DIR_COLORS, name = "Pi < 0.05") +
   facet_wrap(~contrast, ncol = 2, labeller = labeller(contrast = CTR_SHORT)) +
   labs(title = "MA plots", x = "Mean log2 intensity", y = "logFC", tag = "d") +
   FIG_THEME + theme(strip.background = element_blank(), strip.text = element_blank(),
@@ -169,7 +169,7 @@ if (!is.null(out_sens) && nrow(out_sens) > 0) {
     mutate(
       metric = factor(sub("_.*", "", metric_cohort),
                       levels = c("FDR", "Pi"),
-                      labels = c("FDR < 0.05", "Π < 0.05")),
+                      labels = c("FDR < 0.05", "Pi < 0.05")),
       cohort = factor(sub(".*_", "", metric_cohort), levels = c("full", "reduced"))
     )
 

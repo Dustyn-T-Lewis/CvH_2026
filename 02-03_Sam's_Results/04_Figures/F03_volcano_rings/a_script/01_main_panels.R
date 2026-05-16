@@ -82,7 +82,7 @@ contrast_stats <- function(ctr) {
   pi_col <- paste0("pi_score_", ctr)
   n_dep  <- if (pi_col %in% names(dep_df)) sum(dep_df[[pi_col]] < 0.05, na.rm = TRUE) else 0
   ctr_rows <- fgsea_all[fgsea_all$contrast == ctr & fgsea_all$database %in% dbs_used, ]
-  sprintf("%d DEPs (Π < 0.05)  |  %d / %d pathways (FDR < 0.05)",
+  sprintf("%d DEPs (Pi < 0.05)  |  %d / %d pathways (FDR < 0.05)",
           n_dep, sum(ctr_rows$padj < 0.05, na.rm = TRUE), sum(!is.na(ctr_rows$padj)))
 }
 
