@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 })
 
 source("02-03_Sam's_Results/04_Figures/shared/style.R")
-pdf_device <- get_pdf_device()
+pdf_device <- grDevices::pdf  # force base pdf (cairo DLL fails on this system)
 
 # ── Step 1: Main panels ───────────────────────────────────────────────────────
 message("=== F06 Step 1: main panels ===")

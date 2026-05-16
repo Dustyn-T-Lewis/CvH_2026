@@ -981,7 +981,7 @@ pF <- strip_for_composite(pF)
 # ── Composite (3×2) ──────────────────────────────────────────────────────────
 layout  <- "ABC\n###\nDEF"
 ROW_TOP <- 0.458
-SPACER  <- 0.00   # no inter-row gap (match YvO)
+SPACER  <- 0.04   # inter-row gap so axis labels don't bleed into next row
 
 pA <- pA + theme(plot.margin = margin(14,  6, 18,  6))
 pB <- pB + theme(plot.margin = margin(14,  6, 18,  6))

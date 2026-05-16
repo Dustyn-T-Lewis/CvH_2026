@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 source("02-03_Sam's_Results/04_Figures/shared/style.R")
 source("02-03_Sam's_Results/04_Figures/shared/pathway_utils.R")
 
-pdf_device <- get_pdf_device()
+pdf_device <- grDevices::pdf  # force base pdf (cairo DLL fails on this system)
 
 BASE      <- "02-03_Sam's_Results/04_Figures/F06_WGCNA"
 PANEL_DIR <- file.path(BASE, "c_data")
