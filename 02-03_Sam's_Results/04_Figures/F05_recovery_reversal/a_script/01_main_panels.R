@@ -233,7 +233,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CvH, y = logFC_TCR)) +
                    linewidth = 0.15, seed = 42,
                    xlim = c(-3, 3) * 0.85, ylim = c(-2.7, 2.7) * 0.85) +
   annotate("label", x = xlim_range[1], y = ylim_range[2],
-           label = sprintf("Reversed (Cav Tr^)\n%s/%s", q_sig["TL"], q_counts["TL"]),
+           label = sprintf("Reversed (CaDn TrUp)\n%s/%s", q_sig["TL"], q_counts["TL"]),
            hjust = 0, vjust = 1, size = txt_quad, fontface = "bold",
            color = COMP_BLUE, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
@@ -248,7 +248,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CvH, y = logFC_TCR)) +
            color = COMP_RED, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
   annotate("label", x = xlim_range[2], y = ylim_range[1],
-           label = sprintf("%s/%s\nReversed (Ca^ Trv)", q_sig["BR"], q_counts["BR"]),
+           label = sprintf("%s/%s\nReversed (CaUp TrDn)", q_sig["BR"], q_counts["BR"]),
            hjust = 1, vjust = 0, size = txt_quad, fontface = "bold",
            color = COMP_BLUE, fill = alpha("white", 0.92),
            label.padding = unit(2.5, "pt"), lineheight = 0.9) +
@@ -268,7 +268,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CvH, y = logFC_TCR)) +
         axis.text        = element_blank(),
         axis.ticks       = element_blank(),
         axis.title       = element_blank(),
-        plot.margin      = margin(2, 0, 0, 0, "mm"),
+        plot.margin      = margin(2, 3, 0, 3, "mm"),
         legend.position  = "none")
 
 # Significance key
@@ -416,10 +416,11 @@ message("Panel A done")
 # Strip title/subtitle/legend for final composite
 composite_A <- composite_A &
   labs(title = NULL, subtitle = NULL, tag = NULL) &
-  theme(legend.position = "none")
+  theme(legend.position = "none", plot.title = element_blank(), plot.subtitle = element_blank())
 composite_A <- composite_A +
   plot_annotation(title = NULL, subtitle = NULL,
-                  theme = theme(plot.title = element_blank(), plot.subtitle = element_blank()))
+                  theme = theme(plot.title = element_blank(), plot.subtitle = element_blank(),
+                                plot.margin = margin(0, 0, 0, 0, "mm")))
 
 # ── Panel D — fGSEA NES scatter (pathway-level reversal) ────────────────────
 message("=== Panel D: NES scatter ===")
@@ -513,6 +514,9 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_D_nes_scatter.png"), pD,
 ggsave(file.path(PNL_PDF, "MAIN_panel_D_nes_scatter.pdf"), pD,
        width = 80, height = 80, units = "mm", device = pdf_device)
 message("Panel D done")
+# Strip for composite
+pD <- pD + labs(title = NULL, subtitle = NULL) +
+  theme(plot.title = element_blank(), plot.subtitle = element_blank())
 
 # ── Panel C — fry rotation test ──────────────────────────────────────────────
 message("=== Panel C: fry ===")
@@ -663,6 +667,10 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_C_fry.png"), pC_fry,
        width = 130, height = 80, units = "mm", dpi = 300)
 ggsave(file.path(PNL_PDF, "MAIN_panel_C_fry.pdf"), pC_fry,
        width = 130, height = 80, units = "mm", device = pdf_device)
+# Strip for composite (remove plot_annotation title/subtitle from stacked plot)
+pC_fry <- pC_fry + plot_annotation(title = NULL, subtitle = NULL,
+  theme = theme(plot.title = element_blank(), plot.subtitle = element_blank(),
+                plot.margin = margin(0, 0, 0, 0, "mm")))
 
 # Save driving proteins
 if (nrow(filter(dep_df, gene %in% cancer_up | gene %in% cancer_dn)) > 0) {
@@ -758,10 +766,10 @@ pE_heat <- tryCatch({
              label = sprintf("Exacerbated Up\n%.1f", max_UU),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.75, y = nr * 0.12,
-             label = sprintf("Reversed\n(Ca^ Trv)\n%.1f", max_UD),
+             label = sprintf("Reversed\n(CaUp TrDn)\n%.1f", max_UD),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.25, y = nr * 0.88,
-             label = sprintf("Reversed\n(Cav Tr^)\n%.1f", max_DU),
+             label = sprintf("Reversed\n(CaDn TrUp)\n%.1f", max_DU),
              color = "white", size = scale_text(BASE_STAT, 80) * 0.85, fontface = "bold") +
     annotate("text", x = nc * 0.75, y = nr * 0.88,
              label = sprintf("Exacerbated Down\n%.1f", max_DD),
@@ -789,8 +797,8 @@ pE_heat <- tryCatch({
   dep_df2 <- dep_df |> filter(!is.na(t_CvH), !is.na(t_TCR)) |>
     mutate(
       q = case_when(
-        t_CvH > 0 & t_TCR < 0 ~ "Reversed (Ca^ Trv)",
-        t_CvH < 0 & t_TCR > 0 ~ "Reversed (Cav Tr^)",
+        t_CvH > 0 & t_TCR < 0 ~ "Reversed (CaUp TrDn)",
+        t_CvH < 0 & t_TCR > 0 ~ "Reversed (CaDn TrUp)",
         t_CvH > 0 & t_TCR > 0 ~ "Exacerbated Up",
         TRUE                   ~ "Exacerbated Down"
       ))
@@ -801,8 +809,8 @@ pE_heat <- tryCatch({
     scale_fill_manual(values = c(
       "Exacerbated Up"              = "#D6604D",
       "Exacerbated Down"            = "#F4A261",
-      "Reversed (Ca^ Trv)" = "#4393C3",
-      "Reversed (Cav Tr^)" = "#74ADD1"
+      "Reversed (CaUp TrDn)" = "#4393C3",
+      "Reversed (CaDn TrUp)" = "#74ADD1"
     )) +
     geom_text(aes(label = n), hjust = -0.2, size = scale_text(BASE_STAT, 80)) +
     coord_flip() +
@@ -834,6 +842,9 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_E_rrho2.png"), pE_heat,
 ggsave(file.path(PNL_PDF, "MAIN_panel_E_rrho2.pdf"), pE_heat,
        width = 90, height = 90, units = "mm", device = pdf_device)
 message("Panel E done")
+# Strip for composite
+pE_heat <- pE_heat + labs(title = NULL, subtitle = NULL) +
+  theme(plot.title = element_blank(), plot.subtitle = element_blank())
 
 # ── Panel B — Pattern heatmap ────────────────────────────────────────────────
 message("=== Panel B: Pattern heatmap ===")
@@ -968,6 +979,9 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_B_heatmap.png"), pB,
 ggsave(file.path(PNL_PDF, "MAIN_panel_B_heatmap.pdf"), pB,
        width = 80, height = 120, units = "mm", device = pdf_device)
 message("Panel B done")
+# Strip for composite
+pB <- pB + labs(title = NULL, subtitle = NULL) +
+  theme(plot.title = element_blank(), plot.subtitle = element_blank())
 
 # Restore paths
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
@@ -1004,8 +1018,8 @@ quad_legend <- ggplot(inset_quad_df) +
         plot.margin = margin(0, 0, 0, 0, "mm"))
 
 # ── Composite ────────────────────────────────────────────────────────────────
-COMP_W      <- 420
-COMP_H      <- 310
+COMP_W      <- 460
+COMP_H      <- 360
 PRINT_SCALE2 <- 380 / 178
 TAG_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
 TTL_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
