@@ -1,9 +1,0 @@
-quadrant,jaccard_cutoff,n_enriched,n_total_tested,cutoff_label
-Reversed Up,0.3,21,424,J = 0.3
-Reversed Up,0.5,24,618,J = 0.5
-Reversed Up,0.7,29,807,J = 0.7
-Reversed Up,1,32,964,J = 1.0
-Reversed Down,0.3,24,106,J = 0.3
-Reversed Down,0.5,31,135,J = 0.5
-Reversed Down,0.7,40,159,J = 0.7
-Reversed Down,1,47,179,J = 1.0
