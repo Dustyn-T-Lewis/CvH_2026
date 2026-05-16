@@ -277,7 +277,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CRE, y = logFC_PLA)) +
         axis.text       = element_blank(),
         axis.ticks      = element_blank(),
         axis.title      = element_blank(),
-        plot.margin     = margin(2, 0, 0, 0, "mm"),
+        plot.margin     = margin(2, 3, 0, 3, "mm"),
         legend.position = "none")
 
 # Significance key
@@ -326,22 +326,28 @@ make_half_bars <- function(df, fill_color, side, ylim) {
       star     = sig_stars(padj)
     )
   x_max         <- max(bars$neg_log10_padj)
-  x_display_max <- x_max * 1.18
+  x_display_max <- x_max * 1.40
   is_upper      <- ylim[1] >= 0
   brk_fn        <- function(limits) { b <- scales::pretty_breaks(n = 3)(limits); b[b != 0] }
 
+  # Max label chars: left bars are narrower visually so truncate more aggressively
+  max_chars <- if (side == "left") 20L else 26L
+
   bars <- bars |>
     mutate(
-      label_inside = neg_log10_padj >= x_max * 0.10,
-      label_x      = ifelse(label_inside, neg_log10_padj * 0.5,
-                            neg_log10_padj + x_max * 0.03),
-      label_hjust  = ifelse(label_inside, 0.5, 0),
-      label_color  = ifelse(label_inside,
-                            ifelse(significant, "white", "grey15"), "grey20"),
-      text_size    = scale_text(BASE_PATHWAY, 190) * 0.80
+      # Truncate long labels so text fits inside the bar rectangle
+      pathway_label = stringr::str_trunc(pathway_label, max_chars, ellipsis = ".."),
+      label_x      = neg_log10_padj * 0.50,
+      label_hjust  = 0.5,
+      label_color  = ifelse(significant, "white", "grey15"),
+      text_size    = scale_text(BASE_PATHWAY, 190) * 0.72
     )
 
-  star_x_mult <- if (side == "left") 0.12 else 0.035
+  # Stars placed just beyond the outer bar tip (away from scatter at x=0)
+  # Left bars: outer tip is at high x (left side visually); star at neg_log10_padj * 1.12
+  # Right bars: outer tip is at high x (right side visually); star at neg_log10_padj * 1.12
+  # Both cases: x_display_max = x_max * 1.40, so 1.12 * x_max << 1.40 * x_max — safe
+  star_hjust  <- if (side == "left") 0 else 1   # left-bar: left-anchor past tip; right-bar: right-anchor
 
   p <- ggplot(bars, aes(y = y)) +
     geom_rect(aes(xmin = 0, xmax = neg_log10_padj,
@@ -350,9 +356,9 @@ make_half_bars <- function(df, fill_color, side, ylim) {
     geom_text(aes(x = label_x, y = y, label = pathway_label),
               hjust = bars$label_hjust, size = bars$text_size,
               fontface = "bold", color = bars$label_color, lineheight = 0.85) +
-    geom_text(aes(x = neg_log10_padj + x_max * star_x_mult, label = star),
-              hjust = 0, vjust = 0.5,
-              size = 2.2 * PRINT_SCALE, fontface = "bold", color = "black") +
+    geom_text(aes(x = neg_log10_padj * 1.12, label = star),
+              hjust = star_hjust, vjust = 0.5,
+              size = 2.2 * PRINT_SCALE, fontface = "bold", color = "grey20") +
     labs(x = if (!is_upper) expression(-log[10](p[adj])) else NULL, y = NULL) +
     theme_minimal(base_size = 9) +
     theme(panel.grid   = element_blank(),
@@ -367,21 +373,26 @@ make_half_bars <- function(df, fill_color, side, ylim) {
             else element_blank(),
           axis.line.x  = element_line(color = "grey50", linewidth = 0.3),
           axis.ticks.x = element_line(color = "grey50", linewidth = 0.3),
-          plot.margin  = if (is_upper && side == "left") margin(4, 0, 0, 3, "mm")
-                         else if (is_upper) margin(4, 3, 0, 0, "mm")
-                         else if (side == "left") margin(2, 0, 0, 3, "mm")
-                         else margin(2, 3, 0, 0, "mm"))
+          plot.margin  = if (is_upper && side == "left") margin(4, 2, 0, 3, "mm")
+                         else if (is_upper) margin(4, 3, 0, 2, "mm")
+                         else if (side == "left") margin(2, 2, 0, 3, "mm")
+                         else margin(2, 3, 0, 2, "mm"))
 
+  # Add a small padding at the inner edge (x=0) to create a visual gap between
+  # bar panels and the central scatter. mult[2] pads the low end of reversed scale
+  # (= right side visually), mult[1] pads the high end of forward scale (= left side).
   if (side == "left") {
     p + scale_x_reverse(limits = c(x_display_max, 0),
-                         breaks = brk_fn, expand = expansion(mult = c(0, 0))) +
+                         breaks = brk_fn,
+                         expand = expansion(mult = c(0, 0.08))) +
         scale_y_continuous(limits = ylim, expand = c(0, 0)) +
-        coord_cartesian(clip = "off")
+        coord_cartesian(clip = "on")
   } else {
     p + scale_x_continuous(limits = c(0, x_display_max),
-                            breaks = brk_fn, expand = expansion(mult = c(0, 0))) +
+                            breaks = brk_fn,
+                            expand = expansion(mult = c(0.08, 0))) +
         scale_y_continuous(limits = ylim, expand = c(0, 0)) +
-        coord_cartesian(clip = "off")
+        coord_cartesian(clip = "on")
   }
 }
 
@@ -402,7 +413,7 @@ r_spear_A  <- cor(dep_df$logFC_CRE, dep_df$logFC_PLA, use = "complete.obs",
 
 composite_A <- p_ul + p_scatter + p_ur + p_ll + p_lr + p_key +
   plot_layout(design = design_A,
-              widths  = c(70, 100, 70) / 240,
+              widths  = c(50, 140, 50) / 240,
               heights = c(85, 85, 8) / 178) +
   plot_annotation(
     title    = "Training Concordance: Quadrant ORA",
@@ -537,6 +548,8 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_D_nes_scatter.png"), pD,
 ggsave(file.path(PNL_PDF, "MAIN_panel_D_nes_scatter.pdf"), pD,
        width = 80, height = 80, units = "mm", device = pdf_device)
 message("Panel D done")
+# Strip internal title/subtitle for composite (external draw_label used instead)
+pD <- pD + labs(title = NULL, subtitle = NULL)
 
 # ── Panel C — fry rotation test ──────────────────────────────────────────────
 message("=== Panel C: fry ===")
@@ -695,6 +708,10 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_C_fry.png"), pC_fry,
        width = 130, height = 80, units = "mm", dpi = 300)
 ggsave(file.path(PNL_PDF, "MAIN_panel_C_fry.pdf"), pC_fry,
        width = 130, height = 80, units = "mm", device = pdf_device)
+# Strip internal title/subtitle for composite (external draw_label used instead)
+pC_fry <- pC_fry + plot_annotation(title = NULL, subtitle = NULL,
+                                    theme = theme(plot.title = element_blank(),
+                                                  plot.subtitle = element_blank()))
 
 # Save driving proteins
 driving_df <- dep_df |>
@@ -838,6 +855,8 @@ ggsave(file.path(PNL_PNG, "MAIN_panel_E_rrho2.png"), pE_heat,
 ggsave(file.path(PNL_PDF, "MAIN_panel_E_rrho2.pdf"), pE_heat,
        width = 90, height = 90, units = "mm", device = pdf_device)
 message("Panel E done")
+# Strip internal title/subtitle for composite (external draw_label used instead)
+pE_heat <- pE_heat + labs(title = NULL, subtitle = NULL)
 
 # ── Panel B — Pattern heatmap ────────────────────────────────────────────────
 message("=== Panel B: Pattern heatmap ===")
@@ -995,7 +1014,8 @@ pB <- ggplot() +
         axis.title   = element_blank(),
         panel.border = element_blank(),
         panel.grid   = element_blank(),
-        plot.margin  = margin(1, -28, 8, -14, "mm"))
+        # Reduced negative margins to stop bleed into neighbouring panels
+        plot.margin  = margin(1, -10, 8, -5, "mm"))
 
 ggsave(file.path(PNL_PNG, "MAIN_panel_B_heatmap.png"), pB,
        width = 80, height = 120, units = "mm", dpi = 300)
@@ -1038,8 +1058,8 @@ quad_legend <- ggplot(inset_quad_df) +
         plot.margin = margin(0, 0, 0, 0, "mm"))
 
 # ── Composite ────────────────────────────────────────────────────────────────
-COMP_W      <- 420
-COMP_H      <- 310
+COMP_W      <- 450
+COMP_H      <- 360
 PRINT_SCALE2 <- 380 / 178
 TAG_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
 TTL_SZ      <- round(10 * PRINT_SCALE2 * 0.85)
@@ -1059,12 +1079,12 @@ sub_E <- sprintf("%d proteins | max %.1f", n_shared_E, n_conc_E)
 
 layout <- paste(
   "##############",
-  "AAAAAAAABBBBBB",
-  "AAAAAAAABBBBBB",
-  "AAAAAAAABBBBBB",
-  "AAAAAAAABBBBBB",
-  "AAAAAAAABBBBBB",
-  "AAAAAAAABBBBBB",
+  "AAAAAAAAABBBBB",
+  "AAAAAAAAABBBBB",
+  "AAAAAAAAABBBBB",
+  "AAAAAAAAABBBBB",
+  "AAAAAAAAABBBBB",
+  "AAAAAAAAABBBBB",
   "##############",
   "##############",
   "CCCCCCDDDDEEEE",
@@ -1077,16 +1097,19 @@ layout <- paste(
 )
 
 composite_A_final <- composite_A + plot_annotation(
-  theme = theme(plot.margin = margin(-2.5, -1, -2.5, -1, "mm")))
+  theme = theme(plot.margin = margin(2, 8, 2, 2, "mm")))
 pC_fry_final <- pC_fry + plot_annotation(
-  theme = theme(plot.margin = margin(3, 5, 0, 0, "mm")))
-pD_final <- pD + theme(plot.margin = margin(-2.8, 5, 2.8, -5, "mm"))
-pE_final <- pE_heat + theme(plot.margin = margin(-2.1, -0.2, 3.4, -3.5, "mm"),
+  theme = theme(plot.margin = margin(5, 5, 2, 2, "mm")))
+pD_final <- pD + theme(plot.margin = margin(2, 5, 2, 2, "mm"))
+pE_final <- pE_heat + theme(plot.margin = margin(2, 2, 2, 2, "mm"),
                              axis.title = element_text(face = "bold", size = 8))
 pB_final <- pB + coord_cartesian(xlim = c(-0.25, X_BAR_MAX + 1.75),
                                   ylim = c(BAR_YMAX + ROW_H * 6.5, -ROW_H * 0.05),
                                   expand = FALSE) +
-                 theme(plot.margin = margin(1, -28, 8, -14, "mm"))
+                 labs(title = NULL, subtitle = NULL) +
+                 # Reduced negative margins (was -28/-14 left/right which caused bleed)
+                 theme(plot.margin = margin(2, 5, 5, 2, "mm"),
+                       plot.title = element_blank(), plot.subtitle = element_blank())
 
 fig <- wrap_elements(full = composite_A_final) +
        wrap_elements(full = pB_final) +
@@ -1095,14 +1118,17 @@ fig <- wrap_elements(full = composite_A_final) +
        wrap_elements(full = pE_final) +
        plot_layout(design = layout,
                    widths  = rep(1, 14),
-                   heights = c(6.5, rep(10, 6), 4, 4.5, rep(12, 6)))
+                   heights = c(8, rep(10, 6), 10, 10, rep(12, 6)))
 
-X_A <- 0.005; X_B <- 0.549; X_C <- 0.012; X_D <- 0.406; X_E <- 0.693
+X_A <- 0.005; X_B <- 0.614; X_C <- 0.012; X_D <- 0.406; X_E <- 0.693
 X_TTL      <- 0.030
 TAG_DY     <- -0.002
 SUB_OFFSET <- 0.020
-Y_A <- 0.984; Y_B <- 0.984
-Y_C <- 0.512; Y_D <- 0.511; Y_E <- 0.511
+Y_A <- 0.980; Y_B <- 0.980
+# Bottom-row label positions: recomputed for expanded filler rows (10+10 vs old 4+4.5)
+# Total height units = 160; bottom panels span rows 10-15 = 72 units; filler = 20 units
+# Bottom panel top edge fraction from bottom = (72 + 20) / 160 = 0.575 -> label just above
+Y_C <- 0.475; Y_D <- 0.475; Y_E <- 0.475
 
 composite_final <- ggdraw(fig) +
   draw_label("A",   x = X_A,          y = Y_A - TAG_DY,     size = TAG_SZ, fontface = "bold",        hjust = 0, vjust = 1) +
@@ -1120,7 +1146,7 @@ composite_final <- ggdraw(fig) +
   draw_label("E",   x = X_E,          y = Y_E - TAG_DY,     size = TAG_SZ, fontface = "bold",        hjust = 0, vjust = 1) +
   draw_label(ttl_E, x = X_E + X_TTL,  y = Y_E,              size = TTL_SZ, fontface = "bold",        hjust = 0, vjust = 1) +
   draw_label(sub_E, x = X_E + X_TTL,  y = Y_E - SUB_OFFSET, size = SUB_SZ, fontface = "bold.italic", hjust = 0, vjust = 1, colour = "grey40") +
-  draw_plot(quad_legend, x = 0.64, y = 0.524, width = 0.30, height = 0.045)
+  draw_plot(quad_legend, x = 0.64, y = 0.487, width = 0.30, height = 0.045)
 
 ggsave(file.path(RPT_PDF, "MAIN_F04_composite.pdf"), composite_final,
        width = COMP_W, height = COMP_H, units = "mm", device = pdf_device)
