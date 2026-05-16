@@ -164,10 +164,11 @@ perm_res <- adonis2(dist_mat ~ cancer + timepoint, data = norm_meta,
 perm_terms <- c("cancer", "timepoint")
 perm_r2 <- perm_res[perm_terms, "R2"]
 perm_pv <- perm_res[perm_terms, "Pr(>F)"]
+fmt_perm_p <- function(p) if (p < 0.001) "P<0.001" else sprintf("P=%.3f", p)
 perm_label <- sprintf(
-  " PERMANOVA\nGroup     R² = %.3f,  %s\nTime      R² = %.3f,  %s",
-  perm_r2[1], fmt_p(perm_pv[1]),
-  perm_r2[2], fmt_p(perm_pv[2]))
+  " PERMANOVA\nGroup     R2 = %.3f,  %s\nTime       R2 = %.3f,  %s",
+  perm_r2[1], fmt_perm_p(perm_pv[1]),
+  perm_r2[2], fmt_perm_p(perm_pv[2]))
 
 PCA_LABEL_MAP <- c(
   CRE_T1 = "CRE Pre", CRE_T2 = "CRE Post",
