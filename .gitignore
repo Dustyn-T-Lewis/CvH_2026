@@ -15,3 +15,7 @@ Rplots.pdf
 # Quarto render artifacts (keep local only)
 *_files/
 */a_script/*.html
+
+# regenerated stage artifacts (scripts are tracked, outputs are not)
+0*/c_data/
+0*/b_reports/

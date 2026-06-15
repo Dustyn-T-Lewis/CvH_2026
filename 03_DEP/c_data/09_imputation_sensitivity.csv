@@ -1,7 +1,0 @@
-contrast,spearman_rho,p_value,n_proteins
-Cancer_vs_Healthy,0.9846,0,2408
-Training_CR,0.9534,0,2401
-Baseline_Supplement,0.9759,0,2465
-Training_CRE,0.9783,0,2500
-Training_PLA,0.9635,0,2416
-Supplement_Interaction,0.9681,0,2401
