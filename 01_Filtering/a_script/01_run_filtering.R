@@ -14,6 +14,7 @@
 
 suppressPackageStartupMessages({
   library(proteoDA); library(here); library(readxl); library(readr); library(dplyr); library(tidyr)
+  library(openxlsx); library(ggplot2); library(forcats); library(patchwork)
 })
 set.seed(42)
 source(here("R", "cvh_design.R"))
@@ -25,9 +26,13 @@ cfg <- list(
   pheno_file = here("00_input", "CRm_meta.csv"),
   hpa_file   = here("00_input", "HPA_annotations.tsv"),
   data_dir   = here("01_Filtering", "c_data"),
+  report_dir = here("01_Filtering", "b_reports"),
   min_reps = 5L, min_groups = 1L, outlier_k = 3, mad_k = 3, mahal_p = 0.01
 )
-dir.create(cfg$data_dir, recursive = TRUE, showWarnings = FALSE)
+# self-clean: stage owns its outputs, so old runs never leave cruft
+clear_dir <- function(d) { dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  unlink(setdiff(list.files(d, full.names = TRUE), file.path(d, ".gitkeep")), recursive = TRUE) }
+clear_dir(cfg$data_dir); clear_dir(cfg$report_dir)
 
 # --- 1. Load + metadata + 3-group scheme + dedup -----------------------------
 raw <- read_excel(cfg$raw_file)
@@ -107,13 +112,33 @@ outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
 cat(sprintf("Outliers (>=%d/4): %s\n", cfg$outlier_k, if (length(outlier_ids)) paste(outlier_ids, collapse = ", ") else "none"))
 if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
 
-# --- 5. Export ---------------------------------------------------------------
-saveRDS(dal, file.path(cfg$data_dir, "01_DAList_filtered.rds"))
-write_csv(bind_cols(as_tibble(dal$annotation) |> select(uniprot_id, protein, gene, description),
-                    as_tibble(dal$data)), file.path(cfg$data_dir, "02_filtered_matrix.csv"))
-write_csv(flog, file.path(cfg$data_dir, "03_filter_log.csv"))
-saveRDS(list(filter_log = flog, outlier_diag = outlier_diag, outlier_ids = outlier_ids, n_raw = n_raw),
-        file.path(cfg$data_dir, "00_filter_intermediates.rds"))
+# --- 5. Export: RDS handoff + ONE multi-sheet workbook + blood-bar report -----
+saveRDS(dal, file.path(cfg$data_dir, "DAList_filtered.rds"))    # clean handoff to Stage 02
+
+removed <- bl |> filter(verdict == "remove", gene %in% raw$gene) |>
+  select(gene, uniprot, reason, blood_conc)
+write.xlsx(
+  list(filter_log          = flog,
+       contaminants_removed = removed,
+       outlier_diagnostics  = outlier_diag,
+       blood_classification = bl |> select(gene, uniprot, secretome, ery, myo, reason, verdict)),
+  file.path(cfg$data_dir, "filtering_report.xlsx"), overwrite = TRUE)
+
+pal <- c("remove: secreted-to-blood (plasma)" = "#D6604D", "remove: immunoglobulin" = "#F4A582",
+         "remove: erythrocyte (hemoglobin)" = "#9970AB")
+bars <-
+  (count(removed, reason) |> ggplot(aes(reorder(reason, n), n, fill = reason)) +
+     geom_col(show.legend = FALSE) + geom_text(aes(label = n), hjust = -0.2, size = 3.5) +
+     scale_fill_manual(values = pal) + coord_flip(clip = "off") +
+     labs(title = "A  Filtered out, by reason", x = NULL, y = "proteins")) /
+  (removed |> filter(!is.na(blood_conc)) |> slice_max(blood_conc, n = 25) |>
+     ggplot(aes(fct_reorder(gene, blood_conc), log10(blood_conc + 1), fill = reason)) +
+     geom_col(show.legend = FALSE) + scale_fill_manual(values = pal) + coord_flip() +
+     labs(title = "B  Top filtered-out plasma proteins by blood concentration",
+          x = NULL, y = "log10 blood conc [pg/L]")) +
+  plot_layout(heights = c(1, 3)) & theme_minimal(base_size = 11)
+ggsave(file.path(cfg$report_dir, "blood_contaminants.pdf"), bars, width = 8, height = 9)
+
 if (file.exists("Rplots.pdf")) file.remove("Rplots.pdf")
 cat(sprintf("Done: %d proteins x %d samples -> %s/\n", nrow(dal$data), ncol(dal$data), cfg$data_dir))
 print(as.data.frame(flog))

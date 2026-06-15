@@ -16,6 +16,9 @@ CONTRASTS <- c("CRvH_Baseline = CR_pre - H_pre",
                "Resid = CR_post - H_pre")
 FORMULA   <- "~ 0 + group_time + (1 | Subject_ID)"
 CANONICAL <- "imp4p"
+clear_dir <- function(d) { dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  unlink(setdiff(list.files(d, full.names = TRUE), file.path(d, ".gitkeep")), recursive = TRUE) }
+clear_dir(here("03_DEP", "b_imputed", "c_data")); clear_dir(here("03_DEP", "b_imputed", "b_reports"))
 nd <- here("02_Normalization", "c_data")
 methods <- c(imp4p = "DAList_imputed_imp4p.rds", mscoreutils = "DAList_imputed_mscoreutils.rds")
 
