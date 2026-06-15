@@ -23,8 +23,7 @@ cfg <- list(
   raw_file   = here("00_input", "CvH_raw.xlsx"),
   meta_file  = here("00_input", "CvH_meta.csv"),
   pheno_file = here("00_input", "CRm_meta.csv"),
-  hpa_muscle = here("00_input", "HPA_skeletal_muscle_annotations.tsv"),
-  hpa_blood  = here("00_input", "HPA_blood_annotations.tsv"),
+  hpa_file   = here("00_input", "HPA_annotations.tsv"),  # single HPA export (presence + blood)
   data_dir   = here("01_Filtering", "c_data"),
   min_reps = 5L, min_groups = 1L, outlier_k = 3, mad_k = 3, mahal_p = 0.01
 )
@@ -61,10 +60,8 @@ log_step <- function(flog, step, before, after)
 cat(sprintf("Raw: %d proteins x %d samples\n", n_raw, ncol(intensity)))
 
 # --- 2. HPA tissue-context filter --------------------------------------------
-hpa <- read_tsv(cfg$hpa_muscle, show_col_types = FALSE) |>
-  select(Gene, Ensembl, Evidence,
-         Protein_class = `Protein class`,
-         Subcellular_main = `Subcellular main location`, Interactions) |>
+hpa <- read_tsv(cfg$hpa_file, show_col_types = FALSE) |>
+  select(Gene, Protein_class = `Protein class`, Secretome = `Secretome location`) |>
   distinct(Gene, .keep_all = TRUE)
 n0 <- nrow(annotation); keep <- annotation$gene %in% hpa$Gene
 intensity <- intensity[keep, ]; annotation <- annotation[keep, ] |> left_join(hpa, by = c("gene" = "Gene"))
@@ -72,7 +69,7 @@ flog <- log_step(flog, "HPA tissue filter", n0, nrow(annotation))
 cat(sprintf("HPA: %d -> %d\n", n0, nrow(annotation)))
 
 # --- 2b. HPA-derived blood-contaminant removal -------------------------------
-blood_genes <- blood_contaminant_genes(cfg$hpa_blood)
+blood_genes <- blood_contaminant_genes(cfg$hpa_file)
 n0 <- nrow(annotation); keep <- !annotation$gene %in% blood_genes
 intensity <- intensity[keep, ]; annotation <- annotation[keep, ]
 flog <- log_step(flog, "Blood contaminant removal", n0, nrow(annotation))
