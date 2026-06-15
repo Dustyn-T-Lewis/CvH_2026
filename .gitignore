@@ -19,3 +19,6 @@ Rplots.pdf
 # regenerated stage artifacts (scripts are tracked, outputs are not)
 0*/c_data/
 0*/b_reports/
+
+**/c_data/
+**/b_reports/
