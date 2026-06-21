@@ -28,3 +28,4 @@ Rplots.pdf
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 CvH_pipeline.html
 tutorials/*.html
+*_cache/
