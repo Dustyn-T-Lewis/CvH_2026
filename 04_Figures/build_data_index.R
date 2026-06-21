@@ -18,7 +18,7 @@ for (fig in c("F02", "F03", "F04")) {
   df <- read_csv(dict_path, show_col_types = FALSE)
   addWorksheet(wb, fig_stream)
   writeData(wb, fig_stream, df)
-  setColWidths(wb, fig_stream, cols = 1:ncol(df), widths = c(40, 10, 60, 30))
+  setColWidths(wb, fig_stream, cols = seq_len(ncol(df)), widths = c(40, 10, 60, 30))
 }
 
 out_path <- "04_Figures/supplementary_data_index.xlsx"

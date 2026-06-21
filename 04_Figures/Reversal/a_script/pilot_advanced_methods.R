@@ -197,7 +197,7 @@ if (requireNamespace("roastgsa", quietly = TRUE)) {
     })
   }
 
-  if (length(roast_results) > 0) {
+  if (length(roast_results)) {
     roast_df <- bind_rows(roast_results) %>%
       mutate(set = rep(names(index_list), length(roast_results)))
     write_csv(roast_df, file.path(DAT, "roastgsa_multiscore.csv"))

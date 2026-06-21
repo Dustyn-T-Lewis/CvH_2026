@@ -51,7 +51,7 @@ message(sprintf("  RRHO2 matrix: %d x %d", nr, nc))
 na_rows <- which(apply(hmat, 1, function(r) all(is.na(r))))
 na_cols <- which(apply(hmat, 2, function(c) all(is.na(c))))
 
-if (length(na_rows) > 0 && length(na_cols) > 0) {
+if (length(na_rows) && length(na_cols)) {
   row_before <- 1:(min(na_rows) - 1)
   row_after  <- (max(na_rows) + 1):nr
   col_before <- 1:(min(na_cols) - 1)
