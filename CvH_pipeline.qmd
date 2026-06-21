@@ -1,0 +1,462 @@
+---
+title: "Cancer-Recovery vs Healthy (CvH) Skeletal-Muscle Proteomics"
+subtitle: "A ground-up walkthrough of the proteoDA-native pipeline: filtering → normalization → differential expression → rejuvenation analysis"
+author: "A_CvH_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    theme: cosmo
+    fig-cap-location: bottom
+    embed-resources: true
+execute:
+  eval: false      # documentation build: code is shown, not re-run; outputs are frozen
+  echo: true
+  warning: false
+  message: false
+---
+
+> **How to read this document.** Every code block is the *actual* code from the
+> pipeline scripts, shown for provenance but **not re-executed** (`eval: false`).
+> All numbers and figures are **frozen** from the committed run. To reproduce,
+> run the stage scripts in order (§9). Paths are relative to the project root
+> (`A_CvH_2026/`).
+
+# Overview {#sec-overview}
+
+This pipeline asks a two-part question in skeletal-muscle proteomes of cancer
+survivors:
+
+1. **What does cancer recovery do to the muscle proteome?** — the *disease axis*
+   (cancer-recovery baseline vs healthy controls).
+2. **Does exercise training move that proteome back toward healthy?** — the
+   *training axis*, and a formal **rejuvenation / signature-reversal** analysis.
+
+The design is deliberately reduced to **three groups** so each contrast answers
+one clean question, and the supplement (creatine vs placebo) is pooled out
+because it is not the question of interest here.
+
+| `group_time` | Meaning | n samples |
+|---|---|---|
+| `H_pre`   | Healthy controls, single timepoint | 10 |
+| `CR_pre`  | Cancer-recovery subjects, pre-training (CRE+PLA pooled) | 15 |
+| `CR_post` | Cancer-recovery subjects, post-training (CRE+PLA pooled) | 14 |
+
+The three contrasts built on this scheme:
+
+| Contrast | Definition | Question |
+|---|---|---|
+| **`CRvH_Baseline`** (D) | `CR_pre − H_pre`   | Disease deviation from healthy |
+| **`CR_Training`** (T)   | `CR_post − CR_pre` | Effect of training |
+| **`Resid`** (R)         | `CR_post − H_pre`  | What remains after training (R = D + T) |
+
+Architecture (shared house style): each stage is a numbered folder with
+`a_script/` (code), `b_reports/` (proteoDA QC PDFs + figures), `c_data/`
+(RDS hand-offs + one consolidated `.xlsx`). Stages are **self-cleaning**: a
+re-run wipes its own outputs first, so stale artifacts never accumulate.
+
+```
+00_input/        raw matrix, metadata, HPA reference
+01_Filtering/    contaminant + missingness + outlier filtering  → DAList_filtered.rds
+02_Normalization/ cycloess + (imp4p | mscoreutils) imputation   → DAList_normalized.rds
+03_DEP/
+  a_non_imputed/  PRIMARY limma DE (NA-tolerant)                → combined_results_pi.csv
+  b_imputed/      imputed DE (concordance check)
+04_Figures/       publication composites
+  Reversal/       rejuvenation analysis (φ, fry, RRHO2) + composite
+```
+
+# Stage 00 — Inputs {#sec-inputs}
+
+Three files drive everything downstream.
+
+| File | Contents |
+|---|---|
+| `00_input/CvH_raw.xlsx` | DIA-MS protein matrix, **3,172 protein groups × 46 columns** (5 annotation cols + 41 samples) |
+| `00_input/CvH_meta.csv` | Analysis sample sheet (`Col_ID`, `Subject_ID`, `Group`, `Timepoint`, `Group_Time`, `Supplement`), one row per sample |
+| `00_input/HPA_annotations.tsv` | Human Protein Atlas reference (12,894 genes): secretome location, blood concentration, single-cell nCPM, protein class |
+
+The sample sheet is taken as given; from its `Group_Time` column we derive the
+pooled 3-group `group_time`, then align the matrix to it by `Col_ID` — a
+mismatch errors immediately, which is the only check worth keeping:
+
+```{r}
+#| label: load-metadata
+metadata <- readr::read_csv(here::here("00_input", "CvH_meta.csv"), show_col_types = FALSE)
+metadata$group_time <- dplyr::case_when(
+  metadata$Group_Time %in% c("CRE_T1", "PLA_T1") ~ "CR_pre",
+  metadata$Group_Time %in% c("CRE_T2", "PLA_T2") ~ "CR_post",
+  metadata$Group_Time == "H_T1"                  ~ "H_pre")
+```
+
+# Stage 01 — Filtering {#sec-filtering}
+
+This is the stage the study most cares about getting right: **systematically and
+defensibly removing blood-plasma contaminants** from a muscle biopsy proteome,
+without throwing away real muscle biology.
+
+## Why blood contamination matters {#sec-blood-why}
+
+Needle biopsies are perfused with blood. Plasma proteins (albumin, hemoglobins,
+immunoglobulins, complement, apolipoproteins) are extremely abundant and bury
+the muscle signal. But naïvely removing "anything found in blood" also deletes
+real muscle proteins that legitimately appear in plasma MS (collagens, VIM, FLNA
+in vessel walls). We therefore use a **rule that requires a plasma/blood origin
+*and* not a muscle origin**, sourced entirely from the Human Protein Atlas.
+
+## The classifier (inline in Stage 01) {#sec-blood-rule}
+
+A protein is flagged **remove** if it is plasma-origin **and not** muscle-origin:
+
+- **plasma-origin** = HPA Secretome location is *"Secreted to blood"*, **or** it
+  is an immunoglobulin gene, **or** its single-cell erythrocyte signal is high
+  (`Erythrocytes ≥ 5000 nCPM` — captures the hemoglobins);
+- **muscle-origin rescue** = high skeletal-myonuclei single-cell signal
+  (`Myonuclei ≥ 50 nCPM`) — a protein with real myofiber expression is kept even
+  if it also circulates.
+
+```{r}
+#| label: blood-classifier
+bl <- readr::read_tsv(here::here("00_input", "HPA_annotations.tsv"), show_col_types = FALSE) |>
+  dplyr::transmute(gene = Gene, uniprot = Uniprot, protein_class = `Protein class`,
+    secretome = `Secretome location`,
+    ery = suppressWarnings(as.numeric(`Single Cell Type RNA - Erythrocytes [nCPM]`)),
+    myo = suppressWarnings(as.numeric(`Single Cell Type RNA - Myonuclei [nCPM]`))) |>
+  dplyr::mutate(
+    secreted_blood = secretome == "Secreted to blood" & !is.na(secretome),
+    is_ig          = stringr::str_detect(dplyr::coalesce(protein_class, ""), "Immunoglobulin genes"),
+    is_erythrocyte = !is.na(ery) & ery >= 5000,
+    muscle_keep    = !is.na(myo) & myo >= 50,
+    verdict = dplyr::if_else(!muscle_keep & (secreted_blood | is_ig | is_erythrocyte),
+                             "remove", "keep"))
+remove_genes <- bl$gene[bl$verdict == "remove"]
+```
+
+The erythrocyte cut was raised to 5000 nCPM specifically because lower cuts pull
+in housekeeping proteins inflated in enucleate cells; the platelet arm was
+dropped for the same noise reason. This keeps the removal list dominated by
+*bona fide* plasma proteins (hemoglobins, albumin, complement, Ig).
+
+## Full filtering cascade {#sec-filter-cascade}
+
+```{r}
+#| label: filter-cascade
+dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df))
+# 1. keep only proteins present in the HPA reference (annotation coverage)
+# 2. drop blood-contaminant genes (verdict == "remove")
+# 3. native missingness filter: >=5 valid values in >=1 group
+dal <- filter_proteins_by_group(dal, min_reps = 5, min_groups = 1,
+                                grouping_column = "group_time")
+```
+
+> **Implementation note.** `proteoDA::filter_proteins_by_annotation()` is broken
+> under R ≥ 4.4 (an internal length-2 `class()` check errors), so the
+> annotation-based removals are done by direct matrix subsetting. The
+> *group/sample* filters stay native (`filter_proteins_by_group`,
+> `filter_samples`) — they use `inherits()` and work fine.
+
+**Frozen filtering log:**
+
+| Step | Proteins after | Removed | % of raw |
+|---|---|---|---|
+| Raw input | 3,172 | — | 100.0 |
+| HPA presence | 2,962 | 210 | 93.4 |
+| Blood-contaminant removal | 2,816 | **146** | 88.8 |
+| Missingness (≥5 in ≥1 group) | **2,555** | 261 | 80.5 |
+
+## Outlier detection {#sec-outliers}
+
+Samples are flagged by a **4-method consensus** (a sample is dropped only if
+≥3 of 4 methods agree — robust to any single method's quirk):
+
+1. **Missingness** — high % missing, or a large pre/post jump in a paired subject;
+2. **Median-intensity MAD** — global signal level far from the cohort median;
+3. **PCA Mahalanobis** — multivariate outlier on PC1–3 (χ² at p<0.01);
+4. **Correlation** — low median inter-sample correlation.
+
+```{r}
+#| label: outlier-consensus
+outlier_diag <- tibble(Col_ID = colnames(dal$data),
+                       miss_flag, mad_flag, pca_flag, cor_flag) |>
+  mutate(n_flags = miss_flag + mad_flag + pca_flag + cor_flag,
+         consensus_outlier = n_flags >= 3)
+dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
+```
+
+Two samples were dropped by consensus: **`CR9_T1` and `CR10_T1`**. Final
+filtered matrix: **2,555 proteins × 39 samples**, saved as
+`01_Filtering/c_data/DAList_filtered.rds`, with a single
+`filtering_report.xlsx` and a `b_reports/blood_contaminants.pdf` summary bar chart.
+The workbook is written for **manual review** — `contaminants_removed` and
+`contaminants_rescued` each carry the protein name, description, and the HPA
+evidence (secretome, blood concentration, erythrocyte / myonuclei signals) behind
+every keep/remove call, so the blood filter is auditable by eye rather than by a
+test harness. Sheets: `filter_log`, `contaminants_removed`, `contaminants_rescued`,
+`outlier_diagnostics`, `blood_classification`.
+
+# Stage 02 — Normalization & imputation {#sec-norm}
+
+## Normalization {#sec-norm-cycloess}
+
+Cyclic-loess normalization via proteoDA's native `normalize_data()`, bracketed
+by its own QC reports so the choice is auditable (`write_norm_report` compares
+methods; `write_qc_report` shows the post-normalization state).
+
+```{r}
+#| label: normalize
+dal <- readRDS(here::here("01_Filtering", "c_data", "DAList_filtered.rds"))
+write_norm_report(dal, grouping_column = "group_time",
+                  output_dir = report_dir, filename = "norm_comparison.pdf")
+dal <- normalize_data(dal, norm_method = "cycloess")
+write_qc_report(dal, color_column = "group_time", output_dir = report_dir,
+                filename = "qc_normalized.pdf")
+saveRDS(dal, file.path(data_dir, "DAList_normalized.rds"))   # clean hand-off
+```
+
+The normalized matrix **keeps its missing values** — this is deliberate. The
+primary DE test (§4) is NA-tolerant, so we never impute before testing.
+
+## Imputation (for multivariate methods only) {#sec-imputation}
+
+Imputation is provided as **two independent options** in
+`02_Normalization/imputation/a_script/`, used *only* by downstream methods that
+require a complete matrix (figures, rotation tests, WGCNA) — never by the
+primary DE test.
+
+- **`a_imp4p.R` — canonical.** Mechanism-aware multiple imputation
+  (`imp4p::impute.mi`): MCAR positions filled with `mle`, MNAR positions with
+  `igcda` (left-censored). This respects that low-abundance proteins are
+  missing-not-at-random.
+- **`b_mscoreutils.R` — comparison.** `imputeLCMD::model.Selector` partitions
+  MAR vs MNAR, then `MsCoreUtils::impute_matrix(method = "mixed")` applies kNN to
+  MAR and QRILC to MNAR positions.
+
+```{r}
+#| label: imp4p
+conds <- factor(dal$metadata$group_time)
+imp <- imp4p::impute.mi(tab = as.matrix(dal$data), conditions = conds,
+                        methodMCAR = "mle", methodMNAR = "igcda")
+saveRDS(dal_imp, here("02_Normalization", "imputation", "c_data", "DAList_imputed_imp4p.rds"))
+```
+
+# Stage 03 — Differential expression {#sec-dep}
+
+## Why non-imputed is primary {#sec-dep-primary}
+
+The gold standard for the DE *test* is **not to impute** — `limma` handles
+per-protein missing values natively, whereas imputing before testing
+artificially shrinks variances and inflates false positives. So:
+
+- **`a_non_imputed/` is PRIMARY** (the matrix with NAs);
+- **`b_imputed/` is a concordance check** (imp4p canonical + mscoreutils).
+
+## Model & repeated measures {#sec-dep-model}
+
+```{r}
+#| label: dep-model
+dal <- add_design(dal, "~ 0 + group_time + (1 | Subject_ID)")
+dal <- add_contrasts(dal, contrasts_vector = c(
+  "CRvH_Baseline = CR_pre - H_pre",
+  "CR_Training   = CR_post - CR_pre",
+  "Resid         = CR_post - H_pre"))
+dal <- fit_limma_model(dal)
+dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")
+```
+
+The `(1 | Subject_ID)` term is the key to **within-subject** modelling: CR
+subjects contribute paired `CR_pre`/`CR_post` samples, healthy controls
+contribute one. proteoDA routes this through `limma::duplicateCorrelation`,
+estimating **one consensus correlation** (ρ̂ ≈ **0.25**) that accounts for the
+repeated measurement, then fits with `eBayes(robust = TRUE)`. Significance uses
+the **Π-score** (Xiao 2014, `Π = P.Value^|logFC|`, threshold < 0.05), which
+ranks by significance *and* effect size, alongside BH-FDR.
+
+## Frozen results {#sec-dep-results}
+
+| Contrast | n | FDR < 0.10 | Π < 0.05 (↑ / ↓) |
+|---|---|---|---|
+| **CRvH_Baseline** (disease) | 2,555 | **686** | 504 (350 ↑ / 154 ↓) |
+| **CR_Training** (training)  | 2,555 | 0 | 55 (27 ↑ / 28 ↓) |
+| **Resid** (residual)        | 2,555 | 562 | 477 (337 ↑ / 140 ↓) |
+
+The disease axis is strong (686 FDR hits); the *training* axis has **no FDR
+hits** but 55 Π-score hits — training is a subtle, distributed effect, which is
+exactly why the set-level reversal analysis (§5) is the right tool rather than
+per-protein training hits.
+
+## Imputed concordance {#sec-dep-concordance}
+
+Running the same model on imputed matrices confirms the strong contrasts are
+robust and shows where imputation diverges (the weak training axis):
+
+| Method | CRvH_Baseline | CR_Training | Resid |
+|---|---|---|---|
+| **imp4p** (canonical) | ρ = 0.92 | ρ = 0.77 | ρ = 0.96 |
+| mscoreutils | ρ = 0.78 | ρ = 0.70 | ρ = 0.78 |
+
+Strong-contrast logFCs are highly concordant with the non-imputed primary
+(Spearman ρ up to 0.96); the weak `CR_Training` axis is where imputation choice
+matters most — another reason the primary DE stays non-imputed.
+
+# Reversal / rejuvenation analysis (`04_Figures/Reversal/`) {#sec-reversal}
+
+The headline biological question: **does training reverse the cancer-recovery
+proteome back toward healthy?** This analysis is downstream of the primary DEP
+(it reads `03_DEP/a_non_imputed/c_data/combined_results_pi.csv`) but lives with
+its figure: engine = `04_Figures/Reversal/a_script/reversal.R`, consumed by the
+panels via `a_script/reversal_inputs.R`.
+
+## The rejuvenation fraction φ {#sec-phi}
+
+Each protein has a level at three points: **healthy (H)**, **cancer-recovery
+before training (CR_pre)**, and **after training (CR_post)**. From the §4 contrasts,
+the **disease deviation** is **D = CRvH_Baseline = CR_pre − H** (how far the disease
+pushed the protein from healthy) and the **training response** is
+**T = CR_Training = CR_post − CR_pre** (how far training moved it). The third
+contrast, **`Resid` = CR_post − H = D + T**, is just the gap *still* left after
+training — a plain difference, **not** the reversal itself.
+
+The reversal question is separate: *did training move the protein back toward
+healthy?* The **rejuvenation fraction** answers it as "what fraction of the disease
+change did training undo":
+
+$$\varphi = -\,T / D$$
+
+The disease moved the protein by **D**; undoing it fully means moving back by **−D**,
+so φ is training's reversing size over the disease's size:
+
+- **φ = 0** → training did nothing (T = 0); the protein stays at its diseased level;
+- **0 < φ < 1** → partial reversal — some of the disease change undone;
+- **φ = 1** → exact reversal (T = −D); the protein is back to healthy and
+  residual `Resid = D(1 − φ) = 0`;
+- **φ > 1** → overshoot past healthy; **φ < 0** → training **amplifies** the disease change.
+
+So `Resid` (the leftover gap, a difference) and φ (the fraction undone, a ratio)
+are two views of the same story, tied by **`Resid` = D·(1 − φ)**.
+
+Disease-signature proteins (Π < 0.05 on D) are classified with a ±0.25 band:
+
+| Class | Rule | Meaning |
+|---|---|---|
+| **Normalized**  | φ ≥ 0.25  | training reverses ≥25% of the disease deviation |
+| **Persistent**  | \|φ\| < 0.25 | disease deviation largely unchanged by training |
+| **Exacerbated** | φ ≤ −0.25 | training pushes further from healthy |
+
+```{r}
+#| label: phi
+wide <- load_reversal_table("03_DEP/a_non_imputed/c_data/combined_results_pi.csv")
+phi  <- compute_phi(wide, band = 0.25)   # disease_sig = sig_pi_D != 0
+```
+
+## Guarding against shared-baseline circularity {#sec-circularity}
+
+D and T **share the `CR_pre` samples**, so a structural negative correlation
+between their fold-change vectors is mathematically guaranteed (Smyth & Altman
+2013, the two-channel reference-design result). A naïve "reversal exceeds zero"
+claim would be partly an artifact. The engine therefore tests the **right** null:
+
+> **Protein-label permutation null** — does the *disease-DEP set* reverse **more
+> than random proteins** under the *same* shared-baseline structure? It reassigns
+> DEP membership to random proteins of equal size, holding all fold changes
+> fixed, and compares the observed reversal fraction to that background.
+
+```{r}
+#| label: perm-null
+null <- reversal_permutation_null(phi, n_perm = 2000, seed = 42)
+# obs reversal fraction vs background distribution → z, empirical p
+```
+
+This is corroborated by two model-aware / non-parametric methods that do not
+share the circularity weakness:
+
+- **fry** (ROAST-family rotation, run **within the limma model** with
+  `block = Subject_ID` + duplicateCorrelation) — tests whether the disease-Up /
+  disease-Down sets move in the *reversing* direction under training. Run on the
+  imp4p matrix (rotation tests need a complete matrix). **camera** is the
+  competitive complement.
+- **RRHO2** — threshold-free rank–rank hypergeometric; the off-diagonal
+  quadrants (disease-Up × training-Down, disease-Down × training-Up) are the
+  reversal hotspots.
+
+```{r}
+#| label: rotation-rrho2
+rot  <- reversal_rotation_test(dal_imp, phi)   # fry (block) + camera
+rrho <- reversal_rrho2(phi)                    # 4-quadrant concordance map
+```
+
+## Frozen reversal results {#sec-reversal-results}
+
+On the **504 disease-signature proteins** (350 ↑ / 154 ↓):
+
+- **70.8 % reverse** with training, and this **exceeds the random background**
+  under the circularity null: permutation **p = 0.0005, z = 4.72**. The reversal
+  is real, not an artifact of the shared baseline.
+- **Directional asymmetry** (a novel proteome-level finding): disease-**down**
+  proteins normalize more than disease-**up** ones — **77.3 % vs 68.0 %**
+  reversed (two-proportion p = 0.045). Mechanistically consistent with
+  constitutive proteins lost to cachexia/disuse being passively restored by
+  anabolic signalling, while actively-driven up-regulated programs resist.
+- **fry**: disease-Up→Down p = 0.66, disease-Down→Up p = 0.13 (conservative, both
+  directionally reversing); **camera** (competitive) p = 5×10⁻⁷ and 4×10⁻⁵.
+- Global Spearman(D, T) = −0.32 (all proteins), −0.42 (disease signature) — the
+  signature reverses more strongly than the structural background.
+
+These tables (`phi_table`, `class_counts`, asymmetry, `permutation_null`,
+`global_correlation`, `fry`, `camera`, RRHO2) are recomputed on the fly within
+the reversal figure stage by the engine — there is no separate upstream runner.
+
+# Figures {#sec-figures}
+
+The reversal composite (`04_Figures/Reversal/`) is the analytical centrepiece —
+five panels, all driven by the engine outputs via a thin back-compat adapter
+(`a_script/reversal_inputs.R`) and a regenerated pathway-NES cache
+(`a_script/00_build_fgsea_cache.R`):
+
+- **A** Quadrant-ORA scatter (per-protein landscape, enriched pathways per quadrant)
+- **B** Protein-to-pathway sankey
+- **C** fry rotation test (running-enrichment curves)
+- **D** Pathway-NES scatter (disease vs training, with Spearman + Fisher-Z CI)
+- **E** RRHO2 (threshold-free 4-quadrant concordance map)
+
+![CvH reversal composite — `04_Figures/Reversal/b_reports/main/png/MAIN_Reversal_composite.png`](04_Figures/Reversal/b_reports/main/png/MAIN_Reversal_composite.png)
+
+Source data for all panels is consolidated in
+`04_Figures/Reversal/c_data/Reversal_supplementary.xlsx`. The proteome-overview,
+baseline, and training figures live in `04_Figures/F01`–`F08`.
+
+# Reproducibility {#sec-repro}
+
+Run the stages in order from the project root; each stage self-cleans and writes
+an RDS hand-off the next stage reads:
+
+```bash
+Rscript 01_Filtering/a_script/01_run_filtering.R
+Rscript 02_Normalization/a_script/01_run_normalization.R
+Rscript 02_Normalization/imputation/a_script/a_imp4p.R        # canonical
+Rscript 02_Normalization/imputation/a_script/b_mscoreutils.R  # comparison
+Rscript 03_DEP/a_non_imputed/a_script/01_run_dep.R            # PRIMARY
+Rscript 03_DEP/b_imputed/a_script/01_run_dep_imputed.R        # concordance
+Rscript 04_Figures/Reversal/a_script/00_build_fgsea_cache.R   # pathway cache + rejuvenation engine
+Rscript 04_Figures/Reversal/a_script/main/90_stitch_main.R    # composite
+```
+
+**Key design decisions, in one place:**
+
+- 3-group pooled scheme; supplement effect intentionally removed.
+- Repeated measures via `(1 | Subject_ID)` → duplicateCorrelation (single ρ̂).
+- Blood filtering = HPA secretome + erythrocyte signals, rescued by myonuclei.
+- DE test on the **non-imputed** matrix; imputation (imp4p canonical) only for
+  complete-matrix methods.
+- Π-score (Xiao 2014 Eq. 2) for significance + effect size.
+- Reversal φ = −T/D, validated against a protein-label permutation null for the
+  shared-`CR_pre` circularity, with fry + RRHO2 corroboration.
+
+```{r}
+#| label: session-info
+sessionInfo()
+```

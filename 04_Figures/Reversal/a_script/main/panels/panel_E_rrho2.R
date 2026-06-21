@@ -20,8 +20,7 @@ dir.create(file.path(DAT, "panel_E"), recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # --- Load DEP data & build rank lists ---
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv",
-                    show_col_types = FALSE)
+source("04_Figures/Reversal/a_script/reversal_inputs.R")   # dep_df (old column names)
 
 rr_df <- dep_df %>%
   transmute(gene, t_1 = t_Cancer_vs_Healthy, t_2 = t_Training_CR) %>%

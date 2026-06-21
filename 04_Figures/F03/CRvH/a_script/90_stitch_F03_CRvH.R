@@ -10,10 +10,22 @@ suppressPackageStartupMessages({
 })
 
 RPT <- "04_Figures/F03/CRvH/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 read_panel_png <- function(filename) {
-  path <- file.path(RPT, filename)
+  path <- file.path(RPT_PNG, filename)
   if (!file.exists(path)) stop("Missing panel: ", path)
   rasterGrob(readPNG(path), interpolate = TRUE)
 }
@@ -34,10 +46,10 @@ composite <- (wrap_panel(pA) | wrap_panel(pB)) /
 
 COMP_W <- 290; COMP_H <- 220
 
-ggsave(file.path(RPT, "F03_CRvH_dep_pathway_MAIN.pdf"), composite,
+ggsave(file.path(RPT_PDF, "F03_CRvH_dep_pathway_MAIN.pdf"), composite,
        width = COMP_W, height = COMP_H, units = "mm",
        device = pdf_device, limitsize = FALSE)
-ggsave(file.path(RPT, "F03_CRvH_dep_pathway_MAIN.png"), composite,
+ggsave(file.path(RPT_PNG, "F03_CRvH_dep_pathway_MAIN.png"), composite,
        width = COMP_W, height = COMP_H, units = "mm",
        dpi = 300, limitsize = FALSE)
 

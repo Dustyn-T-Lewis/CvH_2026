@@ -23,11 +23,7 @@ COMP_BLUE  <- unname(DIR_COLORS["Down"])
 N_SHOW     <- 5
 
 # ── Data ─────────────────────────────────────────────────────────────────────
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv",
-                   show_col_types = FALSE)
-imputation_df <- read_csv("02_Imputation/c_data/02_mar_mnar_classification.csv",
-                           show_col_types = FALSE) %>%
-  transmute(gene, imputed = classification != "Complete")
+source("04_Figures/Reversal/a_script/reversal_inputs.R")   # dep_df + imputation_df
 
 scatter_df <- dep_df %>%
   transmute(gene,

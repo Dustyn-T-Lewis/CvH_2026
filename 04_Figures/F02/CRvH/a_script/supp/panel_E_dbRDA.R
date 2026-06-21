@@ -23,8 +23,10 @@ dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
 # ── Load data & metadata ──
-imp_df <- read_csv("02_Imputation/c_data/01_imputed.csv",
-                   show_col_types = FALSE)
+.dal <- readRDS("02_Normalization/imputation/c_data/DAList_imputed_imp4p.rds")
+imp_df <- tibble::as_tibble(cbind(
+  .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
+  as.data.frame(.dal$data)))
 meta_full <- read_csv("00_input/CvH_meta.csv", show_col_types = FALSE)
 
 ann_cols   <- c("uniprot_id", "protein", "gene", "description")

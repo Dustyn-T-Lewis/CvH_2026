@@ -24,8 +24,12 @@ dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
 # ── Load data & metadata ──
-norm_df <- read_csv("01_normalization/c_data/02_normalized.csv",
-                    show_col_types = FALSE)
+# Normalized (non-imputed) matrix from the proteoDA DAList.
+.dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
+norm_df <- tibble::as_tibble(cbind(
+  .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
+  as.data.frame(.dal$data)
+))
 meta_full <- read_csv("00_input/CvH_meta.csv", show_col_types = FALSE)
 
 ann_cols   <- c("uniprot_id", "protein", "gene", "description")

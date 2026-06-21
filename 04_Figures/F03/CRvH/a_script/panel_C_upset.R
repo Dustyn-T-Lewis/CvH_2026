@@ -16,14 +16,29 @@ suppressPackageStartupMessages({
   library(purrr)
 })
 
-DEP_FILE <- "03_DEP/c_data/03_combined_results_CRvH.csv"
+DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+RPT_PNG       <- file.path(RPT, "main", "png")
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 DAT      <- "04_Figures/F03/CRvH/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 CONTRASTS <- c("Cancer_vs_Healthy", "Training_CR")
-dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE)
+dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE) |>
+  dplyr::mutate(contrast = dplyr::recode(contrast,
+                                         CRvH_Baseline = "Cancer_vs_Healthy",
+                                         CR_Training   = "Training_CR")) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+                     names_from = contrast,
+                     values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+                     names_glue = "{.value}_{contrast}")
 pdf_device <- get_pdf_device()
 
 PC_W <- 140
@@ -223,9 +238,9 @@ pC_dots <- ggplot() +
 
 pC <- (pC_bars / pC_dots) + plot_layout(heights = c(0.75, 0.25))
 
-ggsave(file.path(RPT, "panel_C_upset_MAIN.pdf"), pC,
+ggsave(file.path(RPT_PDF, "panel_C_upset_MAIN.pdf"), pC,
        width = PC_W, height = PC_H, units = "mm", device = pdf_device)
-ggsave(file.path(RPT, "panel_C_upset_MAIN.png"), pC,
+ggsave(file.path(RPT_PNG, "panel_C_upset_MAIN.png"), pC,
        width = PC_W, height = PC_H, units = "mm", dpi = 300)
 
 message("F03/CRvH Panel C (upset, Pi-score) done")

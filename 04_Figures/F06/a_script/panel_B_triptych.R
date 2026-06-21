@@ -18,6 +18,18 @@ suppressPackageStartupMessages({
 })
 
 RPT <- "04_Figures/F06/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 DAT <- "04_Figures/F06/c_data"
 
 pdf_device <- get_pdf_device()
@@ -125,11 +137,9 @@ build_row <- function(mod, show_xlab = FALSE) {
       .groups = "drop"
     )
 
-  # LMM p-values for key contrasts
+  # LMM p-values for the 3-group contrasts
   p_cvh <- lmm_stats %>% filter(module == mod, contrast == "Cancer_vs_Healthy") %>% pull(p_bh)
   p_tr  <- lmm_stats %>% filter(module == mod, contrast == "Training_CR") %>% pull(p_bh)
-  p_cre <- lmm_stats %>% filter(module == mod, contrast == "Training_CRE") %>% pull(p_bh)
-  p_pla <- lmm_stats %>% filter(module == mod, contrast == "Training_PLA") %>% pull(p_bh)
 
   fmt_sig <- function(p) {
     if (length(p) == 0 || is.na(p)) return("ns")
@@ -148,13 +158,13 @@ build_row <- function(mod, show_xlab = FALSE) {
     geom_line(data = me_summary %>% filter(group_time %in% c("PLA_T1", "PLA_T2")),
               aes(group = 1), color = GROUP_COLORS["PLA_T1"], linewidth = 0.8) +
     scale_color_manual(values = GROUP_COLORS, guide = "none") +
-    # Significance annotations
-    annotate("text", x = 1.5, y = y_range[2] * 1.05,
-             label = fmt_sig(p_cre), size = txt_sig, fontface = "bold",
-             color = GROUP_COLORS["CRE_T1"]) +
-    annotate("text", x = 3.5, y = y_range[1] * 1.05,
-             label = fmt_sig(p_pla), size = txt_sig, fontface = "bold",
-             color = GROUP_COLORS["PLA_T1"]) +
+    # Significance annotations (3-group contrasts: pooled training + cancer vs healthy)
+    annotate("text", x = 2.5, y = y_range[2] * 1.05,
+             label = paste0("Tr.(CR) ", fmt_sig(p_tr)), size = txt_sig, fontface = "bold",
+             color = "grey25") +
+    annotate("text", x = 5, y = y_range[2] * 1.05,
+             label = paste0("CRvH ", fmt_sig(p_cvh)), size = txt_sig, fontface = "bold",
+             color = "grey25") +
     labs(y = "Eigengene", x = NULL) +
     FIG_THEME +
     theme(
@@ -247,10 +257,10 @@ triptych <- wrap_plots(rows, ncol = 1) /
   (wrap_elements(z_legend) | wrap_elements(group_legend)) +
   plot_layout(heights = c(rep(1, length(mod_order)), 0.12))
 
-ggsave(file.path(RPT, "panel_B_triptych_MAIN.pdf"), triptych,
+ggsave(file.path(RPT_PDF, "panel_B_triptych_MAIN.pdf"), triptych,
        width = PB_W, height = PB_H, units = "mm",
        device = pdf_device, limitsize = FALSE)
-ggsave(file.path(RPT, "panel_B_triptych_MAIN.png"), triptych,
+ggsave(file.path(RPT_PNG, "panel_B_triptych_MAIN.png"), triptych,
        width = PB_W, height = PB_H, units = "mm",
        dpi = 300, limitsize = FALSE)
 

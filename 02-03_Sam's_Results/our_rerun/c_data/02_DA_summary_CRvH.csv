@@ -1,7 +1,0 @@
-"contrast","type","sig.PVal","sig.FDR","pval_thresh","lfc_thresh","p_adj_method"
-"Cancer_vs_Healthy","down","370","201",0.1,0,"BH"
-"Cancer_vs_Healthy","nonsig","1170","1475",0.1,0,"BH"
-"Cancer_vs_Healthy","up","404","268",0.1,0,"BH"
-"Training_CR","down","158","1",0.1,0,"BH"
-"Training_CR","nonsig","1634","1939",0.1,0,"BH"
-"Training_CR","up","151","3",0.1,0,"BH"

@@ -13,8 +13,20 @@ suppressPackageStartupMessages({
 })
 
 RPT <- "04_Figures/F03/CRvH/b_reports/supp"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 DAT <- "04_Figures/F03/CRvH/c_data/supp"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
@@ -113,12 +125,12 @@ n_pw <- nrow(nes_mat)
 ht_h <- max(80, n_pw * 2.5 + 30)
 ht_w <- 160
 
-pdf(file.path(RPT, "gsea_concordance_heatmap_SUPP.pdf"),
+pdf(file.path(RPT_SUPP_PDF, "gsea_concordance_heatmap_SUPP.pdf"),
     width = ht_w / 25.4, height = ht_h / 25.4)
 draw(ht, heatmap_legend_side = "bottom", padding = unit(c(2, 2, 2, 2), "mm"))
 dev.off()
 
-png(file.path(RPT, "gsea_concordance_heatmap_SUPP.png"),
+png(file.path(RPT_SUPP_PNG, "gsea_concordance_heatmap_SUPP.png"),
     width = ht_w, height = ht_h, units = "mm", res = 300)
 draw(ht, heatmap_legend_side = "bottom", padding = unit(c(2, 2, 2, 2), "mm"))
 dev.off()

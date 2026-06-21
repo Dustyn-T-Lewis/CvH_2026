@@ -8,18 +8,34 @@ source("04_Figures/F03/a_script/style.R")
 
 library(dplyr)
 library(readr)
+library(tidyr)
 library(VennDiagram)
 library(grid)
 library(png)
 library(patchwork)
 library(ggplot2)
 
-DEP_FILE <- "03_DEP/c_data/03_combined_results_CRvH.csv"
+DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+RPT_PNG       <- file.path(RPT, "main", "png")
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 CONTRASTS <- c("Cancer_vs_Healthy", "Training_CR")
-dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE)
+dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE) |>
+  dplyr::mutate(contrast = dplyr::recode(contrast,
+                                         CRvH_Baseline = "Cancer_vs_Healthy",
+                                         CR_Training   = "Training_CR")) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+                     names_from = contrast,
+                     values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+                     names_glue = "{.value}_{contrast}")
 pdf_device <- get_pdf_device()
 
 PV_W <- 220
@@ -94,9 +110,9 @@ p_down <- wrap_elements(rasterGrob(img_down, interpolate = TRUE))
 
 p_venn <- p_up | p_down
 
-ggsave(file.path(RPT, "panel_C_venn_SUPP.pdf"), p_venn,
+ggsave(file.path(RPT_SUPP_PDF, "panel_C_venn_SUPP.pdf"), p_venn,
        width = PV_W, height = PV_H, units = "mm", device = pdf_device)
-ggsave(file.path(RPT, "panel_C_venn_SUPP.png"), p_venn,
+ggsave(file.path(RPT_SUPP_PNG, "panel_C_venn_SUPP.png"), p_venn,
        width = PV_W, height = PV_H, units = "mm", dpi = 300)
 
 unlink(c(tmp_up, tmp_down))

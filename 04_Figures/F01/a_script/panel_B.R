@@ -14,7 +14,8 @@ PW <- 170; PH <- 80
 RPT <- "04_Figures/F01/b_reports"
 DAT <- "04_Figures/F01/c_data"
 
-meta <- read.csv("00_input/CRm_meta.csv", stringsAsFactors = FALSE)
+meta <- read.csv("00_input/CvH_meta.csv", stringsAsFactors = FALSE) |>
+  dplyr::rename(pid = Subject_ID, timepoint = Timepoint, supp = Supplement)
 
 # --- CR subjects: complete pre+post ALM (one row per subject = T1 row)
 cr_subj <- meta %>%

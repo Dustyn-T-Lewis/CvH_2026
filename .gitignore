@@ -2,6 +2,8 @@
 */.DS_Store
 .RData
 .Rhistory
+.Rapp.history
+**/.Rapp.history
 .Rproj.user/
 .here
 Archive/
@@ -22,3 +24,7 @@ Rplots.pdf
 
 **/c_data/
 **/b_reports/
+
+# rendered quarto docs (source .qmd is tracked, .html is regenerated)
+CvH_pipeline.html
+tutorials/*.html

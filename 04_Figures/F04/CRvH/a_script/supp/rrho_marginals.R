@@ -13,7 +13,15 @@ dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # --- Data prep ----------------------------------------------------------------
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv", show_col_types = FALSE)
+dep_df <- readr::read_csv("03_DEP/a_non_imputed/c_data/combined_results_pi.csv",
+                          show_col_types = FALSE) |>
+  dplyr::mutate(contrast = dplyr::recode(contrast,
+                                         CRvH_Baseline = "Cancer_vs_Healthy",
+                                         CR_Training   = "Training_CR")) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+                     names_from = contrast,
+                     values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+                     names_glue = "{.value}_{contrast}")
 
 rr_df <- dep_df %>%
   transmute(gene, t_cvh = t_Cancer_vs_Healthy, t_tr = t_Training_CR) %>%

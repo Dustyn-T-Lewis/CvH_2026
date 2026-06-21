@@ -1,0 +1,245 @@
+---
+title: "CvH 01 — Filtering"
+subtitle: "The DAList object; contaminant, missingness, and outlier removal"
+author: "A_CvH_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+    embed-resources: true
+    df-print: paged
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+This document reproduces stage 01 of the CvH pipeline and shows the result of
+each step. It runs the same logic as `01_Filtering/a_script/01_run_filtering.R`,
+but entirely in memory: it computes the filtered object live and writes no files.
+The final section confirms the live result matches the committed
+`DAList_filtered.rds`.
+
+# Load the raw matrix and sample sheet {#sec-load}
+
+Stage 01 begins with a raw DIA-MS spreadsheet (`00_input/CvH_raw.xlsx`). The
+annotation columns (protein identity) are separated from the sample-intensity
+columns. The sample sheet `00_input/CvH_meta.csv` supplies one row per sample;
+the pooled three-group factor `group_time` is derived from `Group_Time`, pooling
+the creatine and placebo arms because the supplement is not the question here.
+The matrix is aligned to the sheet by `Col_ID`.
+
+```{r}
+#| label: load
+library(proteoDA); library(readxl); library(readr); library(dplyr)
+library(tidyr); library(stringr)
+
+raw <- read_excel(here("00_input", "CvH_raw.xlsx"))
+annot_cols <- c("uniprot_id", "protein", "gene", "description", "n_seq")
+annotation <- raw[, annot_cols]
+intensity  <- raw[, setdiff(names(raw), annot_cols)]
+
+metadata <- as.data.frame(read_csv(here("00_input", "CvH_meta.csv"), show_col_types = FALSE))
+metadata$group_time <- case_when(
+  metadata$Group_Time %in% c("CRE_T1", "PLA_T1") ~ "CR_pre",
+  metadata$Group_Time %in% c("CRE_T2", "PLA_T2") ~ "CR_post",
+  metadata$Group_Time == "H_T1"                  ~ "H_pre")
+stopifnot(!anyNA(metadata$group_time))
+rownames(metadata) <- metadata$Col_ID
+intensity <- intensity[, metadata$Col_ID]    # errors if matrix/metadata IDs disagree
+n_raw <- nrow(annotation)
+
+c(proteins = n_raw, samples = ncol(intensity))
+table(metadata$group_time)                   # healthy baseline, CR pre-, CR post-training
+```
+
+# Step 1: remove blood contaminants {#sec-contaminants}
+
+Muscle biopsies carry blood, and plasma proteins (albumin, hemoglobins,
+immunoglobulins) are abundant enough to drown out the muscle signal. A protein is
+flagged for removal if it looks like blood (HPA "Secreted to blood", an
+immunoglobulin, or a strong erythrocyte signal) **and** does not look like muscle
+(rescued by a strong skeletal-myonuclei signal). The classifier is built from the
+Human Protein Atlas annotations:
+
+```{r}
+#| label: classifier
+bl <- read_tsv(here("00_input", "HPA_annotations.tsv"), show_col_types = FALSE) |>
+  transmute(
+    gene          = Gene,
+    uniprot       = Uniprot,
+    protein_class = `Protein class`,
+    secretome     = `Secretome location`,
+    blood_conc    = suppressWarnings(as.numeric(`Blood concentration - Conc. blood MS [pg/L]`)),
+    ery           = suppressWarnings(as.numeric(`Single Cell Type RNA - Erythrocytes [nCPM]`)),
+    myo           = suppressWarnings(as.numeric(`Single Cell Type RNA - Myonuclei [nCPM]`))) |>
+  mutate(
+    secreted_blood = secretome == "Secreted to blood" & !is.na(secretome),
+    is_ig          = str_detect(coalesce(protein_class, ""), "Immunoglobulin genes"),
+    is_erythrocyte = !is.na(ery) & ery >= 5000,   # hemoglobin-class red-cell protein
+    muscle_keep    = !is.na(myo) & myo >= 50,      # myonuclei signal rescues as real muscle
+    reason = case_when(
+      muscle_keep & (secreted_blood | is_ig | is_erythrocyte) ~ "keep: muscle-expressed (rescued)",
+      is_erythrocyte                                          ~ "remove: erythrocyte (hemoglobin)",
+      is_ig                                                   ~ "remove: immunoglobulin",
+      secreted_blood                                          ~ "remove: secreted-to-blood (plasma)",
+      TRUE                                                    ~ "keep: not blood-associated"),
+    verdict = if_else(str_starts(reason, "remove"), "remove", "keep"))
+
+table(bl$verdict)                              # how the HPA genes split
+```
+
+Removal is plain subsetting, applied to `annotation` and `intensity` together so
+they stay aligned. The cascade keeps only proteins present in HPA, then drops the
+blood-flagged ones; each step is logged:
+
+```{r}
+#| label: apply-contaminants
+hpa_genes    <- unique(bl$gene)
+remove_genes <- bl$gene[bl$verdict == "remove"]
+
+flog <- tibble(step = "Raw input", n_after = nrow(annotation), n_removed = NA_integer_)
+keep <- annotation$gene %in% hpa_genes
+flog <- bind_rows(flog, tibble(step = "HPA presence", n_after = sum(keep), n_removed = sum(!keep)))
+annotation <- annotation[keep, ]; intensity <- intensity[keep, ]
+keep <- !(annotation$gene %in% remove_genes)
+flog <- bind_rows(flog, tibble(step = "Blood contaminant removal", n_after = sum(keep), n_removed = sum(!keep)))
+annotation <- annotation[keep, ]; intensity <- intensity[keep, ]
+
+flog
+```
+
+The removed and rescued proteins, with the HPA evidence behind each call:
+
+```{r}
+#| label: removed-rescued
+bl |> filter(verdict == "remove") |>
+  arrange(reason, desc(blood_conc)) |>
+  select(gene, reason, blood_conc, ery, myo) |> head(8)
+
+bl |> filter(str_detect(reason, "rescued")) |>
+  arrange(desc(myo)) |>
+  select(gene, reason, blood_conc, myo) |> head(6)   # e.g. A2M: looks blood-like, kept as muscle
+```
+
+# Build the `DAList` {#sec-build}
+
+proteoDA operates on a `DAList` — a named list holding three name-aligned tables:
+`data` (intensity matrix), `annotation` (one row per protein), and `metadata`
+(one row per sample). The row names of `data` equal the row names of
+`annotation`, and the column names of `data` equal the row names of `metadata`.
+`zero_to_missing()` turns DIA zeros into `NA`, since a reported zero means "not
+detected" rather than a measured zero:
+
+```{r}
+#| label: build-dalist
+int_mat  <- as.data.frame(data.matrix(intensity)); rownames(int_mat) <- annotation$uniprot_id
+annot_df <- as.data.frame(annotation);             rownames(annot_df) <- annotation$uniprot_id
+meta_df  <- as.data.frame(metadata);               rownames(meta_df)  <- metadata$Col_ID
+
+dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df))
+
+identical(rownames(dal$data), rownames(dal$annotation))   # proteins aligned
+identical(colnames(dal$data), rownames(dal$metadata))     # samples aligned
+round(100 * mean(is.na(dal$data)), 1)                      # percent missing after zero -> NA
+```
+
+# Step 2: drop barely-detected proteins {#sec-missingness}
+
+`filter_proteins_by_group()` is the native proteoDA filter. With `min_reps = 5,
+min_groups = 1` it keeps a protein detected in at least 5 samples in **at least
+one** group — a protein switched on in cancer but off in healthy is kept, since
+detection is not required everywhere:
+
+```{r}
+#| label: missingness
+n0 <- nrow(dal$data)
+dal <- filter_proteins_by_group(dal, min_reps = 5, min_groups = 1, grouping_column = "group_time")
+flog <- bind_rows(flog, tibble(step = "Missingness (>=5 in >=1 group)",
+                               n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)))
+flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
+flog                                          # full cascade, raw -> final, with % of raw retained
+```
+
+# Step 3: detect and remove outlier samples {#sec-outliers}
+
+Whether a whole sample is untrustworthy is decided by a consensus of four
+independent heuristics — high missingness (with a paired pre→post arm), off
+intensity level (Hampel 3×MAD), multivariate position in PCA space, and low
+correlation with the other samples. A sample is dropped only if at least **three
+of four** agree:
+
+```{r}
+#| label: outliers
+m <- dal$metadata; pct_missing <- colMeans(is.na(dal$data)) * 100
+paired <- m |> filter(Group != "PPS") |> count(Subject_ID) |> filter(n == 2) |> pull(Subject_ID)
+delta <- setNames(rep(NA_real_, nrow(m)), m$Col_ID)
+for (s in paired) {
+  r <- m[m$Subject_ID == s, ]; t1 <- r$Col_ID[r$Timepoint == "T1"]; t2 <- r$Col_ID[r$Timepoint == "T2"]
+  if (length(t1) == 1 && length(t2) == 1) delta[c(t1, t2)] <- abs(pct_missing[t2] - pct_missing[t1])
+}
+miss_thr <- quantile(pct_missing, 0.75) + 1.5 * IQR(pct_missing)                  # Tukey upper fence
+dv <- delta[!is.na(delta)]; delta_thr <- if (length(dv) > 2) quantile(dv, 0.75) + 1.5 * IQR(dv) else Inf
+miss_flag <- pct_missing > miss_thr | (!is.na(delta) & delta > delta_thr)
+sm <- apply(log2(dal$data), 2, median, na.rm = TRUE)
+mad_flag <- abs(sm - median(sm)) > 3 * mad(sm)                                    # Hampel 3xMAD
+pc3 <- prcomp(t(log2(dal$data[rowSums(is.na(dal$data)) == 0, ])), center = TRUE, scale. = TRUE)$x[, 1:3]
+pca_flag <- mahalanobis(pc3, colMeans(pc3), cov(pc3)) > qchisq(0.99, df = 3)      # chi-sq tail on PC1-3
+cm <- cor(log2(dal$data), use = "pairwise.complete.obs")
+mc <- apply(cm, 2, function(x) median(x[x < 1], na.rm = TRUE))                    # x<1 drops self-correlation
+cor_flag <- mc < median(mc) - 3 * mad(mc)
+outlier_diag <- tibble(Col_ID = colnames(dal$data), miss_flag = miss_flag[Col_ID], mad_flag = mad_flag[Col_ID],
+                       pca_flag = pca_flag[Col_ID], cor_flag = cor_flag[Col_ID]) |>
+  mutate(n_flags = miss_flag + mad_flag + pca_flag + cor_flag, consensus_outlier = n_flags >= 3)
+outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
+
+head(outlier_diag[order(-outlier_diag$n_flags), ], 6)
+outlier_ids                                   # CR9_T1 and CR10_T1 trip >= 3 flags
+```
+
+```{r}
+#| label: apply-outliers
+if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
+dim(dal$data)
+```
+
+# Result and verification {#sec-recap}
+
+proteoDA logs every operation in the `tags` slot. Stage 01 turns a 3,172 × 41
+spreadsheet into a clean **2,555 × 39** `DAList`. The live result matches the
+committed `DAList_filtered.rds` exactly:
+
+```{r}
+#| label: verify
+names(dal$tags)
+dim(dal$data)
+
+committed <- readRDS(here("01_Filtering", "c_data", "DAList_filtered.rds"))
+c(same_dim       = identical(dim(dal$data), dim(committed$data)),
+  same_proteins  = identical(sort(rownames(dal$data)), sort(rownames(committed$data))),
+  same_samples   = identical(sort(colnames(dal$data)), sort(colnames(committed$data))))
+```
+
+The side-effecting script additionally writes `filtering_report.xlsx` (the
+classifier verdicts, filter cascade, and outlier diagnostics shown above) and a
+contaminant plot to `b_reports/`, then saves `DAList_filtered.rds` for stage 02.
+Key points:
+
+- A `DAList` is three name-aligned tables; keeping them in step is what proteoDA
+  relies on. The native filters preserve the alignment; hand-subsetting must move
+  `data` and `annotation` together.
+- `zero_to_missing()` reflects that DIA zeros are missing values.
+- `filter_proteins_by_group()` and `filter_samples()` are the native filters.
+
+Stage 02 picks up this file and normalizes it.

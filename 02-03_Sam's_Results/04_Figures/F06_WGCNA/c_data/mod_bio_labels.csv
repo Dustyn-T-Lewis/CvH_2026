@@ -1,8 +1,0 @@
-module_color,module_id,n_proteins,top_pathway,display_label
-turquoise,M1,480,Neutrophil Degranulation,M1: Neutrophil Degranulation (n=480)
-blue,M2,406,Aerobic Respiration And Respiratory Electron Transport,M2: Aerobic Respiration And Respiratory Electron Transport (n=406)
-brown,M3,346,Cardiac Conduction,M3: Cardiac Conduction (n=346)
-yellow,M4,158,Heme Metabolism,M4: Heme Metabolism (n=158)
-green,M5,89,ATP Synthesis Coupled Electron Transport,M5: ATP Synthesis Coupled Electron Transport (n=89)
-red,M6,75,Striated Muscle Contraction,M6: Striated Muscle Contraction (n=75)
-black,M7,33,Extracellular Matrix Organization,M7: Extracellular Matrix Organization (n=33)

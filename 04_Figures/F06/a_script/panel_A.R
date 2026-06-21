@@ -1,5 +1,5 @@
 # Figure 6 — Panel A: Module-Trait Heatmap (Two-Section LMM Contrasts)
-# Layout: gene counts (flanking bar) | CRvH LMM (2 cols) | CR LMM (4 cols)
+# Layout: gene counts (flanking bar) | 3-group LMM contrasts (CR vs H, Training CR)
 # No baseline/change trait sections (CvH has no phenotype columns)
 # BH correction: per-model (CRvH 2*M tests, CR 4*M tests)
 # Two-tier display: solid border = FDR < 0.05; dashed = nominal p < 0.05
@@ -18,8 +18,20 @@ suppressPackageStartupMessages({
 })
 
 RPT <- "04_Figures/F06/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 DAT <- "04_Figures/F06/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
@@ -43,9 +55,8 @@ if (!"display_label" %in% colnames(mod_bio_labels)) {
 mod_display_vec <- setNames(mod_bio_labels$display_label, paste0("ME", mod_bio_labels$module_color))
 
 # --- Reshape LMM to matrices ---
-# CRvH model contrasts
+# 3-group model contrasts (supplements pooled; no CR supplement/interaction model)
 crvh_contrasts <- c("Cancer_vs_Healthy", "Training_CR")
-cr_contrasts   <- c("Baseline_Supplement", "Training_CRE", "Training_PLA", "Supplement_Interaction")
 
 # r_equiv matrix
 lmm_r <- lmm_audit %>%
@@ -80,16 +91,12 @@ gene_counts <- mod_bio_labels %>%
 
 # --- Contrast display labels ---
 contrast_labels <- c(
-  Cancer_vs_Healthy      = "CR vs H",
-  Training_CR            = "Tr.(CR)",
-  Baseline_Supplement    = "BL(CRE-PLA)",
-  Training_CRE           = "Tr.(CRE)",
-  Training_PLA           = "Tr.(PLA)",
-  Supplement_Interaction = "CRExPLA"
+  Cancer_vs_Healthy = "CR vs H",
+  Training_CR       = "Tr.(CR)"
 )
 
 # --- Build tile dataframe ---
-all_contrasts <- c(crvh_contrasts, cr_contrasts)
+all_contrasts <- crvh_contrasts
 
 tile_df <- expand.grid(
   module   = mod_order,
@@ -106,7 +113,7 @@ tile_df <- expand.grid(
     p_raw  = mapply(function(m, c) {
       if (m %in% rownames(lmm_p_raw) && c %in% colnames(lmm_p_raw)) lmm_p_raw[m, c] else NA_real_
     }, module, contrast),
-    model  = ifelse(contrast %in% crvh_contrasts, "CRvH", "CR"),
+    model  = "CRvH",
     # Two-tier significance
     sig_tier = case_when(
       p_bh < 0.05  ~ "FDR",
@@ -166,17 +173,6 @@ p_heat <- ggplot(tile_df, aes(x = contrast, y = module)) +
     lbl <- mod_display_vec[x]
     ifelse(is.na(lbl), x, lbl)
   }) +
-  # Model section divider
-  geom_vline(xintercept = length(crvh_contrasts) + 0.5,
-             linewidth = 1.2, color = "black") +
-  # Section headers via annotation
-  annotate("text", x = mean(seq_along(crvh_contrasts)), y = length(mod_order) + 0.7,
-           label = "CRvH Model", fontface = "bold", size = 3.5,
-           hjust = 0.5, vjust = 0) +
-  annotate("text", x = length(crvh_contrasts) + mean(seq_along(cr_contrasts)),
-           y = length(mod_order) + 0.7,
-           label = "CR Model", fontface = "bold", size = 3.5,
-           hjust = 0.5, vjust = 0) +
   labs(y = NULL, x = NULL,
        title = "Module-LMM Contrast Associations",
        subtitle = "Solid border = FDR < 0.05; dashed = nominal p < 0.05") +
@@ -194,10 +190,10 @@ panel_A <- p_heat + p_counts + plot_layout(widths = c(6, 1))
 
 W <- 240; H <- 200
 
-ggsave(file.path(RPT, "panel_A_module_trait_MAIN.pdf"), panel_A,
+ggsave(file.path(RPT_PDF, "panel_A_module_trait_MAIN.pdf"), panel_A,
        width = W, height = H, units = "mm",
        device = pdf_device, limitsize = FALSE)
-ggsave(file.path(RPT, "panel_A_module_trait_MAIN.png"), panel_A,
+ggsave(file.path(RPT_PNG, "panel_A_module_trait_MAIN.png"), panel_A,
        width = W, height = H, units = "mm",
        dpi = 300, limitsize = FALSE)
 

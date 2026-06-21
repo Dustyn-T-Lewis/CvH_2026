@@ -1,2 +1,2 @@
 "set_A","set_B","n_A","n_B","overlap","expected","odds_ratio","p_value","p_bh"
-"Cancer_vs_Healthy","Training_CR",517,33,10,6.7,1.72,0.11529045441106,0.11529045441106
+"Cancer_vs_Healthy","Training_CR",504,55,12,10.9,1.14,0.400237585270847,0.400237585270847

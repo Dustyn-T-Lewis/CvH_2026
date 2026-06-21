@@ -30,9 +30,21 @@ allowWGCNAThreads()
 set.seed(42)
 
 RPT <- "04_Figures/F06/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 DAT <- "04_Figures/F06/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 message("Panel C: Hub protein networks...")
@@ -46,7 +58,7 @@ kME_all <- readRDS(file.path(DAT, "kME_all.rds"))
 datExpr <- readRDS(file.path(DAT, "datExpr.rds"))
 module_df <- read_csv(file.path(DAT, "wgcna_module_assignments.csv"),
                       show_col_types = FALSE)
-sft_csv   <- read.csv(file.path(DAT, "../../../05_WGCNA/c_data/wgcna/wgcna_sft_summary.csv"))
+sft_csv   <- read.csv(file.path(DAT, "wgcna", "wgcna_sft_summary.csv"))
 NET_POWER <- sft_csv$selected_power[1]
 
 mod_bio_labels_df  <- read_csv(file.path(DAT, "mod_bio_labels.csv"), show_col_types = FALSE)
@@ -212,10 +224,10 @@ if (length(plots) == 0) {
 
   W <- 260; H <- 260
 
-  ggsave(file.path(RPT, "panel_C_hub_network_MAIN.pdf"), composite,
+  ggsave(file.path(RPT_PDF, "panel_C_hub_network_MAIN.pdf"), composite,
          width = W, height = H, units = "mm",
          device = pdf_device, limitsize = FALSE)
-  ggsave(file.path(RPT, "panel_C_hub_network_MAIN.png"), composite,
+  ggsave(file.path(RPT_PNG, "panel_C_hub_network_MAIN.png"), composite,
          width = W, height = H, units = "mm",
          dpi = 300, limitsize = FALSE)
 

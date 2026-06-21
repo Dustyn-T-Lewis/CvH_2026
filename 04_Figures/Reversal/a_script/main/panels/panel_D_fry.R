@@ -37,9 +37,7 @@ pdf_device <- get_pdf_device()
 # ═══════════════════════════════════════════════════════════════════════════════
 # SHARED: Load data
 # ═══════════════════════════════════════════════════════════════════════════════
-dal    <- readRDS("02_Imputation/c_data/01_DAList_imputed.rds")
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv",
-                    show_col_types = FALSE)
+source("04_Figures/Reversal/a_script/reversal_inputs.R")   # dal (imp4p) + dep_df
 
 mat  <- dal$data
 meta <- as.data.frame(dal$metadata)

@@ -13,8 +13,16 @@ library(tidyr)
 
 DAT <- "04_Figures/F03/CRvH/c_data"
 RPT <- "04_Figures/F03/CRvH/b_reports/supp"
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+RPT_PNG       <- file.path(RPT, "main", "png")
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 fgsea_raw <- read_csv(file.path(DAT, "01_panel_C_fgsea_results.csv"),
                       show_col_types = FALSE)
 pdf_device <- get_pdf_device()
@@ -94,9 +102,9 @@ pD <- ggplot(count_df, aes(x = contrast, y = fraction * 100, fill = direction)) 
                                         margin = margin(1, 0, 1, 0)),
         strip.placement  = "outside")
 
-ggsave(file.path(RPT, "panel_D_fgsea_faceted_SUPP.pdf"), pD,
+ggsave(file.path(RPT_SUPP_PDF, "panel_D_fgsea_faceted_SUPP.pdf"), pD,
        width = PC_W, height = PC_H, units = "mm", device = pdf_device)
-ggsave(file.path(RPT, "panel_D_fgsea_faceted_SUPP.png"), pD,
+ggsave(file.path(RPT_SUPP_PNG, "panel_D_fgsea_faceted_SUPP.png"), pD,
        width = PC_W, height = PC_H, units = "mm", dpi = 300)
 
 cat("F03/CRvH Supp: fGSEA faceted done.\n")

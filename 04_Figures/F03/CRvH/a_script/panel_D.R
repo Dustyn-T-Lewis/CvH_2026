@@ -16,6 +16,18 @@ library(ggplot2)
 library(patchwork)
 
 RPT <- "04_Figures/F03/CRvH/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 DAT <- "04_Figures/F03/CRvH/c_data"
 
 # Read fGSEA cache from panel_C
@@ -170,8 +182,8 @@ p_key <- ggplot(key_df) +
 
 p_combined <- p / p_key + plot_layout(heights = c(6, 1))
 
-ggsave(file.path(RPT, "panel_D_fgsea_MAIN.pdf"), p_combined,
+ggsave(file.path(RPT_PDF, "panel_D_fgsea_MAIN.pdf"), p_combined,
        width = PC_W, height = PC_H, units = "mm", device = pdf_device)
-ggsave(file.path(RPT, "panel_D_fgsea_MAIN.png"), p_combined,
+ggsave(file.path(RPT_PNG, "panel_D_fgsea_MAIN.png"), p_combined,
        width = PC_W, height = PC_H, units = "mm", dpi = 300)
 message("F03/CRvH Panel D (stacked fGSEA) saved")

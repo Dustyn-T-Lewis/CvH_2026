@@ -22,9 +22,12 @@ dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 # --- Load data ---
-norm_df  <- read_csv("01_normalization/c_data/02_normalized.csv", show_col_types = FALSE)
+.dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
+norm_df <- tibble::as_tibble(cbind(
+  .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
+  as.data.frame(.dal$data)))
 meta     <- read_csv("00_input/CvH_meta.csv", show_col_types = FALSE)
-hpa      <- read.delim("00_input/HPA_skeletal_muscle_annotations.tsv",
+hpa      <- read.delim("00_input/HPA_annotations.tsv",
                         check.names = FALSE, stringsAsFactors = FALSE)
 
 ann_cols   <- c("uniprot_id", "protein", "gene", "description")

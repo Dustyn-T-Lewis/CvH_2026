@@ -15,15 +15,27 @@ suppressPackageStartupMessages({
 })
 
 RPT <- "04_Figures/F06/b_reports"
+
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+
+RPT_PNG       <- file.path(RPT, "main", "png")
+
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 message("Stitching F06 composite figure...")
 
 # --- Read PNGs ---
 read_panel <- function(filename) {
-  path <- file.path(RPT, filename)
+  path <- file.path(RPT_PNG, filename)
   if (!file.exists(path)) {
     warning(sprintf("Missing panel: %s", path))
     return(grid::textGrob(sprintf("MISSING:\n%s", filename),
@@ -62,14 +74,14 @@ composite <- top_row / bottom_row +
 # --- Save ---
 W <- 400; H <- 500
 
-ggsave(file.path(RPT, "F06_wgcna_MAIN.pdf"), composite,
+ggsave(file.path(RPT_PDF, "F06_wgcna_MAIN.pdf"), composite,
        width = W, height = H, units = "mm",
        device = pdf_device, limitsize = FALSE)
-ggsave(file.path(RPT, "F06_wgcna_MAIN.png"), composite,
+ggsave(file.path(RPT_PNG, "F06_wgcna_MAIN.png"), composite,
        width = W, height = H, units = "mm",
        dpi = 300, limitsize = FALSE)
 
 message("  F06 composite figure saved")
 message(sprintf("  Outputs:\n    %s\n    %s",
-                file.path(RPT, "F06_wgcna_MAIN.pdf"),
-                file.path(RPT, "F06_wgcna_MAIN.png")))
+                file.path(RPT_PDF, "F06_wgcna_MAIN.pdf"),
+                file.path(RPT_PNG, "F06_wgcna_MAIN.png")))

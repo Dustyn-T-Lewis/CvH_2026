@@ -17,7 +17,16 @@ dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # --- 1. Load DEP results and build ranked lists
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv", show_col_types = FALSE)
+dep_df <- readr::read_csv("03_DEP/a_non_imputed/c_data/combined_results_pi.csv",
+                          show_col_types = FALSE) |>
+  dplyr::mutate(contrast = dplyr::recode(contrast,
+                                         CRvH_Baseline = "Cancer_vs_Healthy",
+                                         CR_Training   = "Training_CR")) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+                     names_from = contrast,
+                     values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+                     names_glue = "{.value}_{contrast}") |>
+  dplyr::distinct(gene, .keep_all = TRUE)  # one row per gene for gene-keyed fgsea
 
 contrasts <- c("Cancer_vs_Healthy", "Training_CR")
 stats_list <- setNames(lapply(contrasts, function(ctr) {

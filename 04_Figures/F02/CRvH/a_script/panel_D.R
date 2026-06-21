@@ -21,8 +21,16 @@ DAT_DIR <- "04_Figures/F02/CRvH/c_data"
 dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv",
-                   show_col_types = FALSE)
+# DEP results: new proteoDA long output -> wide per-contrast columns.
+dep_df <- read_csv("03_DEP/a_non_imputed/c_data/combined_results_pi.csv",
+                   show_col_types = FALSE) |>
+  mutate(contrast = recode(contrast,
+                           CRvH_Baseline = "Cancer_vs_Healthy",
+                           CR_Training   = "Training_CR")) |>
+  pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+              names_from = contrast,
+              values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+              names_glue = "{.value}_{contrast}")
 
 pdf_device <- get_pdf_device()
 

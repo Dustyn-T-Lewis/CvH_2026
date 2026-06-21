@@ -19,8 +19,7 @@ pdf_device <- get_pdf_device()
 # =============================================================================
 # 1. LOAD & CLASSIFY
 # =============================================================================
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv",
-                    show_col_types = FALSE)
+source("04_Figures/Reversal/a_script/reversal_inputs.R")   # dep_df (old column names)
 
 sig_df <- dep_df %>%
   filter(pi_score_Cancer_vs_Healthy < 0.05 | pi_score_Training_CR < 0.05) %>%

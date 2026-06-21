@@ -7,6 +7,7 @@ source("04_Figures/F04/a_script/style.R")
 suppressPackageStartupMessages({
   library(readr)
   library(dplyr)
+  library(tidyr)
   library(patchwork)
 })
 
@@ -18,18 +19,20 @@ dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-dep_df <- read_csv("03_DEP/c_data/03_combined_results_CRvH.csv", show_col_types = FALSE)
+# DEP results: new proteoDA long output -> wide per-contrast columns the panel expects.
+# Contrast labels recoded to the figure's display names (Cancer_vs_Healthy, Training_CR).
+dep_df <- read_csv("03_DEP/a_non_imputed/c_data/combined_results_pi.csv",
+                   show_col_types = FALSE) |>
+  mutate(contrast = recode(contrast,
+                           CRvH_Baseline = "Cancer_vs_Healthy",
+                           CR_Training   = "Training_CR")) |>
+  pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+              names_from = contrast,
+              values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+              names_glue = "{.value}_{contrast}")
 
-# --- fGSEA cache (from F03/CRvH) ---
-fgsea_cache <- file.path(DAT, "shared", "fgsea_tstat_CRvH.csv")
-if (!file.exists(fgsea_cache)) {
-  f1_cache <- "04_Figures/F03/CRvH/c_data/01_panel_C_fgsea_results.csv"
-  if (file.exists(f1_cache)) {
-    dir.create(file.path(DAT, "shared"), recursive = TRUE, showWarnings = FALSE)
-    file.copy(f1_cache, fgsea_cache)
-  } else stop("fGSEA cache not found - run F03/CRvH first")
-}
-fgsea_all <- read_csv(fgsea_cache, show_col_types = FALSE)
+# --- fGSEA cache (shared, regenerated from current DEP t-stats) ---
+fgsea_all <- read_csv("04_Figures/shared/fgsea_CRvH.csv", show_col_types = FALSE)
 
 # --- Contrast definitions ---
 volcano_specs <- list(

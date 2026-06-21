@@ -13,16 +13,32 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
   library(tibble)
+  library(tidyr)
 })
 
-DEP_FILE <- "03_DEP/c_data/03_combined_results_CRvH.csv"
+DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"
+RPT_PDF       <- file.path(RPT, "main", "pdf")
+RPT_PNG       <- file.path(RPT, "main", "png")
+RPT_SUPP_PDF  <- file.path(RPT, "supp", "pdf")
+RPT_SUPP_PNG  <- file.path(RPT, "supp", "png")
 DAT      <- "04_Figures/F03/CRvH/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PDF,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_PNG,      recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 CONTRASTS <- c("Cancer_vs_Healthy", "Training_CR")
-dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE)
+dep_df    <- read_csv(DEP_FILE, show_col_types = FALSE) |>
+  dplyr::mutate(contrast = dplyr::recode(contrast,
+                                         CRvH_Baseline = "Cancer_vs_Healthy",
+                                         CR_Training   = "Training_CR")) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene, protein, description),
+                     names_from = contrast,
+                     values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
+                     names_glue = "{.value}_{contrast}")
 pdf_device <- get_pdf_device()
 PA_W <- 170
 PA_H <- 60
@@ -153,9 +169,9 @@ pA <- ggplot(frac_df, aes(x = contrast, y = pct, fill = fill_key)) +
 
 write.csv(pi_ci, file.path(DAT, "audit_panel_A_dep_fraction_ci.csv"), row.names = FALSE)
 
-ggsave(file.path(RPT, "panel_A_dep_counts_MAIN.pdf"), pA,
+ggsave(file.path(RPT_PDF, "panel_A_dep_counts_MAIN.pdf"), pA,
        width = PA_W, height = PA_H, units = "mm", device = pdf_device)
-ggsave(file.path(RPT, "panel_A_dep_counts_MAIN.png"), pA,
+ggsave(file.path(RPT_PNG, "panel_A_dep_counts_MAIN.png"), pA,
        width = PA_W, height = PA_H, units = "mm", dpi = 300)
 
 cat("F03/CRvH Panel A done.\n")

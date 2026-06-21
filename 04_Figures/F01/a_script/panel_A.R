@@ -11,7 +11,8 @@ PW <- 90; PH <- 100
 RPT <- "04_Figures/F01/b_reports"
 DAT <- "04_Figures/F01/c_data"
 
-meta <- read.csv("00_input/CRm_meta.csv", stringsAsFactors = FALSE)
+meta <- read.csv("00_input/CvH_meta.csv", stringsAsFactors = FALSE) |>
+  dplyr::rename(pid = Subject_ID, timepoint = Timepoint, supp = Supplement)
 
 # One row per subject: T1 only
 subj <- meta %>%
