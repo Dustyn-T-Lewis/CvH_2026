@@ -89,7 +89,6 @@ Q9Y281,COF2_HUMAN,CFL2,Cofilin-2
 P21796,VDAC1_HUMAN,VDAC1,Voltage-dependent anion-selective channel protein 1
 P10599,THIO_HUMAN,TXN,Thioredoxin
 Q14315,FLNC_HUMAN,FLNC,Filamin-C
-P01023,A2MG_HUMAN,A2M,Alpha-2-macroglobulin
 P0DP23,CALM1_HUMAN,CALM1,Calmodulin-1
 P45378,TNNT3_HUMAN,TNNT3,"Troponin T, fast skeletal muscle"
 P07195,LDHB_HUMAN,LDHB,L-lactate dehydrogenase B chain
@@ -780,7 +779,6 @@ Q9NZQ9,TMOD4_HUMAN,TMOD4,Tropomodulin-4
 Q9Y6E2,BZW2_HUMAN,BZW2,Basic leucine zipper and W2 domain-containing protein 2
 O95747,OXSR1_HUMAN,OXSR1,Serine/threonine-protein kinase OSR1
 O14773,TPP1_HUMAN,TPP1,Tripeptidyl-peptidase 1
-P09871,C1S_HUMAN,C1S,Complement C1s subcomponent
 Q96MG2,JSPR1_HUMAN,JSRP1,Junctional sarcoplasmic reticulum protein 1
 Q16816,PHKG1_HUMAN,PHKG1,"Phosphorylase b kinase gamma catalytic chain, skeletal muscle/heart isoform"
 P14406,CX7A2_HUMAN,COX7A2,"Cytochrome c oxidase subunit 7A2, mitochondrial"
@@ -1766,7 +1764,6 @@ Q9H444,CHM4B_HUMAN,CHMP4B,Charged multivesicular body protein 4b
 Q9NVI7,ATD3A_HUMAN,ATAD3A,ATPase family AAA domain-containing protein 3A
 A1L0T0,ILVBL_HUMAN,ILVBL,Acetolactate synthase-like protein
 Q9GZZ1,NAA50_HUMAN,NAA50,N-alpha-acetyltransferase 50
-O75882,ATRN_HUMAN,ATRN,Attractin
 Q6UWP2,DHR11_HUMAN,DHRS11,Dehydrogenase/reductase SDR family member 11
 Q96C90,PP14B_HUMAN,PPP1R14B,Protein phosphatase 1 regulatory subunit 14B
 Q6P1A2,MBOA5_HUMAN,LPCAT3,Lysophospholipid acyltransferase 5
@@ -2035,7 +2032,6 @@ O95674,CDS2_HUMAN,CDS2,Phosphatidate cytidylyltransferase 2
 Q9BVA1,TBB2B_HUMAN,TUBB2B,Tubulin beta-2B chain
 Q9UKG1,DP13A_HUMAN,APPL1,DCC-interacting protein 13-alpha
 Q8WXH0,SYNE2_HUMAN,SYNE2,Nesprin-2
-P43251,BTD_HUMAN,BTD,Biotinidase
 Q7Z422,SZRD1_HUMAN,SZRD1,SUZ domain-containing protein 1
 P27635,RL10_HUMAN,RPL10,60S ribosomal protein L10
 Q6GMV2,SMYD5_HUMAN,SMYD5,SET and MYND domain-containing protein 5
@@ -2141,7 +2137,6 @@ O60343,TBCD4_HUMAN,TBC1D4,TBC1 domain family member 4
 L0R6Q1,S35U4_HUMAN,SLC35A4,SLC35A4 upstream open reading frame protein
 Q8N4Q1,MIA40_HUMAN,CHCHD4,Mitochondrial intermembrane space import and assembly protein 40
 O96007,MOC2B_HUMAN,MOCS2,Molybdopterin synthase catalytic subunit
-P80108,PHLD_HUMAN,GPLD1,Phosphatidylinositol-glycan-specific phospholipase D
 P60983,GMFB_HUMAN,GMFB,Glia maturation factor beta
 Q9P0U1,TOM7_HUMAN,TOMM7,Mitochondrial import receptor subunit TOM7 homolog
 P14678,RSMB_HUMAN,SNRPB,Small nuclear ribonucleoprotein-associated proteins B and B'
