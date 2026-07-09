@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 
 allowWGCNAThreads()
 set.seed(42)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
 DALIST_RDS <- "02_Normalization/imputation/c_data/DAList_imputed_imp4p.rds"
 PANEL_DIR  <- "04_Figures/F06/c_data"

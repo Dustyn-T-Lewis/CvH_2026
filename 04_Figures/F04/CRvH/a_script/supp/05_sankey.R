@@ -1,6 +1,6 @@
 # Supplementary Enrichment Gallery -- Pathway Fate Alluvial (F04 CRvH: Concordance)
 # Left = CvH direction, Right = TR direction. Flows colored by pattern.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

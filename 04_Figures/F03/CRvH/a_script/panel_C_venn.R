@@ -3,7 +3,7 @@
 # Two Venn diagrams side by side: Up-regulated | Down-regulated
 # Outputs: panel_C_venn_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 library(dplyr)

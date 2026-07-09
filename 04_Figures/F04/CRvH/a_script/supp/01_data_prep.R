@@ -1,7 +1,7 @@
 # Supplementary Enrichment Gallery -- Data Preparation (F04 CRvH: Concordance)
 # Loads pre-computed enrichment CSV, pivots to wide, classifies patterns.
 # Saves prep_concordance.rds for downstream viz scripts.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

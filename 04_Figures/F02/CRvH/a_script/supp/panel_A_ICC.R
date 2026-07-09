@@ -4,7 +4,7 @@
 # High ICC = stable subject trait; low ICC = responsive to training.
 # Outputs: pA_ICC (ggplot object), panel_A_ICC_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

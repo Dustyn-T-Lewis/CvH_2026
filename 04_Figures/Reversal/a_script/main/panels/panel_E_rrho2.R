@@ -1,7 +1,7 @@
 # Reversal Panel E: RRHO2 Heatmap
 # Stratified rank-rank hypergeometric overlap (Cahill et al. 2018)
 # Uses the RRHO2 R package (Plaisier et al. 2010, NAR)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 library(tidyverse)

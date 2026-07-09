@@ -1,7 +1,7 @@
 # Reversal Panel C: Pattern Heatmap + Sankey
 # Per-protein reversal classification with GO Slim pathway bars
 # Source LAST — AnnotationDbi masks dplyr::select
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/go_slim_categories.R")
 

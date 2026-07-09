@@ -1,7 +1,7 @@
 # F01 — Composite Phenotype Figure Assembly
 # Panels: A (Age), B (ALM), C (STS Max Power)
 # Layout: A left | B/C stacked right
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
 suppressPackageStartupMessages({

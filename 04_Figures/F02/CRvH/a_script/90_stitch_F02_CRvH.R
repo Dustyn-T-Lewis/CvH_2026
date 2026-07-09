@@ -1,5 +1,5 @@
 # F02 CRvH — Composite: PCA + logFC Density
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
 suppressPackageStartupMessages({

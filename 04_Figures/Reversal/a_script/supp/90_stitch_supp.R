@@ -7,7 +7,7 @@
 # Panel tags added by patchwork; titles/subtitles kept on individual panels
 # Output: SUPP_Reversal_diagnostics.{pdf,png}
 #         SUPP_Reversal_methods.{pdf,png}
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
 source("04_Figures/shared/style.R")
 

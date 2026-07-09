@@ -4,7 +4,7 @@
 # CRvH model: 2 contrasts
 # Outputs: supp/panel_D_fgsea_faceted_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 library(dplyr)

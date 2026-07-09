@@ -3,7 +3,7 @@
 # Bootstrap median |logFC| CIs.
 # Outputs: pD (ggplot object), panel_D_logfc_density_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

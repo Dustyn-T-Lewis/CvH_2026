@@ -1,6 +1,6 @@
 # SUPP: ORA Deduplication Sensitivity
 # Pathway count stability across Jaccard cutoffs for reversed quadrants
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 library(tidyverse)

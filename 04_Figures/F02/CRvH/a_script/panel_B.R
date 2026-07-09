@@ -3,7 +3,7 @@
 # B4: DeltaCV scatter.
 # Outputs: pB (combined ggplot), panel_B_cv_scatter_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

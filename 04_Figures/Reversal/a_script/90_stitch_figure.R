@@ -1,7 +1,7 @@
 # Reversal — Master Orchestrator
 # Sources supp panels first (enrichment_heatmap not used), then supp stitcher,
 # then main stitcher. Final cleanup.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
 message("===== Reversal: Master Orchestrator =====")
 

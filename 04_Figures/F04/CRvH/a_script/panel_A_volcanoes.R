@@ -1,7 +1,7 @@
 # F04 CRvH: All Volcano Rings (1x2: Cancer_vs_Healthy, Training_CR)
 # Self-contained — generates both volcano rings + 1x2 composite
 # Outputs: panel_A/B individual PDFs/PNGs + F04_CRvH_volcanoes_MAIN composite
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 suppressPackageStartupMessages({

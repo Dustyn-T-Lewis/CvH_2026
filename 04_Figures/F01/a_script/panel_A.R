@@ -1,5 +1,5 @@
 # F01 Panel A: Age Distribution (CR vs Healthy)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F01/a_script/style.R")
 
 suppressPackageStartupMessages({

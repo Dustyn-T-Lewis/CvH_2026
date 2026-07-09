@@ -3,7 +3,7 @@
 # with the residual view (G: what training did NOT fix). The 5-panel composite
 # (90_stitch_main.R: scatter, NES, fry, RRHO2) stays separate to keep both readable.
 # Reads the panel PNGs (run panel_F + panel_G first). Output: PNG only (cairo-less env).
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 suppressPackageStartupMessages({ library(patchwork); library(ggplot2); library(png); library(grid) })
 

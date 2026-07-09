@@ -1,7 +1,7 @@
 # F04 CRvH Supplementary: Nested Scatter (Protein Concordance + NES Quadrant Insets)
 # Main scatter: logFC Cancer_vs_Healthy vs Training_CR (protein level)
 # Insets: NES scatter per quadrant showing pathway-level concordance
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

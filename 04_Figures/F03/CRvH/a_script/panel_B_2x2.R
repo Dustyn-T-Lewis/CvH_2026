@@ -2,7 +2,7 @@
 # Left: Cancer_vs_Healthy | Right: Training_CR
 # Outputs: panel_B_barcode_2x2_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 library(dplyr)

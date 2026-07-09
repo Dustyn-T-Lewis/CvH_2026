@@ -8,7 +8,7 @@
 # (pathway, pval, padj, log2err, ES, NES, size, leadingEdge, database, contrast)
 # so the panel needs no changes. Ranks = signed limma t-statistic per gene.
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 suppressPackageStartupMessages({
   library(dplyr); library(tidyr); library(readr); library(tibble); library(fgsea)
 })

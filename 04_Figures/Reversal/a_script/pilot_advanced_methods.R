@@ -16,7 +16,7 @@
 #   Shared term: CR_T1 appears with +1 in CvH and -1 in TR
 #   → structural Cov(logFC_CvH, logFC_TR) = -Var(mean(CR_T1))
 #   → expected negative r even under H0: no biological reversal
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 library(tidyverse)
 library(limma)

@@ -1,6 +1,6 @@
 # Supplementary Enrichment Gallery -- Bubble Matrix (F04 CRvH: Concordance)
 # All classified pathways: circle size = -log10(padj), fill = NES.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

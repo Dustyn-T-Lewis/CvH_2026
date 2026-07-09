@@ -1,7 +1,7 @@
 # F04 CRvH Supplementary: RRHO with Marginal Signal Profiles (Concordance)
 # Non-stratified RRHO (Plaisier 2010) for smooth continuous visualization.
 # Signed -log10(p): positive = over-enrichment (concordance), negative = under-enrichment.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

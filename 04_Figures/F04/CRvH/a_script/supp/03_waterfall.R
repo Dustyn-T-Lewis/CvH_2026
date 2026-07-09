@@ -1,6 +1,6 @@
 # Supplementary Enrichment Gallery -- Concordance Ratio Lollipop (F04 CRvH)
 # All pathways included; alpha encodes denominator significance.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

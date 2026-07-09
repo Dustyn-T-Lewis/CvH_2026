@@ -6,7 +6,7 @@
 # Contrasts: Cancer_vs_Healthy, Training_CR
 # Outputs: panel_D_fgsea_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 library(dplyr)

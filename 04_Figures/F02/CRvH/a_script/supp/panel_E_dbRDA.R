@@ -3,7 +3,7 @@
 # Full model: Group_Time. Within-subject model: Timepoint with Condition(Subject_ID).
 # Outputs: pE_dbrda (ggplot object), panel_E_dbRDA_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

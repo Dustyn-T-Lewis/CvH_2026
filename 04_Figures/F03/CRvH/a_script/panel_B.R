@@ -4,7 +4,7 @@
 # Contrasts: Cancer_vs_Healthy, Training_CR
 # Outputs: pB (ggplot object), panel_B_barcode.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 suppressPackageStartupMessages({

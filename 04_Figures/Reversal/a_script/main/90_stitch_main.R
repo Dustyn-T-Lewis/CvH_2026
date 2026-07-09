@@ -5,7 +5,7 @@
 # Source order: A, B, D, E, then C (C last — AnnotationDbi masking)
 # Outputs: MAIN_Reversal_composite.{pdf,png} + Reversal_supplementary.xlsx
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
 suppressPackageStartupMessages({
   library(patchwork)

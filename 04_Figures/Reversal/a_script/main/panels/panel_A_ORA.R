@@ -2,7 +2,7 @@
 # Cancer Recovery Reversal: Cancer_vs_Healthy (x) vs Training_CR (y)
 # Threshold-free ORA on all proteins per quadrant
 # Blue = reversed (off-diagonal), Red = exacerbated (diagonal)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 library(tidyverse)

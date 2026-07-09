@@ -6,7 +6,7 @@
 # environment: sig_sets, dir_map, all_genes, SET_LABELS, SET_DISPLAY_COLORS,
 # pi_total, fdr_total.  Do NOT wrap in a function or local scope.
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 suppressPackageStartupMessages({

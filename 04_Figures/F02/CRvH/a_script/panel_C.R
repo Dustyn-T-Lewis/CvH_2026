@@ -3,7 +3,7 @@
 # PERMANOVA with Group_Time factor. 80% confidence ellipses. Bootstrap PC variance CIs.
 # Outputs: pC (ggplot object), panel_C_pca_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

@@ -2,7 +2,7 @@
 # 1. Melov-style reversal proportion (Melov et al. 2007 PLoS ONE)
 # 2. CMap connectivity score (Subramanian et al. 2017 Cell)
 # 3. Recovery score per protein (continuous metric)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 library(tidyverse)
 library(patchwork)

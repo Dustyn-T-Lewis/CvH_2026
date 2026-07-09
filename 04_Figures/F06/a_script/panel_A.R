@@ -5,7 +5,7 @@
 # Two-tier display: solid border = FDR < 0.05; dashed = nominal p < 0.05
 # Generates: panel_A_module_trait_MAIN.pdf/.png, c_data/01_panel_A_*.csv
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 
 suppressPackageStartupMessages({

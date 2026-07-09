@@ -1,6 +1,6 @@
 # F04 CRvH Supplementary: Directional Asymmetry in Cancer Recovery Concordance
 # Tests whether concordance rate and magnitude differ by direction.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

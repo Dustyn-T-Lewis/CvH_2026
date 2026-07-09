@@ -1,5 +1,5 @@
 # F03 CRvH — Composite: A|B top, C|D bottom (2x2)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
 suppressPackageStartupMessages({

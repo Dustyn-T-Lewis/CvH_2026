@@ -1,7 +1,7 @@
 # F04 CRvH Supplementary: Directional Asymmetry Analysis
 # Q1: Is concordant-up overlap stronger than concordant-down?
 # Q2: Are specific biological processes asymmetrically conserved?
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
 library(tidyverse)

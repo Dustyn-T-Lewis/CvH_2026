@@ -1,6 +1,6 @@
 # SUPP: Bootstrap CI for Reversal Pearson r
 # 1000 bootstrap replicates of r(logFC_CvH, logFC_TR)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 library(tidyverse)
 

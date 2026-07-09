@@ -1,6 +1,6 @@
 # SUPP Reversal Threshold Sensitivity
 # Line plot: % Reversed / Exacerbated / Negligible across |logFC| thresholds
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
 library(tidyverse)

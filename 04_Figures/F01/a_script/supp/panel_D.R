@@ -1,5 +1,5 @@
 # F01 Supplementary Panel D: LBM (Pre/Post x Supplement)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F01/a_script/style.R")
 
 suppressPackageStartupMessages({

@@ -3,7 +3,7 @@
 # Pi-score significant DEPs across 2 CRvH contrasts, split by Up/Down direction
 # Outputs: panel_C_upset_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 suppressPackageStartupMessages({

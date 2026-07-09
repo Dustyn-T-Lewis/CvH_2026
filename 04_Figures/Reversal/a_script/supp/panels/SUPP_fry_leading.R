@@ -1,6 +1,6 @@
 # SUPP Fry Leading-Edge Dotplot
 # Top 25 fry driving proteins ranked by |t_Training_CR|
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
 library(tidyverse)

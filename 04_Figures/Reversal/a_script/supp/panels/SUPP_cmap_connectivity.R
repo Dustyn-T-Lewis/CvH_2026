@@ -9,7 +9,7 @@
 #   Connectivity = (ES_up - ES_down) / 2
 #   Negative connectivity = reversal; positive = exacerbation
 #   Null: 10,000 random gene-set permutations
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 library(tidyverse)
 library(patchwork)

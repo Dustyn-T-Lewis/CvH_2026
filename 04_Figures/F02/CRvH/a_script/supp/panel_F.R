@@ -3,7 +3,7 @@
 # Plasma proteins highlighted; key blood markers labeled.
 # Outputs: panel_F_cv_scatter_baseline_SUPP.png, audit CSVs
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

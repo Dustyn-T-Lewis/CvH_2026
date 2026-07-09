@@ -1,6 +1,6 @@
 # SUPP GO Slim Bars
 # Stacked horizontal bars: GO Slim consolidated category distribution by reversal quadrant
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/go_slim_categories.R")
 

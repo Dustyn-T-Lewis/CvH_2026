@@ -3,7 +3,7 @@
 # Median labels with bootstrap CIs, Wilcoxon + Cliff's delta for paired T1/T2.
 # Outputs: pA (ggplot object), panel_A_cv_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
 suppressPackageStartupMessages({

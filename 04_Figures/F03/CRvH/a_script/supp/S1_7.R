@@ -2,7 +2,7 @@
 # Contrasts: Cancer_vs_Healthy, Training_CR
 # Outputs: s17 (patchwork composite)
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
 suppressPackageStartupMessages({

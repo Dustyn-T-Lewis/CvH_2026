@@ -6,7 +6,7 @@
 #   Generates: panel_C_hub_network_MAIN.pdf/.png, c_data/04_panel_C_*.csv
 ################################################################################
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 source("04_Figures/shared/pathway_utils.R")
 
