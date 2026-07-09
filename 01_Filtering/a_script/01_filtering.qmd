@@ -21,7 +21,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-library(here)
+pacman::p_load(here)
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
@@ -42,8 +42,7 @@ The matrix is aligned to the sheet by `Col_ID`.
 
 ```{r}
 #| label: load
-library(proteoDA); library(readxl); library(readr); library(dplyr)
-library(tidyr); library(stringr)
+pacman::p_load(proteoDA, readxl, readr, dplyr, tidyr, stringr)
 
 raw <- read_excel(here("00_input", "CvH_raw.xlsx"))
 annot_cols <- c("uniprot_id", "protein", "gene", "description", "n_seq")

@@ -12,10 +12,7 @@ setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 
-library(tidyverse)
-library(limma)
-library(fgsea)
-library(patchwork)
+pacman::p_load(tidyverse, limma, fgsea, patchwork)
 
 set.seed(42)
 

@@ -8,11 +8,7 @@
 setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(png)
-  library(grid)
-})
+pacman::p_load(patchwork, png, grid)
 
 RPT <- "04_Figures/F06/b_reports"
 

@@ -2,12 +2,7 @@
 setwd(here::here())
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(ggplot2)
-  library(png)
-  library(grid)
-})
+pacman::p_load(patchwork, ggplot2, png, grid)
 
 RPT <- "04_Figures/F03/CRvH/b_reports"
 

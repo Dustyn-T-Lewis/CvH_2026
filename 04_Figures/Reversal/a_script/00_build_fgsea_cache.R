@@ -9,9 +9,7 @@
 # so the panel needs no changes. Ranks = signed limma t-statistic per gene.
 
 setwd(here::here())
-suppressPackageStartupMessages({
-  library(dplyr); library(tidyr); library(readr); library(tibble); library(fgsea)
-})
+pacman::p_load(dplyr, tidyr, readr, tibble, fgsea)
 source("04_Figures/shared/pathway_utils.R")
 source("04_Figures/Reversal/a_script/reversal.R")
 

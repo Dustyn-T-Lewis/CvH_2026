@@ -3,8 +3,7 @@
 # fGSEA cache is LONG format — pivot wider before scatter
 setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(ggrepel)
+pacman::p_load(tidyverse, ggrepel)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"

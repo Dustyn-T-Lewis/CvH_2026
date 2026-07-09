@@ -9,10 +9,7 @@
 #   minModuleSize = 30, mergeCutHeight = 0.25,
 #   pickSoftThreshold over powers 1:20, R^2 > 0.87 cutoff (default 6 fallback).
 
-suppressPackageStartupMessages({
-  library(WGCNA)
-  library(tidyverse)
-})
+pacman::p_load(WGCNA, tidyverse)
 
 allowWGCNAThreads()
 set.seed(42)

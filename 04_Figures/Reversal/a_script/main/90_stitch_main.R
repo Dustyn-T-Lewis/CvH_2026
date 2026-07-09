@@ -7,11 +7,7 @@
 
 setwd(here::here())
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(cowplot)
-  library(ggplot2)
-})
+pacman::p_load(patchwork, cowplot, ggplot2)
 
 # -- Source panels (C last for AnnotationDbi masking) -------------------------
 message("=== Reversal Composite: sourcing panels ===")

@@ -5,7 +5,7 @@
 # Reads the panel PNGs (run panel_F + panel_G first). Output: PNG only (cairo-less env).
 setwd(here::here())
 source("04_Figures/shared/style.R")
-suppressPackageStartupMessages({ library(patchwork); library(ggplot2); library(png); library(grid) })
+pacman::p_load(patchwork, ggplot2, png, grid)
 
 PANELS <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT    <- "04_Figures/Reversal/b_reports/main/png"

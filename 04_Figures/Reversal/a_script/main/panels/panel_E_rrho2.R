@@ -4,9 +4,7 @@
 setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
-library(RRHO2)
-library(fgsea)
+pacman::p_load(tidyverse, RRHO2, fgsea)
 
 PE_W <- 110
 

@@ -8,8 +8,7 @@
 #   3. Permutation test (10,000×): shuffle cancer-DEP labels, recompute fraction
 setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(patchwork)
+pacman::p_load(tidyverse, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

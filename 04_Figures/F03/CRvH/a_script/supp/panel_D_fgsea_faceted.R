@@ -7,9 +7,7 @@
 setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-library(dplyr)
-library(readr)
-library(tidyr)
+pacman::p_load(dplyr, readr, tidyr)
 
 DAT <- "04_Figures/F03/CRvH/c_data"
 RPT <- "04_Figures/F03/CRvH/b_reports/supp"

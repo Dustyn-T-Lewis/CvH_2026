@@ -3,13 +3,7 @@
 # Maps genes to 15 consolidated pathways via GO Slim Generic BP (62 terms)
 # and GOBPANCESTOR hierarchy traversal.
 
-suppressPackageStartupMessages({
-  library(GO.db)
-  library(org.Hs.eg.db)
-  library(AnnotationDbi)
-  library(dplyr)
-  library(tidyr)
-})
+pacman::p_load(GO.db, org.Hs.eg.db, AnnotationDbi, dplyr, tidyr)
 
 bp_slim <- c(
   "GO:0000278", "GO:0000910", "GO:0002181", "GO:0002376", "GO:0003012",

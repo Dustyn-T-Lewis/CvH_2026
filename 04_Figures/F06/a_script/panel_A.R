@@ -8,14 +8,7 @@
 setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(readr)
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(stringr)
-  library(patchwork)
-})
+pacman::p_load(readr, dplyr, tidyr, tibble, stringr, patchwork)
 
 RPT <- "04_Figures/F06/b_reports"
 

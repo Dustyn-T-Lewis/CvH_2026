@@ -3,8 +3,7 @@
 setwd(here::here())
 source("04_Figures/shared/style.R")
 
-library(tidyverse)
-library(openxlsx)
+pacman::p_load(tidyverse, openxlsx)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

@@ -6,11 +6,7 @@
 setwd(here::here())
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(tidyverse)
-  library(ComplexHeatmap)
-  library(circlize)
-})
+pacman::p_load(tidyverse, ComplexHeatmap, circlize)
 
 RPT <- "04_Figures/F03/CRvH/b_reports/supp"
 

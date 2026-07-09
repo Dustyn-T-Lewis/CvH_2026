@@ -3,11 +3,7 @@
 setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(dplyr)
-library(tibble)
-library(tidyr)
-library(patchwork)
-library(ComplexHeatmap)
+pacman::p_load(dplyr, tibble, tidyr, patchwork, ComplexHeatmap)
 
 
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"

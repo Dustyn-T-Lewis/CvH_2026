@@ -4,9 +4,7 @@
 setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(tidyverse)
-library(ggrepel)
-library(fgsea)
+pacman::p_load(tidyverse, ggrepel, fgsea)
 
 PG_W <- 200
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"

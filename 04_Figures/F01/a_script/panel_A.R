@@ -2,10 +2,7 @@
 setwd(here::here())
 source("04_Figures/F01/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggsignif)
-})
+pacman::p_load(dplyr, ggsignif)
 
 PW <- 90; PH <- 100
 RPT <- "04_Figures/F01/b_reports"

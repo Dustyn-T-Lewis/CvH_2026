@@ -2,8 +2,7 @@
 # Output: 04_Figures/supplementary_data_index.xlsx (one sheet per figure/stream)
 setwd(here::here())
 
-library(readr)
-library(openxlsx)
+pacman::p_load(readr, openxlsx)
 
 wb <- createWorkbook()
 

@@ -3,8 +3,7 @@
 setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(tidyverse)
-library(ggrepel)
+pacman::p_load(tidyverse, ggrepel)
 
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"
 DAT <- "04_Figures/F04/CRvH/c_data/supp"

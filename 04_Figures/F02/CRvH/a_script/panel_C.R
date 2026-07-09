@@ -6,14 +6,7 @@
 setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(vegan)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, vegan)
 
 PC_W <- 145; PC_H <- 100
 

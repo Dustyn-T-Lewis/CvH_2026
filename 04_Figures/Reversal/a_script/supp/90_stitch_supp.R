@@ -11,10 +11,7 @@ setwd(here::here())
 
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(cowplot)
-})
+pacman::p_load(patchwork, cowplot)
 
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf"
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png"

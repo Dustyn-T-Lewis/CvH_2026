@@ -5,11 +5,7 @@
 setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-library(dplyr)
-library(readr)
-library(tidyr)
-library(ggplot2)
-library(patchwork)
+pacman::p_load(dplyr, readr, tidyr, ggplot2, patchwork)
 
 DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"

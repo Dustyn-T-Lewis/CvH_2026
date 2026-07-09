@@ -4,12 +4,7 @@
 setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(readr)
-  library(dplyr)
-  library(tidyr)
-  library(patchwork)
-})
+pacman::p_load(readr, dplyr, tidyr, patchwork)
 
 VW <- 190; VH <- 180
 RPT <- "04_Figures/F04/CRvH/b_reports"

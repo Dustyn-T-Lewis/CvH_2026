@@ -5,10 +5,7 @@
 setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
-library(fgsea)
-library(ggrepel)
-library(patchwork)
+pacman::p_load(tidyverse, fgsea, ggrepel, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"
