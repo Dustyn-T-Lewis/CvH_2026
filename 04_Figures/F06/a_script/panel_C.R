@@ -1,10 +1,8 @@
-################################################################################
-#   Figure 6 — Panel C: Hub Protein Networks (2x2 grid, top 4 modules)
-#   Hub selection: kME >= module Q90 (data-driven, no cap)
-#   Pathway DB: run_ora_deduplicated() with full multi-DB collection
-#   Layout: stress (graphlayouts, deterministic)
-#   Generates: panel_C_hub_network_MAIN.pdf/.png, c_data/04_panel_C_*.csv
-################################################################################
+# Figure 6 — Panel C: Hub Protein Networks (2x2 grid, top 4 modules)
+# Hub selection: kME >= module Q90 (data-driven, no cap)
+# Pathway DB: run_ora_deduplicated() with full multi-DB collection
+# Layout: stress (graphlayouts, deterministic)
+# Generates: panel_C_hub_network_MAIN.pdf/.png, c_data/04_panel_C_*.csv
 
 setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
