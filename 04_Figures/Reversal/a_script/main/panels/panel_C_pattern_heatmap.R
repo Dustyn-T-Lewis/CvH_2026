@@ -1,11 +1,11 @@
 # Reversal Panel C: Pattern Heatmap + Sankey
 # Per-protein reversal classification with GO Slim pathway bars
 # Source LAST — AnnotationDbi masks dplyr::select
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/go_slim_categories.R")
 
-library(tidyverse)
+pacman::p_load(tidyverse)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"
@@ -16,9 +16,7 @@ dir.create(file.path(DAT, "panel_C_heatmap"), recursive = TRUE, showWarnings = F
 
 pdf_device <- get_pdf_device()
 
-# =============================================================================
 # 1. LOAD & CLASSIFY
-# =============================================================================
 source("04_Figures/Reversal/a_script/reversal_inputs.R")   # dep_df (old column names)
 
 sig_df <- dep_df %>%
@@ -58,9 +56,7 @@ n_total <- nrow(sig_df)
 message(sprintf("  %d significant proteins across %d quadrants", n_total,
                 n_distinct(sig_df$quadrant)))
 
-# =============================================================================
 # 2. Y-COORDINATE LAYOUT
-# =============================================================================
 ROW_H <- 0.078
 
 quad_counts <- sig_df %>% count(quadrant, .drop = FALSE) %>%
@@ -90,9 +86,7 @@ BAR_FRAC <- 1.0
 BAR_YMIN <- 0
 BAR_YMAX <- total_h * BAR_FRAC
 
-# =============================================================================
 # 3. PATHWAY LAYOUT
-# =============================================================================
 pw_counts <- sig_df %>%
   filter(pathway != "Other") %>%
   count(pathway, name = "n_prot") %>%
@@ -122,9 +116,7 @@ dom_quad <- sig_df %>%
 
 pw_counts <- pw_counts %>% left_join(dom_quad, by = "pathway")
 
-# =============================================================================
 # 4. X-COORDINATE LAYOUT
-# =============================================================================
 STRIP_W <- 0.10; TILE_W <- 0.70
 
 X_SIG   <- 0.8
@@ -144,9 +136,7 @@ X_BAR_MAX <- max(X_BAR_L + 40 * BAR_SCALE, X_BAR_L + count_max * BAR_SCALE)
 
 PW_OUT <- 178; PH_OUT <- 130
 
-# =============================================================================
 # 5. STACKED BAR DATA
-# =============================================================================
 bar_data <- sig_df %>%
   filter(pathway %in% pw_counts$pathway) %>%
   count(pathway, quadrant, name = "n_seg") %>%
@@ -179,9 +169,7 @@ count_ticks <- tibble(
   y_label = BAR_YMAX + ROW_H * 3.5
 ) %>% filter(val >= 0, val <= count_max)
 
-# =============================================================================
 # 6. SANKEY
-# =============================================================================
 flow_df <- sig_df %>%
   filter(pathway %in% pw_counts$pathway) %>%
   count(quadrant, pathway, name = "n_flow") %>%
@@ -229,9 +217,7 @@ endpoint_bars <- bar_data %>%
   transmute(xmin = X_SANK_R - 0.04, xmax = X_SANK_R + 0.04,
             ymin, ymax, quadrant = as.character(quadrant))
 
-# =============================================================================
 # 7. HEATMAP
-# =============================================================================
 fc_max <- max(abs(c(sig_df$logFC_Cancer_vs_Healthy, sig_df$logFC_Training_CR)),
               na.rm = TRUE)
 
@@ -262,9 +248,7 @@ col_headers <- tibble(
   label = c("Cancer", "Tr.(CR)"),
   color = unname(CONTRAST_COLORS[c("Cancer_vs_Healthy", "Training_CR")]))
 
-# =============================================================================
 # 8. LEGENDS
-# =============================================================================
 n_g <- 50
 HEAT_MID  <- (HEAT_LEFT + HEAT_RIGHT) / 2
 GRAD_HALFW <- (HEAT_RIGHT - HEAT_LEFT) * 0.30
@@ -283,9 +267,7 @@ FONT_UNI <- 2.5
 FONT_BAR <- 2.0
 FONT_PW  <- 2.2
 
-# =============================================================================
 # 9. RENDER
-# =============================================================================
 p <- ggplot() +
   geom_rect(data = bg_stripes,
             aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
@@ -346,17 +328,13 @@ p <- ggplot() +
                                      margin = margin(l = 31.5, unit = "mm")),
         plot.title.position = "panel")
 
-# =============================================================================
 # 10. SAVE
-# =============================================================================
 ggsave(file.path(RPT_PNG, "MAIN_panel_C_pattern_heatmap.png"), p,
        width = PW_OUT, height = PH_OUT, units = "mm", dpi = 300)
 ggsave(file.path(RPT_PDF, "MAIN_panel_C_pattern_heatmap.pdf"), p,
        width = PW_OUT, height = PH_OUT, units = "mm", device = pdf_device)
 
-# =============================================================================
 # 11. DATA EXPORTS
-# =============================================================================
 sig_df %>%
   transmute(gene, quadrant = as.character(quadrant), sig_cat, pathway,
             logFC_Cancer_vs_Healthy = round(logFC_Cancer_vs_Healthy, 4),

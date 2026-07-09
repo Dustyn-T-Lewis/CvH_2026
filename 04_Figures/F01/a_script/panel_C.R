@@ -1,14 +1,8 @@
 # F01 Panel C: STS Max Power (Pre/Post x Supplement)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F01/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(patchwork)
-  library(ggsignif)
-  library(rstatix)
-})
+pacman::p_load(dplyr, tidyr, patchwork, ggsignif, rstatix)
 
 PW <- 170; PH <- 80
 RPT <- "04_Figures/F01/b_reports"

@@ -2,13 +2,10 @@
 # "What's still off after training" -- the per-protein residual gap from healthy,
 # with fgsea pathway enrichment on the residual t-statistic alongside. Pairs with
 # the trajectory clusters (F, "what reversed").
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
-library(fgsea)
-library(ggrepel)
-library(patchwork)
+pacman::p_load(tidyverse, fgsea, ggrepel, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"

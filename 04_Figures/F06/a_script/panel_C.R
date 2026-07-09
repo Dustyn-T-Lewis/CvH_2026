@@ -1,30 +1,14 @@
-################################################################################
-#   Figure 6 — Panel C: Hub Protein Networks (2x2 grid, top 4 modules)
-#   Hub selection: kME >= module Q90 (data-driven, no cap)
-#   Pathway DB: run_ora_deduplicated() with full multi-DB collection
-#   Layout: stress (graphlayouts, deterministic)
-#   Generates: panel_C_hub_network_MAIN.pdf/.png, c_data/04_panel_C_*.csv
-################################################################################
+# Figure 6 — Panel C: Hub Protein Networks (2x2 grid, top 4 modules)
+# Hub selection: kME >= module Q90 (data-driven, no cap)
+# Pathway DB: run_ora_deduplicated() with full multi-DB collection
+# Layout: stress (graphlayouts, deterministic)
+# Generates: panel_C_hub_network_MAIN.pdf/.png, c_data/04_panel_C_*.csv
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 source("04_Figures/shared/pathway_utils.R")
 
-suppressPackageStartupMessages({
-  library(tidyverse)
-  library(patchwork)
-  library(ggrepel)
-  library(WGCNA)
-  library(igraph)
-  library(ggraph)
-  library(ggforce)
-  library(concaveman)
-  library(graphlayouts)
-  library(tidygraph)
-  library(ggnewscale)
-  library(fgsea)
-  library(colorspace)
-})
+pacman::p_load(tidyverse, patchwork, ggrepel, WGCNA, igraph, ggraph, ggforce, concaveman, graphlayouts, tidygraph, ggnewscale, fgsea, colorspace)
 
 allowWGCNAThreads()
 set.seed(42)

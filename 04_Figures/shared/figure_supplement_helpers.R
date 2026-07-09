@@ -4,11 +4,7 @@
 # After the workbook is saved, cleanup_after_workbook() removes the consumed
 # CSVs/subdirs so each c_data/ ends up holding just the Excel.
 
-suppressPackageStartupMessages({
-  library(openxlsx)
-  library(readr)
-  library(readxl)
-})
+pacman::p_load(openxlsx, readr, readxl)
 
 add_sheet <- function(wb, name, data) {
   addWorksheet(wb, name)

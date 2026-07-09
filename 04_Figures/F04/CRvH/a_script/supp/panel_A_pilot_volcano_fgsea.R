@@ -2,11 +2,10 @@
 # Minimal volcanos with top fGSEA pathways as bars growing outward
 # Down-regulated pathways (blue bars) grow right->left from volcano left edge
 # Up-regulated pathways (red bars) grow left->right from volcano right edge
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(tidyverse)
-library(patchwork)
+pacman::p_load(tidyverse, patchwork)
 
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"
 DAT <- "04_Figures/F04/CRvH/c_data"

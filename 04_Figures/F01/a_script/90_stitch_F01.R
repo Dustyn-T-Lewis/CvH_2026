@@ -1,15 +1,10 @@
 # F01 — Composite Phenotype Figure Assembly
 # Panels: A (Age), B (ALM), C (STS Max Power)
 # Layout: A left | B/C stacked right
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(ggplot2)
-  library(png)
-  library(grid)
-})
+pacman::p_load(patchwork, ggplot2, png, grid)
 
 RPT <- "04_Figures/F01/b_reports"
 pdf_device <- get_pdf_device()

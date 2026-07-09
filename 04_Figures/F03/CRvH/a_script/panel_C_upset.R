@@ -3,18 +3,10 @@
 # Pi-score significant DEPs across 2 CRvH contrasts, split by Up/Down direction
 # Outputs: panel_C_upset_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tibble)
-  library(tidyr)
-  library(readr)
-  library(patchwork)
-  library(ComplexHeatmap)
-  library(purrr)
-})
+pacman::p_load(dplyr, tibble, tidyr, readr, patchwork, ComplexHeatmap, purrr)
 
 DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"

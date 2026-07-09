@@ -8,14 +8,11 @@
 #   "Do training-responsive proteins show enrichment in the cancer signature?"
 #   Uses ALL samples (CR + Healthy), blocks on Subject_ID
 #
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 
-library(tidyverse)
-library(limma)
-library(fgsea)
-library(patchwork)
+pacman::p_load(tidyverse, limma, fgsea, patchwork)
 
 set.seed(42)
 

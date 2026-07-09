@@ -1,13 +1,8 @@
 # F03 CRvH — Composite: A|B top, C|D bottom (2x2)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(ggplot2)
-  library(png)
-  library(grid)
-})
+pacman::p_load(patchwork, ggplot2, png, grid)
 
 RPT <- "04_Figures/F03/CRvH/b_reports"
 

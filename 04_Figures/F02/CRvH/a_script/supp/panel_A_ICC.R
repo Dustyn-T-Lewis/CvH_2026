@@ -4,17 +4,10 @@
 # High ICC = stable subject trait; low ICC = responsive to training.
 # Outputs: pA_ICC (ggplot object), panel_A_ICC_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(psych)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, psych)
 
 PA_ICC_W <- 110; PA_ICC_H <- 120
 

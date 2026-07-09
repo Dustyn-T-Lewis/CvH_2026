@@ -1,9 +1,9 @@
 # SUPP Reversal Threshold Sensitivity
 # Line plot: % Reversed / Exacerbated / Negligible across |logFC| thresholds
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
-library(tidyverse)
+pacman::p_load(tidyverse)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

@@ -3,16 +3,10 @@
 # Companion dot plot: Plasma protein intensity fraction with bootstrap CIs.
 # Outputs: panel_G_compartment_composition_SUPP.png, audit CSVs
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(readr)
-  library(ggplot2)
-  library(cowplot)
-})
+pacman::p_load(dplyr, tidyr, readr, ggplot2, cowplot)
 
 PG_W <- 200; PG_H <- 140
 

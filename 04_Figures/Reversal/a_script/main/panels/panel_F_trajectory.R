@@ -5,13 +5,10 @@
 # the per-contrast scatter (A) and NES scatter (B).
 #   Engine = e1071::cmeans (the fuzzy c-means Mfuzz wraps; Futschik & Carlisle 2005).
 #   Descriptive only -- inference stays with fry / RRHO2 / permutation null.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
-library(e1071)
-library(ggrepel)
-library(patchwork)
+pacman::p_load(tidyverse, e1071, ggrepel, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"

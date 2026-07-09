@@ -3,16 +3,10 @@
 # Bootstrap median |logFC| CIs.
 # Outputs: pD (ggplot object), panel_D_logfc_density_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2)
 
 PD_W <- 120; PD_H <- 120
 

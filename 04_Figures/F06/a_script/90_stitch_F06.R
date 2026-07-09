@@ -5,14 +5,10 @@
 #         C (bottom, hub protein networks)
 # Generates: F06_wgcna_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(png)
-  library(grid)
-})
+pacman::p_load(patchwork, png, grid)
 
 RPT <- "04_Figures/F06/b_reports"
 

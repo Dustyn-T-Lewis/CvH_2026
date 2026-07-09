@@ -1,9 +1,8 @@
 # Build master supplementary data index from per-figure data dictionaries
 # Output: 04_Figures/supplementary_data_index.xlsx (one sheet per figure/stream)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
-library(readr)
-library(openxlsx)
+pacman::p_load(readr, openxlsx)
 
 wb <- createWorkbook()
 

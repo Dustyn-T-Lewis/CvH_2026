@@ -15,10 +15,9 @@
 #      MORE than random subsets of the same size
 #   3. Reversal fraction specificity (10,000×): same null, but for %reversed
 #      (complements the correlation metric with a count metric)
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(patchwork)
+pacman::p_load(tidyverse, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

@@ -6,10 +6,9 @@
 #   1. Binomial test vs 50% (H0: reversal no better than coin flip)
 #   2. Fisher exact 2x2 (up/down × reversed/not) for directional independence
 #   3. Permutation test (10,000×): shuffle cancer-DEP labels, recompute fraction
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(patchwork)
+pacman::p_load(tidyverse, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

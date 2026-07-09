@@ -30,3 +30,6 @@ Rplots.pdf
 CvH_pipeline.html
 tutorials/*.html
 *_cache/
+
+# Process scratch — briefs, audits, checksums; deletable at project completion
+docs/

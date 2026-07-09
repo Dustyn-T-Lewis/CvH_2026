@@ -3,17 +3,10 @@
 # Two Venn diagrams side by side: Up-regulated | Down-regulated
 # Outputs: panel_C_venn_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-library(dplyr)
-library(readr)
-library(tidyr)
-library(VennDiagram)
-library(grid)
-library(png)
-library(patchwork)
-library(ggplot2)
+pacman::p_load(dplyr, readr, tidyr, VennDiagram, grid, png, patchwork, ggplot2)
 
 DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"

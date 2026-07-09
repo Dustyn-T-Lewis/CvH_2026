@@ -3,17 +3,10 @@
 # Median labels with bootstrap CIs, Wilcoxon + Cliff's delta for paired T1/T2.
 # Outputs: pA (ggplot object), panel_A_cv_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(ggbeeswarm)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, ggbeeswarm)
 
 PA_W <- 210; PA_H <- 120
 

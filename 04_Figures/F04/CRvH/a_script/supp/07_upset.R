@@ -1,13 +1,9 @@
 # Supplementary Enrichment Gallery -- UpSet Intersection Plot (F04 CRvH: Concordance)
 # Custom ggplot dual-panel (bars + dot matrix) matching F03 Panel B style.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(dplyr)
-library(tibble)
-library(tidyr)
-library(patchwork)
-library(ComplexHeatmap)
+pacman::p_load(dplyr, tibble, tidyr, patchwork, ComplexHeatmap)
 
 
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"

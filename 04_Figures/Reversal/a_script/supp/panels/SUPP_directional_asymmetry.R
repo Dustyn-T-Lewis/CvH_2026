@@ -17,10 +17,9 @@
 #   2. Chi-square test: 2×2 (cancer direction × reversal status)
 #   3. Bootstrap CI for the asymmetry difference
 #   4. Threshold sensitivity: does asymmetry persist across Pi / FDR thresholds?
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(patchwork)
+pacman::p_load(tidyverse, patchwork)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

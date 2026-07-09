@@ -6,14 +6,10 @@
 # Contrasts: Cancer_vs_Healthy, Training_CR
 # Outputs: panel_D_fgsea_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-library(dplyr)
-library(readr)
-library(tidyr)
-library(ggplot2)
-library(patchwork)
+pacman::p_load(dplyr, readr, tidyr, ggplot2, patchwork)
 
 RPT <- "04_Figures/F03/CRvH/b_reports"
 

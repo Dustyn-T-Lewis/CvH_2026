@@ -3,18 +3,10 @@
 # B4: DeltaCV scatter.
 # Outputs: pB (combined ggplot), panel_B_cv_scatter_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(ggrepel)
-  library(cowplot)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, ggrepel, cowplot)
 
 PB_SUB <- 80; PB_W <- 300; PB_H <- 120
 

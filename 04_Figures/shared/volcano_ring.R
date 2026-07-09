@@ -3,12 +3,7 @@
 # Standard Cartesian ggplot with ggforce::geom_arc_bar(); NO coord_polar().
 # Sources style.R for palettes and sizing constants.
 
-suppressPackageStartupMessages({
-  library(tidyverse)
-  library(ggforce)
-  library(patchwork)
-  library(scales)
-})
+pacman::p_load(tidyverse, ggforce, patchwork, scales)
 
 if (!exists("FIG_THEME")) source("04_Figures/shared/style.R")
 

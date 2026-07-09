@@ -1,10 +1,9 @@
 # Supplementary Enrichment Gallery -- NES Quadrant Scatter (F04 CRvH: Concordance)
 # NES vs NES scatter with quadrant backgrounds and pattern coloring.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(tidyverse)
-library(ggrepel)
+pacman::p_load(tidyverse, ggrepel)
 
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"
 DAT <- "04_Figures/F04/CRvH/c_data/supp"

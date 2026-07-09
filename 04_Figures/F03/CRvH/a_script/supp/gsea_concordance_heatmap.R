@@ -3,14 +3,10 @@
 # for pathways significant in at least one contrast.
 # Reads cached fGSEA results from panel_C (no new analysis).
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(tidyverse)
-  library(ComplexHeatmap)
-  library(circlize)
-})
+pacman::p_load(tidyverse, ComplexHeatmap, circlize)
 
 RPT <- "04_Figures/F03/CRvH/b_reports/supp"
 

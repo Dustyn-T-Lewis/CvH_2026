@@ -8,10 +8,8 @@
 # (pathway, pval, padj, log2err, ES, NES, size, leadingEdge, database, contrast)
 # so the panel needs no changes. Ranks = signed limma t-statistic per gene.
 
-setwd(rprojroot::find_rstudio_root_file())
-suppressPackageStartupMessages({
-  library(dplyr); library(tidyr); library(readr); library(tibble); library(fgsea)
-})
+setwd(here::here())
+pacman::p_load(dplyr, tidyr, readr, tibble, fgsea)
 source("04_Figures/shared/pathway_utils.R")
 source("04_Figures/Reversal/a_script/reversal.R")
 

@@ -1,10 +1,7 @@
 # CvH Shared Figure Style
 # Single source of truth: palettes, themes, sizing constants, helpers.
 
-suppressPackageStartupMessages({
-  library(ggplot2)
-  library(scales)
-})
+pacman::p_load(ggplot2, scales)
 
 # ── Palettes ──
 GROUP_COLORS <- c(

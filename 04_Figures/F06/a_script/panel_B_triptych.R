@@ -5,17 +5,10 @@
 # Eigengene: ME mean +/- SE per group_time
 # ORA bars use per-module x-scales (no artificial cap)
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F06/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(readr)
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(ggplot2)
-  library(patchwork)
-})
+pacman::p_load(readr, dplyr, tidyr, stringr, ggplot2, patchwork)
 
 RPT <- "04_Figures/F06/b_reports"
 

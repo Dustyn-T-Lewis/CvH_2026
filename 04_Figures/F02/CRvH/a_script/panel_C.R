@@ -3,17 +3,10 @@
 # PERMANOVA with Group_Time factor. 80% confidence ellipses. Bootstrap PC variance CIs.
 # Outputs: pC (ggplot object), panel_C_pca_MAIN.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(vegan)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, vegan)
 
 PC_W <- 145; PC_H <- 100
 

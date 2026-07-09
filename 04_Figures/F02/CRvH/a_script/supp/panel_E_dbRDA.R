@@ -3,17 +3,10 @@
 # Full model: Group_Time. Within-subject model: Timepoint with Condition(Subject_ID).
 # Outputs: pE_dbrda (ggplot object), panel_E_dbRDA_SUPP.pdf/.png
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F02/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
-  library(readr)
-  library(ggplot2)
-  library(vegan)
-})
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, vegan)
 
 PE_RDA_W <- 145; PE_RDA_H <- 100
 

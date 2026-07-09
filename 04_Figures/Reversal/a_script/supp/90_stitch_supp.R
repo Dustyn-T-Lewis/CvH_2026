@@ -7,14 +7,11 @@
 # Panel tags added by patchwork; titles/subtitles kept on individual panels
 # Output: SUPP_Reversal_diagnostics.{pdf,png}
 #         SUPP_Reversal_methods.{pdf,png}
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
 source("04_Figures/shared/style.R")
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(cowplot)
-})
+pacman::p_load(patchwork, cowplot)
 
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf"
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png"

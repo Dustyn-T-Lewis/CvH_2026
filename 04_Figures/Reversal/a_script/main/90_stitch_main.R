@@ -5,13 +5,9 @@
 # Source order: A, B, D, E, then C (C last — AnnotationDbi masking)
 # Outputs: MAIN_Reversal_composite.{pdf,png} + Reversal_supplementary.xlsx
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 
-suppressPackageStartupMessages({
-  library(patchwork)
-  library(cowplot)
-  library(ggplot2)
-})
+pacman::p_load(patchwork, cowplot, ggplot2)
 
 # -- Source panels (C last for AnnotationDbi masking) -------------------------
 message("=== Reversal Composite: sourcing panels ===")

@@ -1,10 +1,9 @@
 # Reversal Panel B: Pathway NES Scatter
 # Cancer_vs_Healthy (x) vs Training_CR (y) at pathway level
 # fGSEA cache is LONG format — pivot wider before scatter
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
-library(tidyverse)
-library(ggrepel)
+pacman::p_load(tidyverse, ggrepel)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/main/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/main/pdf/panels"

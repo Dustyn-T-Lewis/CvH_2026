@@ -1,10 +1,9 @@
 # SUPP: ORA Deduplication Sensitivity
 # Pathway count stability across Jaccard cutoffs for reversed quadrants
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
-library(fgsea)
+pacman::p_load(tidyverse, fgsea)
 
 RPT_PNG <- "04_Figures/Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/Reversal/b_reports/supp/pdf/panels"

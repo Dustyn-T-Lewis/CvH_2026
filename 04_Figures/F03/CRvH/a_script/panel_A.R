@@ -6,15 +6,10 @@
 # environment: sig_sets, dir_map, all_genes, SET_LABELS, SET_DISPLAY_COLORS,
 # pi_total, fdr_total.  Do NOT wrap in a function or local scope.
 
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F03/a_script/style.R")
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(readr)
-  library(tibble)
-  library(tidyr)
-})
+pacman::p_load(dplyr, readr, tibble, tidyr)
 
 DEP_FILE <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 RPT      <- "04_Figures/F03/CRvH/b_reports"

@@ -1,12 +1,10 @@
 # F04 CRvH Supp: NES Scatter with collapsePathways (H + KEGG + Reactome + GO:BP)
 # Detail-tier databases with fgsea::collapsePathways() to select independent terms.
 # Contrast with main panel_D.R which uses the a priori GO Slim + Hallmark collection.
-setwd(rprojroot::find_rstudio_root_file())
+setwd(here::here())
 source("04_Figures/F04/a_script/style.R")
 
-library(tidyverse)
-library(ggrepel)
-library(fgsea)
+pacman::p_load(tidyverse, ggrepel, fgsea)
 
 PG_W <- 200
 RPT <- "04_Figures/F04/CRvH/b_reports/supp"
