@@ -31,7 +31,7 @@ pacman::p_load(dplyr, tidyr, tibble, purrr, readr)
 REVERSAL_PHI_BAND <- 0.25
 REVERSAL_CONTRASTS <- c(D = "CRvH_Baseline", T = "CR_Training", R = "Resid")
 
-#### 1. Reshape long DEP -> one row per protein with D/T/R columns ####
+# 1. Reshape long DEP -> one row per protein with D/T/R columns
 #' Pivot the long combined_results_pi.csv into a per-protein wide frame.
 #' Keeps logFC, t, P.Value, pi_score and the Pi-significance flag for each axis.
 load_reversal_table <- function(combined_pi_path,
@@ -56,7 +56,7 @@ load_reversal_table <- function(combined_pi_path,
   ann |> inner_join(vals, by = "uniprot_id")
 }
 
-#### 2. Rejuvenation fraction phi = -T / D + 3-way classification ####
+# 2. Rejuvenation fraction phi = -T / D + 3-way classification
 #' phi > 0  : training opposes the disease change (reversal toward healthy)
 #' phi = 1  : exact reversal (Resid = 0); phi > 1 = overshoot past healthy
 #' phi < 0  : training amplifies the disease change (exacerbation)
@@ -85,7 +85,7 @@ compute_phi <- function(wide, band = REVERSAL_PHI_BAND, signature_axis = "D") {
     )
 }
 
-#### 3. Directional asymmetry (disease-down vs disease-up reversal rate) ####
+# 3. Directional asymmetry (disease-down vs disease-up reversal rate)
 #' Two-proportion test on the disease-signature set: do disease-DOWN proteins
 #' reverse at a different rate than disease-UP proteins? (Novel proteome-level
 #' framing; mechanistic basis Murgia 2023 PMID 36517414.)
@@ -110,7 +110,7 @@ directional_asymmetry <- function(phi_tbl) {
   list(by_direction = by_dir, test = test)
 }
 
-#### 4. Protein-label permutation null (shared-baseline circularity control) ####
+# 4. Protein-label permutation null (shared-baseline circularity control)
 #' Observed reversal fraction of the disease-DEP set vs a null where DEP
 #' membership is reassigned to random proteins of the same size, holding ALL
 #' fold changes (and the shared-baseline covariance) fixed. p = P(null >= obs).
@@ -132,7 +132,7 @@ reversal_permutation_null <- function(phi_tbl, n_perm = 2000, seed = 42) {
   )
 }
 
-#### 5. fry + camera rotation test of the disease signature on the T axis ####
+# 5. fry + camera rotation test of the disease signature on the T axis
 #' Tests, within the limma model (block = Subject_ID, duplicateCorrelation),
 #' whether the disease-UP / disease-DOWN sets move in the REVERSING direction
 #' under the training contrast. fry = self-contained rotation (ROAST family,
@@ -185,7 +185,7 @@ reversal_rotation_test <- function(dal, phi_tbl,
        consensus_correlation = dc$consensus.correlation)
 }
 
-#### 6. RRHO2 (threshold-free 4-quadrant concordance/discordance) ####
+# 6. RRHO2 (threshold-free 4-quadrant concordance/discordance)
 #' Ranks proteins by signed significance on D and T; the off-diagonal quadrants
 #' (disease-Up x training-Down, disease-Down x training-Up) capture reversal.
 #' Returns the RRHO2 object plus tidy hotspot genes per quadrant. Wrapped in
@@ -210,7 +210,7 @@ reversal_rrho2 <- function(phi_tbl, labels = c("Disease", "Training"),
   })
 }
 
-#### 7. One-call summary ####
+# 7. One-call summary
 #' Runs phi classification, asymmetry, permutation null and (optionally) the
 #' rotation test; returns a named list of tidy tables for the caller to persist.
 run_reversal_analysis <- function(combined_pi_path, dal = NULL,

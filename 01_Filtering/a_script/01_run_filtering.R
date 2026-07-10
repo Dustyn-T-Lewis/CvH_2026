@@ -14,7 +14,7 @@ clear_dir <- function(d) {
 clear_dir(data_dir)
 clear_dir(report_dir)
 
-#### Load matrix + metadata ####
+# Load matrix + metadata
 # Read the protein matrix, derive the 3-group pre/post scheme, align by sample, collapse duplicates.
 
 raw <- read_excel(here("00_input", "CvH_raw.xlsx"))
@@ -45,7 +45,7 @@ if (any(duplicated(annotation$uniprot_id))) { # guard only; keep highest-mean ro
   intensity <- intensity[keep_idx, ]
 }
 
-#### Contaminant removal ####
+# Contaminant removal
 
 # Remove a protein iff blood-derived AND NOT myofiber-expressed:
 #   blood-derived = HPA "Secreted to blood" | immunoglobulin | erythrocyte-high
@@ -93,7 +93,7 @@ flog <- bind_rows(flog, tibble(step = "Blood contaminant removal", n_after = sum
 annotation <- annotation[keep, ]
 intensity <- intensity[keep, ]
 
-#### Build DAList ####
+# Build DAList
 # Package the cleaned matrix/annotation/metadata into the proteoDA object.
 
 int_mat <- as.data.frame(data.matrix(intensity))
@@ -104,7 +104,7 @@ meta_df <- as.data.frame(metadata)
 rownames(meta_df) <- metadata$Col_ID
 dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df)) # DIA-NN 0 = non-detection
 
-#### Missingness filter ####
+# Missingness filter
 
 n0 <- nrow(dal$data)
 # keep a protein quantified in >= 5 samples in at least one group_time level
@@ -115,7 +115,7 @@ flog <- bind_rows(flog, tibble(
 ))
 flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
 
-#### Outlier consensus ####
+# Outlier consensus
 
 # Four independent QC heuristics; a sample is dropped only on >= 3/4 agreement.
 # Missingness adds a paired arm: a within-subject pre->post jump in NA rate is
@@ -154,7 +154,7 @@ outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
 cat(sprintf("Outliers (>=3/4): %s\n", if (length(outlier_ids)) paste(outlier_ids, collapse = ", ") else "none"))
 if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
 
-#### Export ####
+# Export
 # Write the filtered DAList for Stage 02, plus a review workbook and the blood-contaminant plot.
 
 saveRDS(dal, file.path(data_dir, "DAList_filtered.rds")) # un-normalized handoff to Stage 02

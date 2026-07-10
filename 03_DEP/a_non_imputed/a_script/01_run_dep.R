@@ -15,7 +15,7 @@ clear_dir(out_dir); clear_dir(report_dir)
 dal <- readRDS(here("02_Normalization", "c_data", "DAList_normalized.rds"))
 cat(sprintf("NON-imputed DEP: %d proteins x %d samples\n", nrow(dal$data), ncol(dal$data)))
 
-#### Fit limma model ####
+# Fit limma model
 # (1 | Subject_ID) carries the within-subject pre->post pairing via duplicateCorrelation.
 
 dal <- add_design(dal, "~ 0 + group_time + (1 | Subject_ID)")
@@ -26,7 +26,7 @@ dal <- add_contrasts(dal, contrasts_vector = c(
 dal <- fit_limma_model(dal)
 dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")
 
-#### Tables + plots ####
+# Tables + plots
 # Native proteoDA outputs; drop the loose CSVs and keep the consolidated workbook.
 
 write_limma_tables(dal, output_dir = out_dir, overwrite = TRUE,
@@ -36,7 +36,7 @@ unlink(c(file.path(out_dir, "combined_results.csv"), file.path(out_dir, "DA_summ
 write_limma_plots(dal, grouping_column = "group_time", table_columns = c("uniprot_id", "gene"),
                   output_dir = report_dir, overwrite = TRUE)
 
-#### Pi-score ####
+# Pi-score
 # Xiao 2014: Pi = P.Value^|logFC|; sig_pi = +1 up / -1 down / 0 ns at Pi < 0.05.
 
 ann <- as_tibble(dal$annotation) |> select(any_of(c("uniprot_id", "gene", "protein", "description")))

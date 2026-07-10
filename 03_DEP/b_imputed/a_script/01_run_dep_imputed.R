@@ -19,7 +19,7 @@ methods <- c(
   missforest = "DAList_imputed_missforest.rds"
 )
 
-#### DEP per imputed matrix ####
+# DEP per imputed matrix
 # Identical limma workflow to the primary arm, run once per imputed matrix.
 
 runs <- imap(methods, function(rds, m) {
@@ -71,7 +71,7 @@ runs <- imap(methods, function(rds, m) {
   res
 })
 
-#### logFC concordance vs non-imputed ####
+# logFC concordance vs non-imputed
 # Spearman per contrast against the primary fit; high rho = imputation didn't distort effects.
 
 ni_file <- here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv")
