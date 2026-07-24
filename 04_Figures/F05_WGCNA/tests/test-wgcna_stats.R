@@ -24,7 +24,8 @@ test_that("module_trait_cor recovers a planted positive correlation", {
   eig <- matrix(rnorm(30 * 2), 30, 2, dimnames = list(NULL, c("blue", "brown")))
   traits <- cbind(age = eig[, "blue"] + rnorm(30, sd = 0.1), grip = rnorm(30))
   out <- module_trait_cor(eig, traits)
-  expect_named(out, c("module", "trait", "r", "p", "padj"))
+  expect_named(out, c("module", "trait", "r", "p", "n", "padj"))
+  expect_equal(unique(out$n), 30L)
   r_blue_age <- out$r[out$module == "blue" & out$trait == "age"]
   expect_gt(r_blue_age, 0.9)
   p_blue_age <- out$p[out$module == "blue" & out$trait == "age"]

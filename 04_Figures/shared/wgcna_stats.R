@@ -27,12 +27,16 @@ run_module_fgsea <- function(rank_wide, module_genes, contrasts,
     ungroup()
 }
 
-module_trait_cor <- function(eig, traits, n_samples = nrow(eig)) {
+module_trait_cor <- function(eig, traits, n_samples = NULL) {
   r <- stats::cor(eig, traits, use = "pairwise.complete.obs")
-  p <- WGCNA::corPvalueStudent(r, n_samples)
+  n_mat <- matrix(rep(colSums(!is.na(traits)), each = nrow(r)),
+    nrow = nrow(r), dimnames = dimnames(r)
+  )
+  if (!is.null(n_samples)) n_mat[] <- n_samples
+  p <- WGCNA::corPvalueStudent(r, n_mat)
   as_tibble(as.data.frame(as.table(r)), .name_repair = "minimal") |>
     setNames(c("module", "trait", "r")) |>
-    mutate(p = as.vector(as.table(p)), padj = p.adjust(p, "BH"))
+    mutate(p = as.vector(as.table(p)), n = as.vector(as.table(n_mat)), padj = p.adjust(p, "BH"))
 }
 
 module_trait_lmm <- function(eig_long, trait_long, block) {
