@@ -48,16 +48,20 @@ source(file.path(A, "panel_C_pattern_heatmap.R"))
 n_total_C <- n_total
 n_pw_C <- n_pw
 
+# Capture the quadrant-ORA composite (panel A) for the main figure.
+pA_comp <- composite
+
+# Trajectory and fry are their own figures now; source panel_F so it self-renders.
+source(file.path(A, "panel_F_trajectory.R"))
+
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf"
 RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png"
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-COMP_W <- 420
-COMP_H <- 320
-# Titles/subtitles use the shared tokens so F04 reads like F02/F03/F05; the tag is
-# baked into the title (add_tag convention) rather than a separate oversized letter.
+COMP_W <- 340
+COMP_H <- 165
 TTL_SZ <- FIG_TITLE_SIZE
 SUB_SZ <- FIG_SUBTITLE_SIZE
 
@@ -71,43 +75,27 @@ sub_B <- sprintf(
   "ρ = %.2f [%.2f, %.2f] | %.0f%% reversed",
   rho_B, rho_lo_B, rho_hi_B, pw_rev_B * 100
 )
-ttl_C <- "fry Rotation Test"
-sub_C <- sprintf("n = %d | dupCor = %.3f | circ r = %.3f", n_all_D, cor_imp_D, circ_r_D)
 
-# ORA composite spans the top; NES and fry share the bottom row. Blank rows
-# reserve space for the drawn tags/titles above each region.
-layout <- paste(
+# The reversal landscape: quadrant ORA (left, wider) beside the pathway-NES
+# scatter (right). A blank top row reserves space for the drawn tag+titles.
+layout <- paste(c(
   "############",
-  "AAAAAAAAAAAA", "AAAAAAAAAAAA", "AAAAAAAAAAAA",
-  "AAAAAAAAAAAA", "AAAAAAAAAAAA", "AAAAAAAAAAAA",
-  "############",
-  "BBBBBBCCCCCC", "BBBBBBCCCCCC", "BBBBBBCCCCCC",
-  "BBBBBBCCCCCC", "BBBBBBCCCCCC", "BBBBBBCCCCCC",
-  sep = "\n"
-)
-SPACER_TOP <- 6
-SPACER_MID <- 10
+  rep("AAAAAAABBBBB", 11)
+), collapse = "\n")
 
-composite <- composite +
+pA_comp <- pA_comp +
   plot_annotation(theme = theme(plot.margin = margin(0, 0, 0, 0, "mm")))
-pB <- pB + theme(plot.margin = margin(0, 2, 0, 0, "mm"))
-pD_fry <- pD_fry +
-  plot_annotation(theme = theme(plot.margin = margin(0, 2, 0, 0, "mm")))
+pB <- pB + theme(plot.margin = margin(0, 2, 0, 2, "mm"))
 
-fig <- wrap_elements(full = composite) +
+fig <- wrap_elements(full = pA_comp) +
   wrap_elements(full = pB) +
-  wrap_elements(full = pD_fry) +
   plot_layout(
     design = layout, widths = rep(1, 12),
-    heights = c(SPACER_TOP, rep(10, 6), SPACER_MID, rep(10, 6))
+    heights = c(12, rep(10, 11))
   )
 
-X_A <- 0.005
-X_B <- 0.005
-X_C <- 0.505
-SUB_OFFSET <- 0.017
-Y_top <- 0.985
-Y_bot <- 0.512
+SUB_OFFSET <- 0.03
+Y_TOP <- 0.98
 
 tag_block <- function(d, tag, ttl, sub, x, y) {
   d +
@@ -121,9 +109,8 @@ tag_block <- function(d, tag, ttl, sub, x, y) {
 }
 
 composite_final <- ggdraw(fig) |>
-  tag_block("A", ttl_A, sub_A, X_A, Y_top) |>
-  tag_block("B", ttl_B, sub_B, X_B, Y_bot) |>
-  tag_block("C", ttl_C, sub_C, X_C, Y_bot)
+  tag_block("A", ttl_A, sub_A, 0.005, Y_TOP) |>
+  tag_block("B", ttl_B, sub_B, 0.585, Y_TOP)
 
 ggsave(file.path(RPT_PDF, "MAIN_F04_composite.pdf"), composite_final,
   width = COMP_W, height = COMP_H, units = "mm", device = pdf_device
@@ -202,29 +189,20 @@ cleanup_after_workbook(rev_specs,
   )
 )
 
-# ── Trajectory / residual companion (F, G) ──
-source(file.path(A, "panel_F_trajectory.R"))
+# ── Residual volcano -> supplement (Resid = what training did NOT fix) ──
 source(file.path(A, "panel_G_resid_volcano.R"))
-
-PANELS <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
-MAIN_PNG <- "04_Figures/F04_Reversal/b_reports/main/png" # panel scripts overwrite RPT_PNG
-read_panel <- function(f) {
-  path <- file.path(PANELS, f)
-  if (!file.exists(path)) stop("missing panel PNG: ", path)
-  ggplot() +
-    annotation_custom(rasterGrob(readPNG(path), interpolate = TRUE)) +
-    theme_void() +
-    theme(plot.margin = margin(0, 0, 0, 0))
-}
-companion <- read_panel("MAIN_panel_F_trajectory_composite.png") /
-  read_panel("MAIN_panel_G_resid_volcano_composite.png") +
-  plot_layout(heights = c(150, 120)) +
-  plot_annotation(tag_levels = list(c("A", "B"))) &
-  theme(plot.tag = element_text(size = 16, face = "bold"))
-ggsave(file.path(MAIN_PNG, "MAIN_F04_trajectory_companion.png"), companion,
-  width = 220, height = 280, units = "mm", dpi = 300
+pG_resid <- composite
+RESID_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png"
+RESID_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf"
+dir.create(RESID_PNG, recursive = TRUE, showWarnings = FALSE)
+dir.create(RESID_PDF, recursive = TRUE, showWarnings = FALSE)
+ggsave(file.path(RESID_PNG, "SUPP_F04_residual_volcano.png"), pG_resid,
+  width = 220, height = 120, units = "mm", dpi = 300, bg = "white"
 )
-message("F04 trajectory companion saved")
+ggsave(file.path(RESID_PDF, "SUPP_F04_residual_volcano.pdf"), pG_resid,
+  width = 220, height = 120, units = "mm", device = pdf_device
+)
+message("F04 residual volcano saved to supplement")
 
 # ── Supplementary composites (two pages) ──
 S <- file.path(A, "supp")
