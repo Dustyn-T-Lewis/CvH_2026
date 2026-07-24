@@ -1,4 +1,0 @@
-test,n,n_reversed,pct_reversed,statistic,p_value,ci_lower,ci_upper,note
-binomial_vs_50pct,509,313,61.49312377210216,313,1.2123007654197572e-7,0.5780400104518989,1,"one-sided, greater"
-permutation_vs_random,509,313,61.49312377210216,0.6149312377210217,0.011198880111988802,0.5324165029469549,0.6090373280943026,n_perm=10000; null=random protein selection
-fisher_up_vs_down,509,NA,NA,0.4133305750650844,4.635389257888045e-5,NA,NA,"Fisher exact, two-sided"

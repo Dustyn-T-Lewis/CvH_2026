@@ -1,3 +1,0 @@
-metric,background_all,cancer_dep,n_all,n_dep,perm_p,n_perm,note
-pearson_r,-0.18032444894134805,-0.2914295001443151,2350,509,0.014298570142985701,10000,one-sided: r_dep < null_r
-pct_reversed,57.06382978723404,61.493123772102166,2350,509,0.012598740125987402,10000,one-sided: frac_dep > null_frac

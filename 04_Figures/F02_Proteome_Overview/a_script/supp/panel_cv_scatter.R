@@ -1,0 +1,255 @@
+# Figure 2 (CRvH) — Panel B: CV Scatter Triptych
+# B1/B2/B3: Per-protein CV% T1 vs T2 for CR pooled, CRE, PLA.
+# B4: DeltaCV scatter.
+# Outputs: pB (combined ggplot), cv_scatter.pdf/.png
+
+setwd(here::here())
+source("04_Figures/shared/style.R")
+
+pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, ggrepel, cowplot)
+
+PB_SUB <- 80; PB_W <- 300; PB_H <- 120
+
+RPT_DIR <- "04_Figures/F02_Proteome_Overview/b_reports/supp/panels"
+DAT_DIR <- "04_Figures/F02_Proteome_Overview/c_data"
+dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
+dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
+
+# ── Load data & metadata ──
+# Normalized (non-imputed) matrix from the proteoDA DAList.
+.dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
+norm_df <- tibble::as_tibble(cbind(
+  .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
+  as.data.frame(.dal$data)
+))
+meta_full <- read_csv("00_input/CvH_meta.csv", show_col_types = FALSE)
+
+ann_cols   <- c("uniprot_id", "protein", "gene", "description")
+samp_names <- setdiff(names(norm_df), ann_cols)
+
+# CRvH sample space (CR_CRE, CR_PLA, PPS) — but only paired CR subjects for scatter
+meta <- meta_full |>
+  filter(Group %in% c("CR_CRE", "CR_PLA"), Col_ID %in% samp_names)
+
+pdf_device <- get_pdf_device()
+
+# ── CV on linear scale per Brenes 2024 ──
+lin_mat <- 2^as.matrix(norm_df[, samp_names])
+
+compute_cv <- function(mat, idx) {
+  sub <- mat[, idx, drop = FALSE]
+  apply(sub, 1, function(x) {
+    x <- x[!is.na(x)]
+    if (length(x) < 2) return(NA_real_)
+    sd(x) / mean(x) * 100
+  })
+}
+
+# Three group scatters: CR pooled, CRE, PLA
+scatter_groups <- list(
+  "CR (pooled)" = list(
+    t1 = meta$Col_ID[meta$Timepoint == "T1"],
+    t2 = meta$Col_ID[meta$Timepoint == "T2"]
+  ),
+  "CRE" = list(
+    t1 = meta$Col_ID[meta$Supplement == "CRE" & meta$Timepoint == "T1"],
+    t2 = meta$Col_ID[meta$Supplement == "CRE" & meta$Timepoint == "T2"]
+  ),
+  "PLA" = list(
+    t1 = meta$Col_ID[meta$Supplement == "PLA" & meta$Timepoint == "T1"],
+    t2 = meta$Col_ID[meta$Supplement == "PLA" & meta$Timepoint == "T2"]
+  )
+)
+
+scatter_list <- lapply(names(scatter_groups), function(grp) {
+  ids <- scatter_groups[[grp]]
+  cv_t1 <- compute_cv(lin_mat, ids$t1)
+  cv_t2 <- compute_cv(lin_mat, ids$t2)
+  tibble(gene = norm_df$gene, cv_t1 = cv_t1, cv_t2 = cv_t2, group = grp)
+})
+scatter_df <- bind_rows(scatter_list) |>
+  filter(!is.na(cv_t1), !is.na(cv_t2)) |>
+  mutate(
+    delta_cv = cv_t2 - cv_t1,
+    max_cv   = pmax(cv_t1, cv_t2),
+    group    = factor(group, levels = c("CR (pooled)", "CRE", "PLA"))
+  )
+
+max_cv_cap <- quantile(scatter_df$max_cv, 0.98, na.rm = TRUE)
+scatter_df$max_cv_capped <- pmin(scatter_df$max_cv, max_cv_cap)
+
+cv_cap <- quantile(abs(scatter_df$delta_cv), 0.98, na.rm = TRUE)
+scatter_df$delta_cv_capped <- pmin(pmax(scatter_df$delta_cv, -cv_cap), cv_cap)
+
+# Top 15 per group
+top_cv_labels <- scatter_df |>
+  group_by(group) |>
+  slice_max(max_cv, n = 15, with_ties = FALSE) |>
+  ungroup()
+
+# Correlations with Fisher z CIs
+r_stats <- scatter_df |>
+  group_by(group) |>
+  summarise(
+    n = sum(!is.na(cv_t1) & !is.na(cv_t2)),
+    r = cor(cv_t1, cv_t2, use = "complete.obs"),
+    .groups = "drop"
+  ) |>
+  rowwise() |>
+  mutate(
+    ci_lo = fisher_z_ci(r, n)[["lo"]],
+    ci_hi = fisher_z_ci(r, n)[["hi"]],
+    label = sprintf("r = %.2f [%.2f, %.2f]", r, ci_lo, ci_hi)
+  ) |>
+  ungroup()
+
+# Delta CV scatter: CRE vs PLA
+delta_wide <- scatter_df |>
+  filter(group %in% c("CRE", "PLA")) |>
+  select(gene, delta_cv, group) |>
+  pivot_wider(names_from = group, values_from = delta_cv,
+              names_prefix = "dcv_", values_fn = mean) |>
+  filter(!is.na(dcv_CRE), !is.na(dcv_PLA)) |>
+  mutate(
+    dist_origin = sqrt(dcv_CRE^2 + dcv_PLA^2),
+    mean_dcv    = (dcv_CRE + dcv_PLA) / 2,
+    mean_dcv_capped = pmin(pmax(mean_dcv, -cv_cap), cv_cap)
+  )
+
+top_delta <- delta_wide |>
+  slice_max(dist_origin, n = 15, with_ties = FALSE)
+
+n_delta <- nrow(delta_wide)
+r_delta <- cor(delta_wide$dcv_CRE, delta_wide$dcv_PLA, use = "complete.obs")
+ci_delta <- fisher_z_ci(r_delta, n_delta)
+
+# ── Heatmap colors (not in CvH shared/style.R) ──
+HEATMAP_LO <- "#2166AC"
+HEATMAP_HI <- "#D6604D"
+
+theme_B <- FIG_THEME +
+  theme(
+    legend.position  = "none",
+    panel.grid.major = element_line(color = "grey92", linewidth = 0.3),
+    panel.grid.minor = element_blank(),
+    plot.title       = element_text(hjust = 0.5, size = FIG_STRIP_SIZE,
+                                    face = "bold")
+  )
+
+axis_max_cv <- 300
+
+# ── B1-B3: CV scatter faceted by group ──
+pB_scatter <- ggplot(scatter_df, aes(x = cv_t1, y = cv_t2)) +
+  facet_wrap(~group, nrow = 1) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "grey50", linewidth = 0.4) +
+  geom_point(aes(color = max_cv_capped), alpha = 0.35, size = 0.9) +
+  geom_label_repel(data = top_cv_labels,
+                   aes(label = gene, fill = max_cv_capped),
+                   color = "white", fontface = "bold",
+                   size = scale_text(BASE_GENE, PB_SUB),
+                   label.padding = unit(1, "pt"),
+                   label.size = 0.3, max.overlaps = 20,
+                   segment.size = 0.2, segment.color = "grey50",
+                   min.segment.length = 0, seed = 42, show.legend = FALSE) +
+  geom_label(data = r_stats, aes(label = label),
+             x = -Inf, y = Inf, hjust = -0.05, vjust = 1.4,
+             size = scale_text(BASE_STAT, PB_SUB),
+             color = "grey30", fontface = "bold",
+             fill = alpha("white", 0.85), linewidth = 0,
+             label.padding = unit(2, "pt"),
+             inherit.aes = FALSE) +
+  scale_color_viridis_c(option = "inferno", direction = -1,
+                        begin = 0.1, end = 0.85,
+                        name = "CV%",
+                        guide = guide_colorbar(barwidth = unit(2, "mm"),
+                                               barheight = unit(12, "mm"),
+                                               title.position = "top",
+                                               title.hjust = 0.5)) +
+  scale_fill_viridis_c(option = "inferno", direction = -1,
+                       begin = 0.1, end = 0.85,
+                       name = "CV%",
+                       guide = "none") +
+  coord_equal(xlim = c(0, axis_max_cv), ylim = c(0, axis_max_cv)) +
+  labs(title = "Per-Protein Variability (CV%)",
+       subtitle = sprintf("%s proteins (normalized) | r: CR = %.2f, CRE = %.2f, PLA = %.2f, DeltaCV = %.2f",
+                          format(nrow(norm_df), big.mark = ","),
+                          r_stats$r[r_stats$group == "CR (pooled)"],
+                          r_stats$r[r_stats$group == "CRE"],
+                          r_stats$r[r_stats$group == "PLA"],
+                          r_delta),
+       x = expression(bold(CV * "%"[T1])),
+       y = expression(bold(CV * "%"[T2])),
+       tag = "B") +
+  theme_B +
+  theme(plot.title    = element_text(hjust = 0, size = FIG_TITLE_SIZE, face = "bold"),
+        plot.subtitle = element_text(hjust = 0, size = FIG_SUBTITLE_SIZE,
+                                     face = "bold.italic", color = "grey30"),
+        strip.text    = element_text(face = "bold", size = FIG_STRIP_SIZE),
+        legend.position  = c(0.97, 0.02),
+        legend.justification = c(1, 0),
+        legend.background = element_rect(fill = alpha("white", 0.8), color = NA),
+        legend.title = element_text(face = "bold", size = FIG_LEGEND_TITLE),
+        legend.text  = element_text(size = FIG_LEGEND_TEXT),
+        legend.key.size = unit(3, "mm"),
+        plot.margin = margin(5.5, 0, 5.5, 5.5))
+
+# ── B4: DeltaCV CRE vs PLA ──
+pB_delta <- ggplot(delta_wide, aes(x = dcv_CRE, y = dcv_PLA)) +
+  geom_hline(yintercept = 0, color = "grey70", linewidth = 0.3) +
+  geom_vline(xintercept = 0, color = "grey70", linewidth = 0.3) +
+  geom_point(aes(color = mean_dcv_capped), alpha = 0.4, size = 0.9) +
+  geom_label_repel(data = top_delta, aes(label = gene, fill = mean_dcv_capped),
+                   color = "white", fontface = "bold",
+                   size = scale_text(BASE_GENE, PB_SUB),
+                   label.padding = unit(1, "pt"), label.size = 0.3,
+                   max.overlaps = 25,
+                   segment.size = 0.2, segment.color = "grey50",
+                   min.segment.length = 0, seed = 44, show.legend = FALSE) +
+  annotate("label", x = -Inf, y = Inf,
+           label = sprintf("r = %.2f [%.2f, %.2f]", r_delta, ci_delta["lo"], ci_delta["hi"]),
+           hjust = -0.05, vjust = 1.4,
+           size = scale_text(BASE_STAT, PB_SUB),
+           color = "grey30", fontface = "bold",
+           fill = alpha("white", 0.85), linewidth = 0,
+           label.padding = unit(2, "pt")) +
+  scale_color_gradient2(low = HEATMAP_LO, mid = "grey95", high = HEATMAP_HI,
+                        midpoint = 0, limits = c(-cv_cap, cv_cap),
+                        name = expression(bold(Delta * "CV%")),
+                        guide = guide_colorbar(barwidth = unit(2, "mm"),
+                                               barheight = unit(12, "mm"),
+                                               title.position = "top",
+                                               title.hjust = 0.5)) +
+  scale_fill_gradient2(low = HEATMAP_LO, mid = "grey95", high = HEATMAP_HI,
+                       midpoint = 0, limits = c(-cv_cap, cv_cap),
+                       guide = "none") +
+  coord_equal(xlim = c(-75, 225), ylim = c(-100, 200)) +
+  labs(x = expression(bold(Delta * "CV%"[CRE])),
+       y = expression(bold(Delta * "CV%"[PLA])),
+       title = "Supplement Response") +
+  theme_B +
+  theme(legend.position  = c(0.97, 0.02),
+        legend.justification = c(1, 0),
+        legend.background = element_rect(fill = alpha("white", 0.8), color = NA),
+        legend.title = element_text(face = "bold", size = FIG_LEGEND_TITLE),
+        legend.text  = element_text(size = FIG_LEGEND_TEXT),
+        legend.key.size = unit(3, "mm"),
+        axis.title.y = element_text(margin = margin(r = 0, l = 0)),
+        plot.margin = margin(5.5, 5.5, 5.5, 0))
+
+# ── Save audit data ──
+write.csv(scatter_df |> select(gene, cv_t1, cv_t2, delta_cv, group),
+          file.path(DAT_DIR, "audit_cv_scatter.csv"), row.names = FALSE)
+write.csv(delta_wide |> select(gene, dcv_CRE, dcv_PLA, mean_dcv, dist_origin),
+          file.path(DAT_DIR, "audit_cv_scatter_delta.csv"), row.names = FALSE)
+
+# 3:1 ratio for equal sub-plot areas (pB_scatter has 3 facets, pB_delta has 1)
+pB <- cowplot::plot_grid(
+  pB_scatter, pB_delta,
+  nrow = 1, rel_widths = c(3, 1), align = "h", axis = "tb"
+)
+
+ggsave(file.path(RPT_DIR, "cv_scatter.pdf"), pB,
+       width = PB_W, height = PB_H, units = "mm", device = pdf_device)
+ggsave(file.path(RPT_DIR, "cv_scatter.png"), pB,
+       width = PB_W, height = PB_H, units = "mm", dpi = 300)
