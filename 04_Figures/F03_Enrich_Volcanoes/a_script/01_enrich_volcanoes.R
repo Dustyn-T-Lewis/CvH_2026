@@ -114,7 +114,7 @@ grid <- volcano_ring_grid(
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = PI_THRESH, logfc_threshold = 0,
-  x_scale = 0.9, y_scale = 0.93,
+  x_scale = 0.82, y_scale = 0.93,
   label_size = 2.9, count_size = 2.8, ncol = 3,
   theme = volcano_ring_theme(base_size = 13)
 )
@@ -128,7 +128,8 @@ fig <- grid$plot &
     legend.key.width = unit(13, "mm"),
     legend.key.height = unit(2.5, "mm"),
     legend.title = element_text(size = 8),
-    legend.text = element_text(size = 7)
+    legend.text = element_text(size = 7),
+    plot.margin = margin(2, 9, 2, 9, "mm")
   )
 fig <- fig & guides(
   fill = guide_colorbar(direction = "horizontal", title.position = "top")
@@ -144,10 +145,10 @@ fig <- fig + plot_annotation(
   )
 )
 ggsave(file.path(RPT_PNG, "MAIN_F03_enrich_volcanoes.png"), fig,
-  width = 330, height = 175, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
+  width = 420, height = 175, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
 )
 ggsave(file.path(RPT_PDF, "MAIN_F03_enrich_volcanoes.pdf"), fig,
-  width = 330, height = 175, units = "mm", device = pdf_device,
+  width = 420, height = 175, units = "mm", device = pdf_device,
   bg = "white", limitsize = FALSE
 )
 

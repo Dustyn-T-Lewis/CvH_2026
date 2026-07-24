@@ -175,6 +175,7 @@ clean_pathway_name <- function(name, max_chars = NULL) {
     stringr::str_remove("^KEGG_") |>
     stringr::str_replace_all("_", " ") |>
     stringr::str_to_title() |>
+    stringr::str_remove("^Reference ") |>
     stringr::str_replace("Mtorc1", "mTORC1") |>
     stringr::str_replace("Myc ", "MYC ") |>
     stringr::str_replace("E2f ", "E2F ") |>
@@ -191,7 +192,13 @@ clean_pathway_name <- function(name, max_chars = NULL) {
     stringr::str_replace("Nf Kb", "NF-kB") |>
     stringr::str_replace("Atp ", "ATP ") |>
     stringr::str_replace("Nadh ", "NADH ") |>
-    stringr::str_replace("Oxidative Phosphorylation", "OXPHOS")
+    stringr::str_replace("Oxidative Phosphorylation", "OXPHOS") |>
+    stringr::str_replace("\\bTrna\\b", "tRNA") |>
+    stringr::str_replace("\\bMhc\\b", "MHC") |>
+    stringr::str_replace("\\bIqgaps?\\b", "IQGAPs") |>
+    stringr::str_replace("\\bIv\\b", "IV") |>
+    stringr::str_replace("\\bIii\\b", "III") |>
+    stringr::str_replace("\\bIi\\b", "II")
 }
 
 make_sigmoid_ribbon <- function(x0, x1, y0_top, y0_bot, y1_top, y1_bot,
