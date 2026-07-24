@@ -56,9 +56,10 @@ pdf_device <- get_pdf_device()
 
 COMP_W <- 420
 COMP_H <- 320
-TAG_SZ <- 16
-TTL_SZ <- 13
-SUB_SZ <- 9
+# Titles/subtitles use the shared tokens so F04 reads like F02/F03/F05; the tag is
+# baked into the title (add_tag convention) rather than a separate oversized letter.
+TTL_SZ <- FIG_TITLE_SIZE
+SUB_SZ <- FIG_SUBTITLE_SIZE
 
 ttl_A <- "Quadrant ORA"
 sub_A <- sprintf(
@@ -104,17 +105,19 @@ fig <- wrap_elements(full = composite) +
 X_A <- 0.005
 X_B <- 0.005
 X_C <- 0.505
-X_TTL <- 0.030
-TAG_DY <- -0.002
 SUB_OFFSET <- 0.017
 Y_top <- 0.985
 Y_bot <- 0.512
 
 tag_block <- function(d, tag, ttl, sub, x, y) {
   d +
-    draw_label(tag, x = x, y = y + TAG_DY, size = TAG_SZ, fontface = "bold", hjust = 0, vjust = 1) +
-    draw_label(ttl, x = x + X_TTL, y = y, size = TTL_SZ, fontface = "bold", hjust = 0, vjust = 1) +
-    draw_label(sub, x = x + X_TTL, y = y - SUB_OFFSET, size = SUB_SZ, fontface = "bold.italic", hjust = 0, vjust = 1, colour = "grey40")
+    draw_label(paste0(tag, "  ", ttl),
+      x = x, y = y, size = TTL_SZ, fontface = "bold", hjust = 0, vjust = 1
+    ) +
+    draw_label(sub,
+      x = x, y = y - SUB_OFFSET, size = SUB_SZ, fontface = "bold.italic",
+      hjust = 0, vjust = 1, colour = "grey30"
+    )
 }
 
 composite_final <- ggdraw(fig) |>
