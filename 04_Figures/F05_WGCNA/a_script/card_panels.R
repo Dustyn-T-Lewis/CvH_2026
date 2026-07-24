@@ -1,14 +1,10 @@
-# Module-card columns for F04_WGCNA (Mito F03 layout). Each column is faceted by
+# Module-card columns for F05_WGCNA (Mito F03 layout). Each column is faceted by
 # module on the same order with blank strips, so one row reads left to right as a
 # single module: protein count, module-trait heatmap, member-response fry tiles,
 # eigengene trajectory with post-hoc brackets, and top-5 ORA pathways.
 
 pacman::p_load(ggplot2, dplyr, tidyr, stringr, patchwork, ggtext, ggfittext)
 
-ORA_DB_COLORS <- c(
-  Hallmark = "#E41A1C", KEGG = "#377EB8", Reactome = "#4DAF4A",
-  `GO:BP` = "#FF7F00", `GO Slim` = "#1B9E77", WikiPathways = "#984EA3", Other = "grey60"
-)
 CTR_KEEP <- c("CRvH_Baseline", "CR_Training")
 CTR_LABS <- c(CRvH_Baseline = "CR vs Ctl", CR_Training = "Training")
 
@@ -215,7 +211,7 @@ card_ora <- function(ora, modules, top_n = 5L) {
     ungroup() |>
     mutate(
       module_color = factor(module_color, levels = modules),
-      database = ifelse(database %in% names(ORA_DB_COLORS), database, "Other"),
+      database = ifelse(database %in% names(DB_COLORS), database, "Other"),
       lp = -log10(padj), sig_fdr = padj < 0.05,
       fill_col = if_else(sig_fdr, as.character(module_color),
         vapply(as.character(module_color), tint_colour, character(1))
@@ -227,7 +223,9 @@ card_ora <- function(ora, modules, top_n = 5L) {
     arrange(module_color, lp) |>
     mutate(rid = paste(module_color, dplyr::row_number()), row = factor(rid, levels = rid))
   db_of <- stats::setNames(as.character(d$database), as.character(d$row))
-  db_label <- function(x) sprintf("<span style='color:%s'>%s</span>", ORA_DB_COLORS[db_of[x]], db_of[x])
+  db_label <- function(x) {
+    sprintf("<span style='color:%s'>%s</span>", DB_COLORS[db_of[x]], db_of[x])
+  }
 
   ggplot(d, aes(lp, row, fill = fill_col)) +
     geom_col(width = 0.86, colour = "grey35", linewidth = 0.2, orientation = "y") +

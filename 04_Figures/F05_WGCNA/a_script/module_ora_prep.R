@@ -1,15 +1,15 @@
-# Per-module over-representation analysis feeding the F04 module cards.
+# Per-module over-representation analysis feeding the F05 module cards.
 # Background is every quantified protein assigned to a module; each module is
 # tested against the full multi-DB collection and deduplicated by Jaccard.
 # Cached to c_data/module_ora.csv so the panels stay cheap to re-render.
 
 setwd(here::here())
-source("04_Figures/F04_WGCNA/a_script/style.R")
+source("04_Figures/F05_WGCNA/a_script/style.R")
 source("04_Figures/shared/pathway_utils.R")
 
 pacman::p_load(readr, dplyr, purrr, tibble)
 
-DAT <- "04_Figures/F04_WGCNA/c_data"
+DAT <- "04_Figures/F05_WGCNA/c_data"
 
 module_df <- read_csv(file.path(DAT, "wgcna_module_assignments.csv"), show_col_types = FALSE)
 mod_bio <- read_csv(file.path(DAT, "mod_bio_labels.csv"), show_col_types = FALSE)

@@ -1,19 +1,19 @@
-# F04_WGCNA driver (Mito F03 card layout). One row per module across five aligned
+# F05_WGCNA driver (Mito F03 card layout). One row per module across five aligned
 # columns: protein count, module-trait heatmap, member-response fry tiles,
 # eigengene trajectory with post-hoc brackets, top-5 ORA pathways. The main card
 # holds modules with a nominal group effect (omnibus F p < 0.05); the rest go to
 # the supplement.
 
 setwd(here::here())
-source("04_Figures/F04_WGCNA/a_script/style.R")
-source("04_Figures/F04_WGCNA/a_script/card_panels.R")
+source("04_Figures/F05_WGCNA/a_script/style.R")
+source("04_Figures/F05_WGCNA/a_script/card_panels.R")
 pacman::p_load(readr, dplyr, patchwork)
 
-DAT <- "04_Figures/F04_WGCNA/c_data"
-RPT_PDF <- "04_Figures/F04_WGCNA/b_reports/main/pdf"
-RPT_PNG <- "04_Figures/F04_WGCNA/b_reports/main/png"
-SUPP_PDF <- "04_Figures/F04_WGCNA/b_reports/supp/pdf"
-SUPP_PNG <- "04_Figures/F04_WGCNA/b_reports/supp/png"
+DAT <- "04_Figures/F05_WGCNA/c_data"
+RPT_PDF <- "04_Figures/F05_WGCNA/b_reports/main/pdf"
+RPT_PNG <- "04_Figures/F05_WGCNA/b_reports/main/png"
+SUPP_PDF <- "04_Figures/F05_WGCNA/b_reports/supp/pdf"
+SUPP_PNG <- "04_Figures/F05_WGCNA/b_reports/supp/png"
 for (d in c(RPT_PDF, RPT_PNG, SUPP_PDF, SUPP_PNG)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
@@ -56,16 +56,16 @@ save_card(
   main_mods,
   "WGCNA co-expression modules and their eigengene response",
   "Each row is one module; main = modules with a nominal group effect (omnibus F p < 0.05), the rest supplementary.",
-  "F04_wgcna_MAIN", RPT_PNG, RPT_PDF
+  "F05_wgcna_MAIN", RPT_PNG, RPT_PDF
 )
-message(sprintf("F04 main card saved (%d modules)", length(main_mods)))
+message(sprintf("F05 main card saved (%d modules)", length(main_mods)))
 
 if (length(supp_mods)) {
   save_card(
     supp_mods,
     "WGCNA modules without a nominal group effect (omnibus F p ≥ 0.05)",
     "Same layout as the main figure. These modules carry no detectable group effect on their eigengene.",
-    "SUPP_F04_wgcna_other", SUPP_PNG, SUPP_PDF
+    "SUPP_F05_wgcna_other", SUPP_PNG, SUPP_PDF
   )
-  message(sprintf("F04 supplement card saved (%d modules)", length(supp_mods)))
+  message(sprintf("F05 supplement card saved (%d modules)", length(supp_mods)))
 }

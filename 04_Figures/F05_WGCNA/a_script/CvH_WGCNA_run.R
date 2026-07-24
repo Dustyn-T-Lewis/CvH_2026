@@ -1,7 +1,7 @@
-# CvH WGCNA Runner — produces network and module artifacts for F04_WGCNA
+# CvH WGCNA Runner — produces network and module artifacts for F05_WGCNA
 # Inputs:  02_Normalization/imputation/c_data/DAList_imputed_missforest.rds
-# Outputs: 04_Figures/F04_WGCNA/c_data/wgcna/  (network, sft_summary)
-#          04_Figures/F04_WGCNA/c_data/        (panel-ready: MEs, kME, module_colors, datExpr,
+# Outputs: 04_Figures/F05_WGCNA/c_data/wgcna/  (network, sft_summary)
+#          04_Figures/F05_WGCNA/c_data/        (panel-ready: MEs, kME, module_colors, datExpr,
 #                                         module_assignments, mod_bio_labels)
 #
 # Mirrors YvO_WGCNA_run.R parameters (Cahill 2018 / Langfelder & Horvath 2008):
@@ -16,9 +16,9 @@ set.seed(42)
 setwd(here::here())
 
 DALIST_RDS <- "02_Normalization/imputation/c_data/DAList_imputed_missforest.rds"
-PANEL_DIR <- "04_Figures/F04_WGCNA/c_data"
+PANEL_DIR <- "04_Figures/F05_WGCNA/c_data"
 DATA_DIR <- file.path(PANEL_DIR, "wgcna")
-REPORT_DIR <- "04_Figures/F04_WGCNA/b_reports/supp/01_QC"
+REPORT_DIR <- "04_Figures/F05_WGCNA/b_reports/supp/01_QC"
 
 dir.create(PANEL_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DATA_DIR, recursive = TRUE, showWarnings = FALSE)

@@ -6,7 +6,7 @@
 setwd(here::here())
 pacman::p_load(limma, dplyr, tibble, readr)
 
-DAT <- "04_Figures/F04_WGCNA/c_data"
+DAT <- "04_Figures/F05_WGCNA/c_data"
 expr <- readRDS(file.path(DAT, "imp_mat.rds"))
 mc <- readRDS(file.path(DAT, "module_colors.rds"))
 names(mc) <- rownames(expr)
