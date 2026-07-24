@@ -45,6 +45,25 @@ if (any(duplicated(annotation$uniprot_id))) { # guard only; keep highest-mean ro
   intensity <- intensity[keep_idx, ]
 }
 
+# Blood-tracking index (HRvLR): each protein's Spearman correlation with the
+# per-sample hemoglobin index flags the RNA-poor red-cell membrane skeleton
+# (band 3, spectrin, CA1, protein 4.1/4.2) that HPA erythrocyte RNA misses.
+# Computed on the full matrix, before the hemoglobin anchors are filtered out.
+blood_anchor <- c("HBB", "HBA1", "HBD", "HBG1", "HBG2")
+li <- log2(data.matrix(intensity))
+li[!is.finite(li)] <- NA
+anchor_rows <- annotation$gene %in% blood_anchor
+blood_index <- colMeans(li[anchor_rows, , drop = FALSE], na.rm = TRUE)
+n_obs <- rowSums(!is.na(li))
+blood_cor <- suppressWarnings(as.vector(
+  cor(t(li), blood_index, method = "spearman", use = "pairwise.complete.obs")
+))
+blood_cor[n_obs < 15] <- NA
+names(blood_cor) <- annotation$uniprot_id
+
+rbc <- read_tsv(here("00_input", "RBC_proteome_reference.tsv"), show_col_types = FALSE)
+strip_iso <- function(x) sub("-\\d+$", "", x)
+
 # Contaminant removal
 
 # Remove a protein iff blood-derived AND NOT myofiber-expressed:
@@ -90,6 +109,22 @@ annotation <- annotation[keep, ]
 intensity <- intensity[keep, ]
 keep <- !(annotation$gene %in% remove_genes)
 flog <- bind_rows(flog, tibble(step = "Blood contaminant removal", n_after = sum(keep), n_removed = sum(!keep)))
+annotation <- annotation[keep, ]
+intensity <- intensity[keep, ]
+
+# Red-cell membrane skeleton: tracks the hemoglobin index (rho > 0.45) AND sits in
+# the mature-RBC proteome, unless rescued by myonuclei expression. Two independent
+# hits are required so a muscle protein that merely co-varies with blood survives.
+myo_by_gene <- setNames(bl$myo, bl$gene)
+bconc_by_gene <- setNames(bl$blood_conc, bl$gene)
+in_rbc <- strip_iso(annotation$uniprot_id) %in% rbc$acc | annotation$gene %in% rbc$gene
+rescued <- !is.na(myo_by_gene[annotation$gene]) & myo_by_gene[annotation$gene] >= 50 &
+  (is.na(bconc_by_gene[annotation$gene]) | bconc_by_gene[annotation$gene] < 1e9)
+is_red_cell <- coalesce(blood_cor[annotation$uniprot_id] > 0.45, FALSE) & in_rbc & !rescued
+keep <- !is_red_cell
+flog <- bind_rows(flog, tibble(step = "Red-cell tracking removal", n_after = sum(keep), n_removed = sum(!keep)))
+red_cell_removed <- annotation[is_red_cell, c("uniprot_id", "gene", "description")] |>
+  mutate(blood_cor = round(blood_cor[uniprot_id], 3))
 annotation <- annotation[keep, ]
 intensity <- intensity[keep, ]
 
@@ -189,6 +224,7 @@ write.xlsx(
     filter_log = flog,
     contaminants_removed = removed,
     contaminants_rescued = rescued,
+    red_cell_removed = red_cell_removed,
     outlier_diagnostics = outlier_diag,
     blood_classification = bl |> select(
       gene, uniprot, protein_class, secretome,
