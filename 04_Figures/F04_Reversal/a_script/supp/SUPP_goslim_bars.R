@@ -6,9 +6,9 @@ source("04_Figures/shared/go_slim_categories.R")
 
 pacman::p_load(tidyverse)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/supp/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/supp/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data/panel_supp"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data/panel_supp"
 
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
@@ -17,7 +17,7 @@ dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # -- Load data -----------------------------------------------------------------
-source("04_Figures/F03_Reversal/a_script/f03_data.R")
+source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep <- dep_df
 
 # -- Filter Pi-significant cancer proteins & classify --------------------------

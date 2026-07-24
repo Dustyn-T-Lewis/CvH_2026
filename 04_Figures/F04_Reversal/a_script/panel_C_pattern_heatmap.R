@@ -7,9 +7,9 @@ source("04_Figures/shared/go_slim_categories.R")
 
 pacman::p_load(tidyverse)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(file.path(DAT, "panel_C_heatmap"), recursive = TRUE, showWarnings = FALSE)
@@ -17,7 +17,7 @@ dir.create(file.path(DAT, "panel_C_heatmap"), recursive = TRUE, showWarnings = F
 pdf_device <- get_pdf_device()
 
 # 1. LOAD & CLASSIFY
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dep_df (old column names)
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df (old column names)
 
 sig_df <- dep_df %>%
   filter(pi_score_CRvH_Baseline < 0.05 | pi_score_CR_Training < 0.05) %>%

@@ -5,9 +5,9 @@ source("04_Figures/shared/style.R")
 
 pacman::p_load(tidyverse, openxlsx)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/supp/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/supp/pdf/panels"
-DAT <- "04_Figures/F03_Reversal/c_data/panel_supp"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
+DAT <- "04_Figures/F04_Reversal/c_data/panel_supp"
 
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
@@ -16,8 +16,8 @@ dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # -- Load driving proteins (CSV with xlsx fallback) ----------------------------
-csv_path <- "04_Figures/F03_Reversal/c_data/panel_D_fry/driving_proteins.csv"
-xlsx_path <- "04_Figures/F03_Reversal/c_data/F03_supplementary.xlsx"
+csv_path <- "04_Figures/F04_Reversal/c_data/panel_D_fry/driving_proteins.csv"
+xlsx_path <- "04_Figures/F04_Reversal/c_data/F04_supplementary.xlsx"
 
 if (file.exists(csv_path)) {
   drivers <- read_csv(csv_path, show_col_types = FALSE)
@@ -30,7 +30,7 @@ if (file.exists(csv_path)) {
 }
 
 # -- Load DEP results for t-statistics ----------------------------------------
-source("04_Figures/F03_Reversal/a_script/f03_data.R")
+source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep <- dep_df %>%
   dplyr::select(gene,
     t_TR = t_CR_Training, t_CvH = t_CRvH_Baseline,

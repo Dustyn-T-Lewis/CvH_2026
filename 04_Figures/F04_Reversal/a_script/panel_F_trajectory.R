@@ -10,9 +10,9 @@ source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 pacman::p_load(tidyverse, e1071, ggrepel, patchwork)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data/panel_F"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data/panel_F"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
@@ -28,7 +28,7 @@ CLASS_COLORS <- c(Normalized = "#1B7837", Persistent = "#878787",
                   Exacerbated = "#D6604D")
 
 # ── Data: group-mean trajectories of the disease signature ───────────────────
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dep_df, dal
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df, dal
 stopifnot(all(ORDER %in% dal$metadata$group_time))
 
 gmean <- sapply(ORDER, function(g)

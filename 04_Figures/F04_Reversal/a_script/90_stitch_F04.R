@@ -1,8 +1,8 @@
-# F03 driver: cancer-recovery reversal figure. Builds the 5-panel main composite
+# F04 driver: cancer-recovery reversal figure. Builds the 5-panel main composite
 # (A quadrant ORA, B protein-to-pathway, C fry rotation, D pathway NES, E RRHO2)
 # plus its source-data workbook, the trajectory/residual companion (F, G), and
 # the two-page supplementary composite. Panels read native pipeline outputs
-# through f03_data.R.
+# through f04_data.R.
 
 setwd(here::here())
 source("04_Figures/shared/style.R")
@@ -14,7 +14,7 @@ pacman::p_load(patchwork, cowplot, ggplot2, png, grid, dplyr)
 select <- dplyr::select
 filter <- dplyr::filter
 
-A <- "04_Figures/F03_Reversal/a_script"
+A <- "04_Figures/F04_Reversal/a_script"
 
 # ── Main composite (A–E). Panel C sourced last: AnnotationDbi masks select(). ──
 source(file.path(A, "panel_A_ORA.R"))
@@ -48,8 +48,8 @@ source(file.path(A, "panel_C_pattern_heatmap.R"))
 n_total_C <- n_total
 n_pw_C <- n_pw
 
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf"
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png"
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
@@ -122,13 +122,13 @@ composite_final <- ggdraw(fig) |>
   tag_block("B", ttl_B, sub_B, X_B, Y_bot) |>
   tag_block("C", ttl_C, sub_C, X_C, Y_bot)
 
-ggsave(file.path(RPT_PDF, "MAIN_F03_composite.pdf"), composite_final,
+ggsave(file.path(RPT_PDF, "MAIN_F04_composite.pdf"), composite_final,
   width = COMP_W, height = COMP_H, units = "mm", device = pdf_device
 )
-ggsave(file.path(RPT_PNG, "MAIN_F03_composite.png"), composite_final,
+ggsave(file.path(RPT_PNG, "MAIN_F04_composite.png"), composite_final,
   width = COMP_W, height = COMP_H, units = "mm", dpi = 300
 )
-message("F03 main composite saved")
+message("F04 main composite saved")
 
 # ── Source-data workbook ──
 source("04_Figures/shared/figure_supplement_helpers.R")
@@ -154,22 +154,22 @@ summary_stats <- data.frame(
 
 rev_specs <- list(
   list(name = "summary_stats", df = summary_stats),
-  list(name = "panel_A_ora_quadrant", path = "04_Figures/F03_Reversal/c_data/panel_A/ora_quadrant.csv"),
-  list(name = "panel_B_pattern_class", path = "04_Figures/F03_Reversal/c_data/panel_C_heatmap/pattern_classification.csv"),
-  list(name = "panel_B_sankey", path = "04_Figures/F03_Reversal/c_data/panel_C_heatmap/sankey_links.csv"),
-  list(name = "panel_B_bar", path = "04_Figures/F03_Reversal/c_data/panel_C_heatmap/bar_data.csv"),
-  list(name = "panel_C_fry_results", path = "04_Figures/F03_Reversal/c_data/panel_D_fry/fry_results_all.csv"),
-  list(name = "panel_C_fry_driving", path = "04_Figures/F03_Reversal/c_data/panel_D_fry/driving_proteins.csv"),
-  list(name = "panel_D_nes_scatter", path = "04_Figures/F03_Reversal/c_data/panel_B/nes_scatter.csv"),
-  list(name = "panel_E_rrho2_summary", path = "04_Figures/F03_Reversal/c_data/panel_E/rrho2_summary.csv"),
-  list(name = "panel_E_rrho2_hotspot", path = "04_Figures/F03_Reversal/c_data/panel_E/rrho2_hotspot_genes.csv"),
-  list(name = "panel_E_rrho2_ora_concord", path = "04_Figures/F03_Reversal/c_data/panel_E/rrho2_ora_concordant.csv"),
-  list(name = "panel_E_rrho2_ora_discord", path = "04_Figures/F03_Reversal/c_data/panel_E/rrho2_ora_discordant.csv")
+  list(name = "panel_A_ora_quadrant", path = "04_Figures/F04_Reversal/c_data/panel_A/ora_quadrant.csv"),
+  list(name = "panel_B_pattern_class", path = "04_Figures/F04_Reversal/c_data/panel_C_heatmap/pattern_classification.csv"),
+  list(name = "panel_B_sankey", path = "04_Figures/F04_Reversal/c_data/panel_C_heatmap/sankey_links.csv"),
+  list(name = "panel_B_bar", path = "04_Figures/F04_Reversal/c_data/panel_C_heatmap/bar_data.csv"),
+  list(name = "panel_C_fry_results", path = "04_Figures/F04_Reversal/c_data/panel_D_fry/fry_results_all.csv"),
+  list(name = "panel_C_fry_driving", path = "04_Figures/F04_Reversal/c_data/panel_D_fry/driving_proteins.csv"),
+  list(name = "panel_D_nes_scatter", path = "04_Figures/F04_Reversal/c_data/panel_B/nes_scatter.csv"),
+  list(name = "panel_E_rrho2_summary", path = "04_Figures/F04_Reversal/c_data/panel_E/rrho2_summary.csv"),
+  list(name = "panel_E_rrho2_hotspot", path = "04_Figures/F04_Reversal/c_data/panel_E/rrho2_hotspot_genes.csv"),
+  list(name = "panel_E_rrho2_ora_concord", path = "04_Figures/F04_Reversal/c_data/panel_E/rrho2_ora_concordant.csv"),
+  list(name = "panel_E_rrho2_ora_discord", path = "04_Figures/F04_Reversal/c_data/panel_E/rrho2_ora_discordant.csv")
 )
 
 build_workbook(
-  "04_Figures/F03_Reversal/c_data/F03_supplementary.xlsx",
-  title = "F03 Reversal — Source Data",
+  "04_Figures/F04_Reversal/c_data/F04_supplementary.xlsx",
+  title = "F04 Reversal — Source Data",
   description = "Cancer recovery reversal diagnostics: quadrant ORA, pathway NES scatter, per-protein pattern classification, fry rotation test, RRHO2.",
   overview_df = data.frame(
     Sheet = vapply(rev_specs, `[[`, character(1), "name"),
@@ -193,9 +193,9 @@ build_workbook(
 )
 cleanup_after_workbook(rev_specs,
   extra_subdirs = c(
-    "04_Figures/F03_Reversal/c_data/panel_A", "04_Figures/F03_Reversal/c_data/panel_B",
-    "04_Figures/F03_Reversal/c_data/panel_C_heatmap", "04_Figures/F03_Reversal/c_data/panel_D_fry",
-    "04_Figures/F03_Reversal/c_data/panel_E"
+    "04_Figures/F04_Reversal/c_data/panel_A", "04_Figures/F04_Reversal/c_data/panel_B",
+    "04_Figures/F04_Reversal/c_data/panel_C_heatmap", "04_Figures/F04_Reversal/c_data/panel_D_fry",
+    "04_Figures/F04_Reversal/c_data/panel_E"
   )
 )
 
@@ -203,8 +203,8 @@ cleanup_after_workbook(rev_specs,
 source(file.path(A, "panel_F_trajectory.R"))
 source(file.path(A, "panel_G_resid_volcano.R"))
 
-PANELS <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-MAIN_PNG <- "04_Figures/F03_Reversal/b_reports/main/png" # panel scripts overwrite RPT_PNG
+PANELS <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+MAIN_PNG <- "04_Figures/F04_Reversal/b_reports/main/png" # panel scripts overwrite RPT_PNG
 read_panel <- function(f) {
   path <- file.path(PANELS, f)
   if (!file.exists(path)) stop("missing panel PNG: ", path)
@@ -218,10 +218,10 @@ companion <- read_panel("MAIN_panel_F_trajectory_composite.png") /
   plot_layout(heights = c(150, 120)) +
   plot_annotation(tag_levels = list(c("A", "B"))) &
   theme(plot.tag = element_text(size = 16, face = "bold"))
-ggsave(file.path(MAIN_PNG, "MAIN_F03_trajectory_companion.png"), companion,
+ggsave(file.path(MAIN_PNG, "MAIN_F04_trajectory_companion.png"), companion,
   width = 220, height = 280, units = "mm", dpi = 300
 )
-message("F03 trajectory companion saved")
+message("F04 trajectory companion saved")
 
 # ── Supplementary composites (two pages) ──
 S <- file.path(A, "supp")
@@ -235,8 +235,8 @@ source(file.path(S, "SUPP_reversal_threshold.R"))
 source(file.path(S, "SUPP_fry_leading.R"))
 source(file.path(S, "SUPP_goslim_bars.R")) # last: loads AnnotationDbi
 
-RPT_SUPP_PDF <- "04_Figures/F03_Reversal/b_reports/supp/pdf"
-RPT_SUPP_PNG <- "04_Figures/F03_Reversal/b_reports/supp/png"
+RPT_SUPP_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf"
+RPT_SUPP_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png"
 dir.create(RPT_SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 
@@ -247,10 +247,10 @@ diagnostics <- pS_ora_dedup + pS_r_boot + pS_circ + pS_threshold + pS_goslim + p
     plot.tag = element_text(face = "bold", size = 14),
     plot.margin = margin(4, 4, 4, 4, "mm")
   ))
-ggsave(file.path(RPT_SUPP_PNG, "SUPP_F03_diagnostics.png"), diagnostics,
+ggsave(file.path(RPT_SUPP_PNG, "SUPP_F04_diagnostics.png"), diagnostics,
   width = 360, height = 400, units = "mm", dpi = 300, bg = "white"
 )
-ggsave(file.path(RPT_SUPP_PDF, "SUPP_F03_diagnostics.pdf"), diagnostics,
+ggsave(file.path(RPT_SUPP_PDF, "SUPP_F04_diagnostics.pdf"), diagnostics,
   width = 360, height = 400, units = "mm", device = pdf_device
 )
 
@@ -260,12 +260,12 @@ methods <- pS_melov + pS_cmap + pS_asym +
     plot.tag = element_text(face = "bold", size = 14),
     plot.margin = margin(4, 4, 4, 4, "mm")
   ))
-ggsave(file.path(RPT_SUPP_PNG, "SUPP_F03_methods.png"), methods,
+ggsave(file.path(RPT_SUPP_PNG, "SUPP_F04_methods.png"), methods,
   width = 360, height = 340, units = "mm", dpi = 300, bg = "white"
 )
-ggsave(file.path(RPT_SUPP_PDF, "SUPP_F03_methods.pdf"), methods,
+ggsave(file.path(RPT_SUPP_PDF, "SUPP_F04_methods.pdf"), methods,
   width = 360, height = 340, units = "mm", device = pdf_device
 )
 
-message("F03 supplementary composites saved")
-message("F03 driver complete")
+message("F04 supplementary composites saved")
+message("F04 driver complete")

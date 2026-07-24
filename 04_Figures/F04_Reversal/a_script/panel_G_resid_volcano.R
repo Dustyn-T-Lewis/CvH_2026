@@ -7,16 +7,16 @@ source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 pacman::p_load(tidyverse, fgsea, ggrepel, patchwork)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data/panel_G"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data/panel_G"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 set.seed(42)
 
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dep_df
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df
 
 # ── Volcano frame: residual contrast ─────────────────────────────────────────
 v <- dep_df |>

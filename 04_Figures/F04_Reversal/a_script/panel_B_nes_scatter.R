@@ -5,9 +5,9 @@ setwd(here::here())
 source("04_Figures/shared/style.R")
 pacman::p_load(tidyverse, ggrepel)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(file.path(DAT, "panel_B"), recursive = TRUE, showWarnings = FALSE)

@@ -7,9 +7,9 @@ source("04_Figures/shared/style.R")
 source("04_Figures/shared/pathway_utils.R")
 pacman::p_load(tidyverse, fgsea, ggrepel, patchwork)
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(file.path(DAT, "panel_A"), recursive = TRUE, showWarnings = FALSE)
@@ -20,7 +20,7 @@ COMP_BLUE  <- unname(DIR_COLORS["Down"])
 N_SHOW     <- 5
 
 # ── Data ─────────────────────────────────────────────────────────────────────
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dep_df + imputation_df
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df + imputation_df
 
 scatter_df <- dep_df %>%
   transmute(gene,

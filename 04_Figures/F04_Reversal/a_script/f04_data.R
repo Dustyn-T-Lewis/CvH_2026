@@ -1,9 +1,9 @@
-# Native data load for the F03 reversal panels. Builds dep_df (per-protein wide,
+# Native data load for the F04 reversal panels. Builds dep_df (per-protein wide,
 # with native contrast suffixes), dal (imp4p DAList for the rotation panels) and
 # imputation_df (gene -> imputed flag) directly from the proteoDA-native
 # pipeline. Source after setwd(root).
 
-source("04_Figures/F03_Reversal/a_script/reversal.R")
+source("04_Figures/F04_Reversal/a_script/reversal.R")
 
 .rev_wide <- load_reversal_table("03_DEP/a_non_imputed/c_data/combined_results_pi.csv")
 dep_df <- .rev_wide |>

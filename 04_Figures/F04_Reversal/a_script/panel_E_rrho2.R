@@ -8,9 +8,9 @@ pacman::p_load(tidyverse, RRHO2, fgsea)
 
 PE_W <- 110
 
-RPT_PNG <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-DAT     <- "04_Figures/F03_Reversal/c_data"
+RPT_PNG <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+DAT     <- "04_Figures/F04_Reversal/c_data"
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(file.path(DAT, "panel_E"), recursive = TRUE, showWarnings = FALSE)
@@ -18,7 +18,7 @@ dir.create(file.path(DAT, "panel_E"), recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
 # --- Load DEP data & build rank lists ---
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dep_df (old column names)
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df (old column names)
 
 rr_df <- dep_df %>%
   transmute(gene, t_1 = t_CRvH_Baseline, t_2 = t_CR_Training) %>%

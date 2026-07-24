@@ -16,11 +16,11 @@ pacman::p_load(tidyverse, limma, fgsea, patchwork)
 
 set.seed(42)
 
-RPT_PNG     <- "04_Figures/F03_Reversal/b_reports/main/png/panels"
-RPT_PDF     <- "04_Figures/F03_Reversal/b_reports/main/pdf/panels"
-RPT_SUP_PNG <- "04_Figures/F03_Reversal/b_reports/supp/png/panels"
-RPT_SUP_PDF <- "04_Figures/F03_Reversal/b_reports/supp/pdf/panels"
-DAT         <- "04_Figures/F03_Reversal/c_data"
+RPT_PNG     <- "04_Figures/F04_Reversal/b_reports/main/png/panels"
+RPT_PDF     <- "04_Figures/F04_Reversal/b_reports/main/pdf/panels"
+RPT_SUP_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
+RPT_SUP_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
+DAT         <- "04_Figures/F04_Reversal/c_data"
 PANEL_W     <- 178
 
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
@@ -34,7 +34,7 @@ pdf_device <- get_pdf_device()
 # ═══════════════════════════════════════════════════════════════════════════════
 # SHARED: Load data
 # ═══════════════════════════════════════════════════════════════════════════════
-source("04_Figures/F03_Reversal/a_script/f03_data.R")   # dal (imp4p) + dep_df
+source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dal (imp4p) + dep_df
 
 mat  <- dal$data
 meta <- as.data.frame(dal$metadata)
