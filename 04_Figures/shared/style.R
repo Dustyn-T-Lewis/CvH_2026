@@ -20,12 +20,20 @@ GROUP_FILL <- c(
   H_T1   = scales::alpha("#4DAF4A", 0.7)
 )
 
-# Database palette, keyed to match the fgsea `database` values exactly.
+# Database palettes, keyed to the fgsea `database` values. DB_COLORS is the dark
+# canonical set (axis/label text, white in-bar fit-text); ORA_DB_COLORS is the
+# light tint for bar fills that sit under dark labels.
 DB_COLORS <- c(
   Hallmark = "#E41A1C", Reactome = "#4DAF4A", KEGG = "#377EB8",
-  `GO:BP` = "#FF7F00", `GO Slim` = "#1B9E77"
+  `GO:BP` = "#FF7F00", `GO Slim` = "#1B9E77",
+  WikiPathways = "#984EA3", Other = "grey60"
 )
-DB_ORDER <- names(DB_COLORS)
+DB_ORDER <- c("Hallmark", "Reactome", "KEGG", "GO:BP", "GO Slim")
+ORA_DB_COLORS <- c(
+  Hallmark = "#F4A7A6", Reactome = "#B4DDB2", KEGG = "#A9C4E0",
+  `GO:BP` = "#FFD199", `GO Slim` = "#A6D9C6",
+  WikiPathways = "#D3BCE0", Other = "grey80"
+)
 
 # ── Sizing ──
 PANEL_MD <- 180
@@ -49,23 +57,47 @@ FIG_LEGEND_TITLE <- 9.5
 FIG_LEGEND_TEXT <- 8.5
 
 # ── Theme ──
-FIG_THEME <- theme_bw(base_size = 10) +
-  theme(
-    plot.title = element_text(face = "bold", size = FIG_TITLE_SIZE),
-    plot.subtitle = element_text(
-      face = "bold.italic", size = FIG_SUBTITLE_SIZE,
-      colour = "grey30"
-    ),
-    plot.tag = element_text(face = "bold", size = 15),
-    strip.background = element_blank(),
-    strip.text = element_text(face = "bold", size = FIG_STRIP_SIZE),
-    axis.title = element_text(face = "bold", size = 10),
-    axis.text = element_text(size = FIG_AXIS_TEXT),
-    legend.title = element_text(face = "bold", size = FIG_LEGEND_TITLE),
-    legend.text = element_text(size = FIG_LEGEND_TEXT),
-    legend.key.size = unit(3, "mm"),
-    panel.grid.minor = element_blank()
+# Sizes scale by panel width (scale_text): at the reference width (PANEL_MD) the
+# function reproduces the base hierarchy, so a narrower panel gets smaller type.
+# FIG_THEME is the default-width object every panel appends with + FIG_THEME.
+theme_cvh <- function(base_size = 10, panel_width_mm = PANEL_MD) {
+  s <- function(pt) scale_text(pt, panel_width_mm)
+  ggplot2::theme_bw(base_size = base_size) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(
+        face = "bold", size = s(FIG_TITLE_SIZE)
+      ),
+      plot.subtitle = ggplot2::element_text(
+        face = "bold.italic", size = s(FIG_SUBTITLE_SIZE),
+        colour = "grey30"
+      ),
+      plot.tag = ggplot2::element_text(face = "bold", size = s(15)),
+      strip.background = ggplot2::element_blank(),
+      strip.text = ggplot2::element_text(
+        face = "bold", size = s(FIG_STRIP_SIZE)
+      ),
+      axis.title = ggplot2::element_text(face = "bold", size = s(10)),
+      axis.text = ggplot2::element_text(size = s(FIG_AXIS_TEXT)),
+      legend.title = ggplot2::element_text(
+        face = "bold", size = s(FIG_LEGEND_TITLE)
+      ),
+      legend.text = ggplot2::element_text(size = s(FIG_LEGEND_TEXT)),
+      legend.key.size = grid::unit(3, "mm"),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+}
+
+FIG_THEME <- theme_cvh()
+
+# Panel letter baked into the title at a constant gap, so every panel reads
+# uniformly regardless of its y-axis width (steadier than a floating plot.tag).
+add_tag <- function(p, tag) {
+  cur <- p$labels$title
+  p + ggplot2::labs(
+    tag = NULL,
+    title = paste0(tag, "  ", if (is.null(cur)) "" else cur)
   )
+}
 
 # ── Utility functions ──
 get_pdf_device <- function() {
@@ -167,52 +199,7 @@ make_sigmoid_ribbon <- function(x0, x1, y0_top, y0_bot, y1_top, y1_bot,
   )
 }
 
-# ── F03 (Supplement Concordance: CRE vs PLA) ──
-classify_proteins_f3 <- function(pi_CRE, pi_PLA, pi_int, threshold = 0.05) {
-  dplyr::case_when(
-    pi_int < threshold ~ "Interaction",
-    pi_CRE < threshold & pi_PLA < threshold ~ "Sig Both",
-    pi_CRE < threshold ~ "Sig CRE only",
-    pi_PLA < threshold ~ "Sig PLA only",
-    TRUE ~ "NS"
-  ) |>
-    factor(levels = c(
-      "Interaction", "Sig Both",
-      "Sig CRE only", "Sig PLA only", "NS"
-    ))
-}
-
-SIG_COLORS_F3 <- c(
-  "Interaction"  = "#FF8F00",
-  "Sig Both"     = "#2E7D32",
-  "Sig CRE only" = "#2166AC",
-  "Sig PLA only" = "#D6604D",
-  "NS"           = "grey70"
-)
-
-SIG_LABEL_FILL_F3 <- c(
-  "Interaction"  = scales::alpha("#FF8F00", 0.75),
-  "Sig Both"     = scales::alpha("#2E7D32", 0.75),
-  "Sig CRE only" = scales::alpha("#2166AC", 0.75),
-  "Sig PLA only" = scales::alpha("#D6604D", 0.75),
-  "NS"           = scales::alpha("grey70", 0.75)
-)
-SIG_LABEL_TEXT_F3 <- c(
-  "Interaction"  = "white",
-  "Sig Both"     = "white",
-  "Sig CRE only" = "white",
-  "Sig PLA only" = "white",
-  "NS"           = "white"
-)
-
-ORA_QUAD_COLORS_F3 <- c(
-  "Concordant Up" = "#E57373",
-  "Concordant Down" = "#64B5F6",
-  "Discordant (CRE Up / PLA Down)" = "#FFB74D",
-  "Discordant (CRE Down / PLA Up)" = "#81C784"
-)
-
-# ── F04 (Cancer Recovery: CRvH_Baseline vs CR_Training) ──
+# ── F04 Reversal (Cancer Recovery: CRvH_Baseline vs CR_Training) ──
 classify_proteins_f4 <- function(pi_CvH, pi_TR, threshold = 0.05) {
   dplyr::case_when(
     pi_CvH < threshold & pi_TR < threshold ~ "Sig Both",
@@ -297,23 +284,7 @@ SUPP_LABELS <- c(
   CR = "Cancer Recovery"
 )
 
-# ── F03 pattern colors (Supplement Concordance) ──
-PATTERN_COLS_F3 <- c(
-  "Shared"       = "#457B9D",
-  "CRE-specific" = "#2166AC",
-  "PLA-specific" = "#D6604D",
-  "Interaction"  = "#FF8F00"
-)
-PATTERN_ORDER_F3 <- c("Shared", "CRE-specific", "PLA-specific", "Interaction")
-
-PATTERN_SUBTITLES_F3 <- c(
-  "Shared"       = "Sig CRE & PLA",
-  "CRE-specific" = "Sig CRE only",
-  "PLA-specific" = "Sig PLA only",
-  "Interaction"  = "Sig Interaction"
-)
-
-# ── F04 pattern colors (Cancer Recovery) ──
+# ── F04 Reversal pattern colors (Cancer Recovery) ──
 PATTERN_COLS_F4 <- c(
   "Reversed"           = "#2563EB",
   "Partially Reversed" = "#64B5F6",
