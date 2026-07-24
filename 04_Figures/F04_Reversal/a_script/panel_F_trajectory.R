@@ -59,18 +59,41 @@ z <- t(apply(gmean, 1, function(r) (r - mean(r)) / sd(r)))
 z <- z[is.finite(rowSums(z)), , drop = FALSE]
 message(sprintf("  Trajectory clustering: %d disease-signature proteins", nrow(z)))
 
-# ── Fuzzy c-means soft clustering ────────────────────────────────────────────
-fcm <- cmeans(z, centers = K, m = M_FUZZ, iter.max = 200)
-memb_max <- apply(fcm$membership, 1, max)
+# ── Trajectory clustering (pluggable: fuzzy c-means, k-means, hierarchical) ───
+# Each method returns cluster, membership (1 for hard methods), and k x 3
+# centres in ORDER column order, so the plotting is method-agnostic.
+cluster_trajectories <- function(z, method = c("cmeans", "kmeans", "hierarchical"),
+                                 k, m = 1.25, seed = 42) {
+  method <- match.arg(method)
+  set.seed(seed)
+  switch(method,
+    cmeans = {
+      fcm <- e1071::cmeans(z, centers = k, m = m, iter.max = 200)
+      list(cluster = fcm$cluster, membership = apply(fcm$membership, 1, max), centers = fcm$centers)
+    },
+    kmeans = {
+      km <- stats::kmeans(z, centers = k, iter.max = 200, nstart = 25)
+      list(cluster = km$cluster, membership = rep(1, nrow(z)), centers = km$centers)
+    },
+    hierarchical = {
+      cl <- stats::cutree(stats::hclust(stats::dist(z), method = "ward.D2"), k = k)
+      centers <- t(vapply(seq_len(k), function(i) colMeans(z[cl == i, , drop = FALSE]), numeric(ncol(z))))
+      list(cluster = cl, membership = rep(1, nrow(z)), centers = centers)
+    }
+  )
+}
+
+CLUSTER_METHOD <- "cmeans"
+cl <- cluster_trajectories(z, method = CLUSTER_METHOD, k = K, m = M_FUZZ)
 assign <- tibble(
   uniprot_id = rownames(z),
-  cluster = fcm$cluster, membership = memb_max
+  cluster = cl$cluster, membership = cl$membership
 ) |>
   left_join(sig, by = "uniprot_id") # per-protein phi + reversal_class
 write_csv(assign, file.path(DAT, "trajectory_clusters.csv"))
 
 # centroid shape per cluster -> dominant-pattern label for the facet strip only
-cent <- as_tibble(fcm$centers, .name_repair = "minimal")
+cent <- as_tibble(cl$centers, .name_repair = "minimal")
 names(cent) <- ORDER
 cent <- cent |>
   mutate(
@@ -132,6 +155,63 @@ if (nrow(top_path)) write_csv(top_path, file.path(DAT, "cluster_top_pathway.csv"
 
 class_n <- assign |> count(reversal_class)
 rev_dir <- mean(assign$phi > 0, na.rm = TRUE)
+
+# ── Cluster ↔ phenotype: per-sample cluster score vs baseline outcomes ────────
+# Cluster score = mean of member proteins' sample-standardized abundance, the
+# hard-clustering analog of a WGCNA module eigengene. Reuses module_trait_cor.
+source("04_Figures/shared/wgcna_stats.R")
+zexpr <- t(scale(t(dal$data)))
+cluster_score <- vapply(seq_len(K), function(k) {
+  members <- assign$uniprot_id[assign$cluster == k]
+  colMeans(zexpr[rownames(zexpr) %in% members, , drop = FALSE], na.rm = TRUE)
+}, numeric(ncol(dal$data)))
+colnames(cluster_score) <- paste0("C", seq_len(K))
+rownames(cluster_score) <- colnames(dal$data)
+
+meta_f <- as.data.frame(dal$metadata)
+base_ids <- meta_f$Col_ID[meta_f$Timepoint == "T1"]
+pre_cols <- c(
+  "age", "pre_ALM_kg", "pre_sts_max_pwr", "pre_LBM_kg",
+  "pre_chest_press_lbs", "pre_leg_ext_lbs", "pre_grip_lbs"
+)
+trait_b <- as.matrix(meta_f[match(base_ids, meta_f$Col_ID), pre_cols])
+rownames(trait_b) <- base_ids
+cluster_pheno <- module_trait_cor(cluster_score[base_ids, , drop = FALSE], trait_b)
+write_csv(cluster_pheno, file.path(DAT, "cluster_phenotype.csv"))
+
+pheno_short <- c(
+  age = "Age", pre_ALM_kg = "ALM", pre_sts_max_pwr = "STS pwr",
+  pre_LBM_kg = "LBM", pre_chest_press_lbs = "Chest",
+  pre_leg_ext_lbs = "Leg ext", pre_grip_lbs = "Grip"
+)
+cp <- cluster_pheno |>
+  mutate(
+    trait = factor(pheno_short[trait], levels = pheno_short),
+    cluster = factor(module, levels = paste0("C", seq_len(K))),
+    sig = !is.na(padj) & padj < 0.05, lab = sprintf("%.2f", r)
+  )
+cluster_pheno_fig <- ggplot(cp, aes(trait, cluster, fill = r)) +
+  geom_tile(colour = "grey85", linewidth = 0.3) +
+  geom_tile(data = filter(cp, sig), fill = NA, colour = "black", linewidth = 0.8) +
+  geom_text(aes(label = lab), size = 2.4, colour = if_else(abs(cp$r) > 0.6, "white", "grey15")) +
+  scale_fill_gradient2(low = "#1B7837", mid = "white", high = "#762A83", midpoint = 0, limits = c(-1, 1)) +
+  labs(
+    title = "Trajectory cluster vs baseline phenotype",
+    subtitle = "Cluster score (mean member z) vs pre_ outcomes; box = BH-FDR < 0.05.",
+    x = NULL, y = NULL, fill = "Pearson r"
+  ) +
+  FIG_THEME +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+SUPP_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png"
+SUPP_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf"
+dir.create(SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
+dir.create(SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
+ggsave(file.path(SUPP_PNG, "SUPP_F04_cluster_phenotype.png"), cluster_pheno_fig,
+  width = 150, height = 90, units = "mm", dpi = 300, bg = "white"
+)
+ggsave(file.path(SUPP_PDF, "SUPP_F04_cluster_phenotype.pdf"), cluster_pheno_fig,
+  width = 150, height = 90, units = "mm", device = pdf_device
+)
 
 # ── Long frame for trajectory plotting ───────────────────────────────────────
 long <- as_tibble(z, rownames = "uniprot_id") |>
