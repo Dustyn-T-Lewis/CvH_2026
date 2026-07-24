@@ -3,10 +3,9 @@
 setwd(here::here())
 
 scripts <- c(
-  "CvH_WGCNA_run.R",
-  "module_ora_prep.R",
-  "02_member_response.R",
-  "90_stitch_F05.R"
+  "00_build_wgcna.R",
+  "01_module_stats.R",
+  "02_clustering.R"
 )
 
 for (s in scripts) {
