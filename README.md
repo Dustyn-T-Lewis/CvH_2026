@@ -10,14 +10,16 @@ timepoints; the CRE and PLA training sub-arms are pooled into a three-cell desig
 
 ## Design and Contrasts
 
-DEP fits the means model `~ 0 + group_time + (1 | Subject_ID)` over the three
-cells, with the within-subject pre-to-post pairing carried by
-`duplicateCorrelation` on `Subject_ID`. Three contrasts, each a linear
-combination of the three cell means:
+DEP fits the means model `~ 0 + model_cell + (1 | Subject_ID)` over five cells
+(`H_pre` plus `CRE`/`PLA` × `pre`/`post`), with the within-subject pre-to-post
+pairing carried by `duplicateCorrelation` on `Subject_ID`. The CRE and PLA arms
+enter the model so the estimates are supplement-adjusted, but the reported
+contrasts average the two arms 50:50 and no CRE-vs-PLA effect is tested. Three
+contrasts, each a linear combination of the cell means:
 
-- `CRvH_Baseline = CR_pre - H_pre` — disease deviation from healthy (D)
-- `CR_Training = CR_post - CR_pre` — effect of training (T)
-- `Resid = CR_post - H_pre` — what remains after training (R = D + T)
+- `CRvH_Baseline = ½(CRE_pre + PLA_pre) - H_pre` — disease deviation from healthy (D)
+- `CR_Training = ½(CRE_post + PLA_post) - ½(CRE_pre + PLA_pre)` — effect of training (T)
+- `Resid = ½(CRE_post + PLA_post) - H_pre` — what remains after training (R = D + T)
 
 The three form a closed triangle: `Resid = CRvH_Baseline + CR_Training`.
 Significance is the Pi-score (`Pi = P.Value^|log2FC|`, Xiao et al. 2014) at
