@@ -1,0 +1,49 @@
+"quadrant","consolidated","n","pct"
+"Non-reversed","Muscle & Contractile",6,6.89655172413793
+"Non-reversed","Cytoskeleton & Motility",5,5.74712643678161
+"Non-reversed","ECM & Adhesion",15,17.2413793103448
+"Non-reversed","Lipid Metabolism",3,3.44827586206897
+"Non-reversed","Carbohydrate & Energy Metabolism",3,3.44827586206897
+"Non-reversed","Amino Acid & Cofactor Metabolism",3,3.44827586206897
+"Non-reversed","Mitochondria & Energy",2,2.29885057471264
+"Non-reversed","Protein Homeostasis",9,10.3448275862069
+"Non-reversed","Transport",13,14.9425287356322
+"Non-reversed","Translation & Ribosome",0,0
+"Non-reversed","Transcription & Chromatin",4,4.59770114942529
+"Non-reversed","Immune & Inflammation",3,3.44827586206897
+"Non-reversed","DNA & Cell Cycle",7,8.04597701149425
+"Non-reversed","Circulatory System",3,3.44827586206897
+"Non-reversed","Development",6,6.89655172413793
+"Non-reversed","Other",5,5.74712643678161
+"Reversed Down","Muscle & Contractile",0,0
+"Reversed Down","Cytoskeleton & Motility",1,1.63934426229508
+"Reversed Down","ECM & Adhesion",0,0
+"Reversed Down","Lipid Metabolism",4,6.55737704918033
+"Reversed Down","Carbohydrate & Energy Metabolism",6,9.83606557377049
+"Reversed Down","Amino Acid & Cofactor Metabolism",3,4.91803278688525
+"Reversed Down","Mitochondria & Energy",7,11.4754098360656
+"Reversed Down","Protein Homeostasis",8,13.1147540983607
+"Reversed Down","Transport",7,11.4754098360656
+"Reversed Down","Translation & Ribosome",5,8.19672131147541
+"Reversed Down","Transcription & Chromatin",1,1.63934426229508
+"Reversed Down","Immune & Inflammation",3,4.91803278688525
+"Reversed Down","DNA & Cell Cycle",3,4.91803278688525
+"Reversed Down","Circulatory System",4,6.55737704918033
+"Reversed Down","Development",1,1.63934426229508
+"Reversed Down","Other",8,13.1147540983607
+"Reversed Up","Muscle & Contractile",0,0
+"Reversed Up","Cytoskeleton & Motility",12,8.05369127516779
+"Reversed Up","ECM & Adhesion",21,14.0939597315436
+"Reversed Up","Lipid Metabolism",12,8.05369127516779
+"Reversed Up","Carbohydrate & Energy Metabolism",10,6.71140939597315
+"Reversed Up","Amino Acid & Cofactor Metabolism",20,13.4228187919463
+"Reversed Up","Mitochondria & Energy",0,0
+"Reversed Up","Protein Homeostasis",16,10.738255033557
+"Reversed Up","Transport",11,7.38255033557047
+"Reversed Up","Translation & Ribosome",4,2.68456375838926
+"Reversed Up","Transcription & Chromatin",11,7.38255033557047
+"Reversed Up","Immune & Inflammation",6,4.02684563758389
+"Reversed Up","DNA & Cell Cycle",12,8.05369127516779
+"Reversed Up","Circulatory System",1,0.671140939597315
+"Reversed Up","Development",3,2.01342281879195
+"Reversed Up","Other",10,6.71140939597315

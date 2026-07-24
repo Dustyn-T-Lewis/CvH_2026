@@ -1,0 +1,7 @@
+cluster,pathway_label,padj
+1,Glycolysis,0.8595673368543192
+2,Xenobiotic Metabolism,0.016043540488137213
+3,Extracellular Matrix Organization,5.7497663328955297e-05
+4,Phase I Functionalization Of Compounds,0.014198229359056142
+5,Calcium Ion Homeostasis,0.3096046035169269
+6,Coagulation,0.08628325016045504

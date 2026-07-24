@@ -1,0 +1,10 @@
+contrast,method,spearman_vs_nonimputed
+CR_Training,missforest,0.8964835153193149
+CRvH_Baseline,missforest,0.9663165190293469
+Resid,missforest,0.976031135172214
+CR_Training,imp4p,0.7822614621392378
+CRvH_Baseline,imp4p,0.9183280866621663
+Resid,imp4p,0.954517611300648
+CR_Training,mscoreutils,0.717328235548966
+CRvH_Baseline,mscoreutils,0.789792053788807
+Resid,mscoreutils,0.8158502775070134

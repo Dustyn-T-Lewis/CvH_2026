@@ -19,12 +19,7 @@ Rplots.pdf
 *_cache/
 **/a_script/*.html
 
-# regenerated stage artifacts (scripts are tracked, outputs are not)
-0*/c_data/
-0*/b_reports/
-
-**/c_data/
-**/b_reports/
+# stage outputs (c_data / b_reports) are tracked as a full mirror on the repo
 
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 CvH_pipeline.html

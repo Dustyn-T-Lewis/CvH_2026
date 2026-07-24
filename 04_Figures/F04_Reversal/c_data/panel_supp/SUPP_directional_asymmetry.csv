@@ -1,0 +1,2 @@
+cancer_up_n,cancer_up_reversed,cancer_up_pct,cancer_dn_n,cancer_dn_reversed,cancer_dn_pct,delta_pct,prop_test_p,chi_sq_p,boot_ci_lower,boot_ci_upper
+209,149,71.3,78,61,78.2,6.9,0.1523942911180277,0.3047885822360555,-4.5,17.9
