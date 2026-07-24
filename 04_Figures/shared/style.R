@@ -20,6 +20,15 @@ GROUP_FILL <- c(
   H_T1   = scales::alpha("#4DAF4A", 0.7)
 )
 
+# Phenotype (F01) bar fills. The T1/T2 alpha ramp encodes pre vs post, so this is
+# a deliberate ramp, not a duplicate of GROUP_FILL; SUPP_COLORS is the base hue.
+SUPP_FILL <- c(
+  CRE_T1 = scales::alpha("#2166AC", 0.5), CRE_T2 = scales::alpha("#2166AC", 0.9),
+  PLA_T1 = scales::alpha("#D6604D", 0.5), PLA_T2 = scales::alpha("#D6604D", 0.9),
+  H_T1   = scales::alpha("#4DAF4A", 0.7)
+)
+SUPP_COLORS <- c(CRE = "#2166AC", PLA = "#D6604D", H = "#4DAF4A")
+
 # Database palettes, keyed to the fgsea `database` values. DB_COLORS is the dark
 # canonical set (axis/label text, white in-bar fit-text); ORA_DB_COLORS is the
 # light tint for bar fills that sit under dark labels.

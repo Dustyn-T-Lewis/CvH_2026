@@ -1,6 +1,6 @@
 # F01 Panel A: Age Distribution (CR vs Healthy)
 setwd(here::here())
-source("04_Figures/F01_Phenotype/a_script/style.R")
+source("04_Figures/shared/style.R")
 
 pacman::p_load(dplyr, ggsignif)
 

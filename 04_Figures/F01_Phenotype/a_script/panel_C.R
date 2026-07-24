@@ -1,6 +1,6 @@
 # F01 Panel C: STS Max Power (Pre/Post x Supplement)
 setwd(here::here())
-source("04_Figures/F01_Phenotype/a_script/style.R")
+source("04_Figures/shared/style.R")
 
 pacman::p_load(dplyr, tidyr, patchwork, ggsignif, rstatix)
 
