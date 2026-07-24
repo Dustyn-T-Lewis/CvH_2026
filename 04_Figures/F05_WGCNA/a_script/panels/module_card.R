@@ -1,12 +1,17 @@
 # Module-card columns for F05_WGCNA (Mito F03 layout). Each column is faceted by
 # module on the same order with blank strips, so one row reads left to right as a
-# single module: protein count, module-trait heatmap, member-response fry tiles,
-# eigengene trajectory with post-hoc brackets, and top-5 ORA pathways.
+# single module: protein count, member response (fGSEA NES over fry), phenotype
+# association, eigengene trajectory with post-hoc brackets, and top-5 ORA.
 
 pacman::p_load(ggplot2, dplyr, tidyr, stringr, patchwork, ggtext, ggfittext)
 
 CTR_KEEP <- c("CRvH_Baseline", "CR_Training")
 CTR_LABS <- c(CRvH_Baseline = "CR vs Ctl", CR_Training = "Training")
+PHENO_LABS <- c(
+  age = "Age", pre_ALM_kg = "ALM", pre_sts_max_pwr = "STS pwr",
+  pre_LBM_kg = "LBM", pre_chest_press_lbs = "Chest",
+  pre_leg_ext_lbs = "Leg ext", pre_grip_lbs = "Grip"
+)
 
 tint_colour <- function(hex, amt = 0.62) {
   v <- grDevices::col2rgb(hex) / 255
@@ -56,26 +61,25 @@ card_count <- function(mod_bio, modules) {
     )
 }
 
-# MITO-style stacked member response: r_equiv module-trait tiles (top row) over
-# fry tiles (bottom row, signed -log10 q), per contrast, with two colorbars.
-card_response <- function(lmm, settests, modules) {
-  fmt2 <- function(p) {
-    ifelse(is.na(p), "", ifelse(p < 0.001, "<.001", sprintf("%.2f", p)))
-  }
+# Member response: fGSEA NES tiles (top, modules as gene sets ranked by DE
+# moderated-t) over fry tiles (below, signed -log10 q), per contrast, boxed at
+# FDR < 0.05, with two diverging colorbars.
+card_response <- function(nes, settests, modules) {
+  fmt2 <- function(p) ifelse(is.na(p), "", ifelse(p < 0.001, "<.001", sprintf("%.2f", p)))
   as_card <- function(d) {
     mutate(d,
       module_color = factor(module_color, levels = modules),
       contrast = factor(contrast, levels = CTR_KEEP),
-      row = factor(row, levels = c("trait", "fry"))
+      row = factor(row, levels = c("NES", "fry"))
     )
   }
-  trait <- lmm |>
-    mutate(module_color = sub("^ME", "", module)) |>
+  nes_d <- nes |>
+    rename(module_color = module) |>
     filter(module_color %in% modules, contrast %in% CTR_KEEP) |>
     transmute(module_color, contrast,
-      row = "trait", value = r_equiv,
-      sig = case_when(p_bh < 0.05 ~ "FDR", p_raw < 0.05 ~ "nominal", TRUE ~ "ns"),
-      lab = sprintf("%.2f%s", r_equiv, ifelse(p_bh < 0.05, sig_stars(p_bh), ""))
+      row = "NES", value = NES,
+      sig = if_else(!is.na(padj) & padj < 0.05, "FDR", "ns"),
+      lab = sprintf("%.1f", NES)
     ) |>
     as_card()
   fry <- settests |>
@@ -87,20 +91,18 @@ card_response <- function(lmm, settests, modules) {
       lab = sprintf("p=%s\nq=%s", fmt2(fry_p), fmt2(fry_fdr))
     ) |>
     as_card()
-  boxes <- bind_rows(trait, fry) |> filter(sig != "ns")
+  boxes <- bind_rows(nes_d, fry) |> filter(sig != "ns")
 
   ggplot(mapping = aes(contrast, row)) +
     geom_tile(
-      data = trait, aes(fill = value), colour = "grey80",
+      data = nes_d, aes(fill = value), colour = "grey80",
       linewidth = 0.4, width = 0.96, height = 0.92
     ) +
-    scale_fill_gradient2(
-      low = "#1B7837", mid = "white", high = "#762A83",
-      midpoint = 0, limits = c(-0.8, 0.8), oob = scales::squish,
-      name = expression(r[equiv]),
+    scale_fill_gradientn(
+      colours = c("#1B7837", "white", "#762A83"), limits = c(-3.5, 3.5),
+      oob = scales::squish, name = "fGSEA NES (up purple)",
       guide = guide_colorbar(
-        order = 1, barwidth = unit(12, "mm"),
-        barheight = unit(2, "mm"), title.vjust = 1
+        order = 1, barwidth = unit(12, "mm"), barheight = unit(2, "mm"), title.vjust = 1
       )
     ) +
     ggnewscale::new_scale_fill() +
@@ -110,35 +112,27 @@ card_response <- function(lmm, settests, modules) {
     ) +
     scale_fill_gradient2(
       low = "#4393C3", mid = "white", high = "#D6604D",
-      midpoint = 0, limits = c(-2, 2), oob = scales::squish,
-      name = "fry ±log10 q",
+      midpoint = 0, limits = c(-2, 2), oob = scales::squish, name = "fry ±log10 q",
       guide = guide_colorbar(
-        order = 2, barwidth = unit(12, "mm"),
-        barheight = unit(2, "mm"), title.vjust = 1
+        order = 2, barwidth = unit(12, "mm"), barheight = unit(2, "mm"), title.vjust = 1
       )
-    ) +
-    geom_tile(
-      data = filter(boxes, sig == "nominal"), fill = NA, colour = "grey30",
-      linetype = "dashed", linewidth = 0.5, width = 0.96, height = 0.92
     ) +
     geom_tile(
       data = filter(boxes, sig == "FDR"), fill = NA, colour = "black",
       linewidth = 0.9, width = 0.96, height = 0.92
     ) +
     geom_text(
-      data = trait, aes(label = lab), size = 1.9,
-      colour = if_else(abs(trait$value) > 0.5, "white", "grey15")
+      data = nes_d, aes(label = lab), size = 1.9,
+      colour = if_else(abs(nes_d$value) > 2.5, "white", "grey15")
     ) +
     geom_text(
       data = fry, aes(label = lab), size = 1.5, lineheight = 0.9,
       colour = if_else(fry$sig == "FDR", "white", "grey30")
     ) +
     scale_x_discrete(labels = CTR_LABS) +
-    scale_y_discrete(
-      limits = c("fry", "trait"), labels = c(fry = "fry", trait = "r_eq")
-    ) +
+    scale_y_discrete(limits = c("fry", "NES"), labels = c(fry = "fry", NES = "NES")) +
     labs(
-      title = "Member response", subtitle = "r_equiv (top) · fry (below)",
+      title = "Member response", subtitle = "fGSEA NES (top) · fry (below)",
       x = NULL, y = NULL
     ) +
     FIG_THEME +
@@ -151,6 +145,46 @@ card_response <- function(lmm, settests, modules) {
       legend.text = element_text(size = 5), legend.box = "vertical",
       legend.margin = margin(0, 0, 0, 0), legend.spacing.y = unit(0.5, "mm"),
       plot.margin = margin(2, 2, 2, 2)
+    )
+}
+
+# Module eigengene vs baseline clinical outcome (Pearson r, BH-FDR box).
+card_phenotype <- function(cor_pheno, modules) {
+  d <- cor_pheno |>
+    filter(module %in% modules, trait %in% names(PHENO_LABS)) |>
+    mutate(
+      module_color = factor(module, levels = modules),
+      trait = factor(trait, levels = names(PHENO_LABS)),
+      lab = sprintf("%.2f", r), sig = !is.na(padj) & padj < 0.05
+    )
+  ggplot(d, aes(trait, 1, fill = r)) +
+    geom_tile(colour = "grey80", linewidth = 0.4, width = 0.96, height = 0.92) +
+    geom_tile(
+      data = filter(d, sig), fill = NA, colour = "black",
+      linewidth = 0.9, width = 0.96, height = 0.92
+    ) +
+    geom_text(aes(label = lab),
+      size = 1.7,
+      colour = if_else(abs(d$r) > 0.6, "white", "grey15")
+    ) +
+    scale_fill_gradient2(
+      low = "#1B7837", mid = "white", high = "#762A83", midpoint = 0,
+      limits = c(-1, 1), name = "Pearson r",
+      guide = guide_colorbar(barwidth = unit(12, "mm"), barheight = unit(2, "mm"))
+    ) +
+    scale_x_discrete(labels = PHENO_LABS) +
+    scale_y_continuous(breaks = NULL, expand = c(0, 0)) +
+    labs(
+      title = "Phenotype", subtitle = "eigengene vs baseline (FDR box)",
+      x = NULL, y = NULL
+    ) +
+    FIG_THEME +
+    card_facets() +
+    theme(
+      axis.text.x = element_text(size = 5.5, angle = 40, hjust = 1),
+      axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+      legend.position = "bottom", legend.title = element_text(size = 6),
+      legend.text = element_text(size = 5), plot.margin = margin(2, 2, 2, 2)
     )
 }
 
@@ -296,14 +330,15 @@ card_ora <- function(ora, modules, top_n = 5L) {
     )
 }
 
-assemble_card <- function(mod_bio, lmm, settests, traj, ora, modules) {
+assemble_card <- function(mod_bio, nes, settests, cor_pheno, traj, lmm, ora, modules) {
   wrap_plots(
     list(
       card_count(mod_bio, modules),
-      card_response(lmm, settests, modules),
+      card_response(nes, settests, modules),
+      card_phenotype(cor_pheno, modules),
       card_trajectory(traj, lmm, modules),
       card_ora(ora, modules)
     ),
-    nrow = 1, widths = c(0.55, 0.72, 1, 1.7)
+    nrow = 1, widths = c(0.5, 0.72, 0.75, 1, 1.7)
   )
 }
