@@ -59,7 +59,7 @@ main_mods <- mod_order[mod_order %in% responsive]
 supp_mods <- setdiff(mod_order, main_mods)
 
 save_card <- function(modules, title, subtitle, stem, dir_png, dir_pdf) {
-  card <- assemble_card(mod_bio, nes, settests, cor_pheno, traj, lmm, ora, modules) +
+  card <- assemble_card(mod_bio, nes, settests, traj, lmm, ora, modules) +
     plot_annotation(
       title = title, subtitle = subtitle,
       theme = theme(
@@ -67,20 +67,20 @@ save_card <- function(modules, title, subtitle, stem, dir_png, dir_pdf) {
         plot.subtitle = element_text(face = "italic", size = 8.5, colour = "grey40")
       )
     )
-  h <- 44 + 34 * length(modules)
+  h <- 48 + 35 * length(modules)
   ggsave(file.path(dir_png, paste0(stem, ".png")), card,
-    width = 320, height = h, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
+    width = 300, height = h, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
   )
   ggsave(file.path(dir_pdf, paste0(stem, ".pdf")), card,
-    width = 320, height = h, units = "mm", device = pdf_device, limitsize = FALSE
+    width = 300, height = h, units = "mm", device = pdf_device, limitsize = FALSE
   )
 }
 
 if (length(main_mods)) {
   save_card(
     main_mods,
-    "WGCNA co-expression modules and their eigengene response",
-    "Each row is one module; main = nominal group effect (omnibus F p < 0.05). NES over fry, phenotype r, eigengene trajectory, top-5 ORA.",
+    "WGCNA co-expression modules and their eigengene response across the design",
+    "Rows: modules with a nominal omnibus group effect (F-test p < 0.05). Trajectory brackets = post-hoc contrasts; ✱ = FDR < 0.05. Other modules are supplementary.",
     "F05_wgcna_MAIN", RPT_PNG, RPT_PDF
   )
   message(sprintf("F05 main card saved (%d modules)", length(main_mods)))
