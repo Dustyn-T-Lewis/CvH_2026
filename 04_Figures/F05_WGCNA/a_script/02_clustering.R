@@ -52,10 +52,7 @@ traj <- read_csv(file.path(DAT, "trajectory_eigengenes.csv"), show_col_types = F
 mod_order <- mod_bio |>
   arrange(desc(n_proteins)) |>
   pull(module_color)
-responsive <- omnibus |>
-  filter(p < 0.05) |>
-  pull(module_color)
-main_mods <- mod_order[mod_order %in% responsive]
+main_mods <- mod_order
 supp_mods <- setdiff(mod_order, main_mods)
 
 save_card <- function(modules, title, subtitle, stem, dir_png, dir_pdf) {
@@ -80,7 +77,7 @@ if (length(main_mods)) {
   save_card(
     main_mods,
     "WGCNA co-expression modules and their eigengene response across the design",
-    "Rows: modules with a nominal omnibus group effect (F-test p < 0.05). Trajectory brackets = post-hoc contrasts; ✱ = FDR < 0.05. Other modules are supplementary.",
+    "Rows: all co-expression modules, ordered by size. Trajectory brackets = post-hoc contrasts; ✱ = FDR < 0.05.",
     "F05_wgcna_MAIN", RPT_PNG, RPT_PDF
   )
   message(sprintf("F05 main card saved (%d modules)", length(main_mods)))
