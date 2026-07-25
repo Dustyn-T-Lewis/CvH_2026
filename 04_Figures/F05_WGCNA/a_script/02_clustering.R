@@ -6,6 +6,7 @@ setwd(here::here())
 source("04_Figures/F05_WGCNA/a_script/style.R")
 source("04_Figures/F05_WGCNA/a_script/panels/module_card.R")
 source("04_Figures/F05_WGCNA/a_script/panels/construction.R")
+source("04_Figures/F05_WGCNA/a_script/supp/construction.R")
 source("04_Figures/shared/pathway_utils.R")
 source("04_Figures/shared/figure_supplement_helpers.R")
 pacman::p_load(readr, dplyr, tidyr, purrr, patchwork)
@@ -92,64 +93,11 @@ if (length(supp_mods)) {
   message(sprintf("F05 supplement card saved (%d modules)", length(supp_mods)))
 }
 
-# --- construction supplement ---
-w <- readRDS(file.path(DAT, "wgcna_network.rds"))
-sft_df <- readRDS(file.path(DAT, "wgcna", "sft_fitIndices.rds"))
-construction <- panel_scale_free(sft_df, w$chosen_power) +
-  panel_dendro(w$net) +
-  plot_annotation(
-    title = "WGCNA network construction",
-    subtitle = "Module preservation not computed: single-cohort network, no external validation set.",
-    theme = theme(plot.title = element_text(face = "bold", size = 13))
-  ) +
-  plot_layout(widths = c(1, 1.4))
-ggsave(file.path(SUPP_PNG, "SUPP_F05_construction.png"), construction,
-  width = 240, height = 110, units = "mm", dpi = 300, bg = "white"
-)
-ggsave(file.path(SUPP_PDF, "SUPP_F05_construction.pdf"), construction,
-  width = 240, height = 110, units = "mm", device = pdf_device
-)
-
-# --- phenotype-method comparison supplement ---
+# --- supplements ---
 cor_matched <- read_csv(file.path(DAT, "module_trait_cor_matched.csv"), show_col_types = FALSE)
 lmm_pheno <- read_csv(file.path(DAT, "module_trait_lmm.csv"), show_col_types = FALSE)
-short_trait <- function(x) {
-  recode(sub("^(pre_|post_)", "", x),
-    grip_lbs = "Grip", ALM_kg = "ALM",
-    sts_max_pwr = "STS pwr", LBM_kg = "LBM", chest_press_lbs = "Chest", leg_ext_lbs = "Leg ext",
-    age = "Age"
-  )
-}
-pheno_heat <- function(df, value_col, title, subtitle, lim) {
-  d <- df |>
-    filter(module != "grey") |>
-    mutate(
-      trait = short_trait(trait), value = .data[[value_col]],
-      sig = !is.na(padj) & padj < 0.05, lab = sprintf("%.2f", value)
-    )
-  ggplot(d, aes(trait, module, fill = value)) +
-    geom_tile(colour = "grey85", linewidth = 0.3) +
-    geom_tile(data = filter(d, sig), fill = NA, colour = "black", linewidth = 0.8) +
-    geom_text(aes(label = lab), size = 2.2, colour = if_else(abs(d$value) > lim * 0.6, "white", "grey15")) +
-    scale_fill_gradient2(low = "#1B7837", mid = "white", high = "#762A83", midpoint = 0, limits = c(-lim, lim), oob = scales::squish) +
-    labs(title = title, subtitle = subtitle, x = NULL, y = NULL, fill = value_col) +
-    FIG_THEME +
-    theme(axis.text.x = element_text(angle = 40, hjust = 1))
-}
-pheno_supp <- pheno_heat(cor_pheno, "r", "Baseline (primary)", "T1 only, pre_ outcomes, Pearson", 1) +
-  pheno_heat(cor_matched, "r", "Matched Pearson", "all samples, T1→pre_/T2→post_", 1) +
-  pheno_heat(lmm_pheno, "beta", "Matched LMM", "std β, (1|subject)", 1) +
-  plot_annotation(
-    title = "Module–phenotype association: primary vs sensitivity arms",
-    subtitle = "Boxes mark BH-FDR < 0.05.",
-    theme = theme(plot.title = element_text(face = "bold", size = 13))
-  )
-ggsave(file.path(SUPP_PNG, "SUPP_F05_phenotype_methods.png"), pheno_supp,
-  width = 280, height = 110, units = "mm", dpi = 300, bg = "white"
-)
-ggsave(file.path(SUPP_PDF, "SUPP_F05_phenotype_methods.pdf"), pheno_supp,
-  width = 280, height = 110, units = "mm", device = pdf_device
-)
+render_construction_supp(DAT, SUPP_PNG, SUPP_PDF, pdf_device)
+render_phenotype_supp(cor_pheno, cor_matched, lmm_pheno, SUPP_PNG, SUPP_PDF, pdf_device)
 
 # --- one supplementary workbook ---
 overview <- tibble::tribble(
