@@ -43,10 +43,12 @@ source(file.path(A, "panel_E_rrho2.R"))
 n_shared_E <- n_shared
 max_rev_E <- max(max_UD, max_DU)
 n_rev_E <- if (max_UD >= max_DU) n_UD else n_DU
+message("  self-rendered supplement: SUPP_F04_rrho2")
 
 source(file.path(A, "panel_C_pattern_heatmap.R"))
 n_total_C <- n_total
 n_pw_C <- n_pw
+message("  self-rendered supplement: SUPP_F04_pattern_heatmap")
 
 # Capture the quadrant-ORA composite (panel A) for the main figure.
 pA_comp <- composite
