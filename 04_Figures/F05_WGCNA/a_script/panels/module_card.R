@@ -270,7 +270,7 @@ ora_aligned <- function(ora_top5, modules) {
       outside = padj > 0.75
     ) |>
     arrange(module, lp) |>
-    mutate(row = factor(paste(module, name, sep = ""), levels = unique(paste(module, name, sep = ""))))
+    mutate(row = factor(paste(module, pathway, sep = "|"), levels = unique(paste(module, pathway, sep = "|"))))
   db_of <- stats::setNames(as.character(d$database), as.character(d$row))
   db_cols <- unname(DB_COLORS[db_of[levels(d$row)]])
 

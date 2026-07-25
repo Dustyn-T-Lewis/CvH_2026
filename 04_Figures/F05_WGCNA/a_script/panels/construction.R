@@ -4,7 +4,7 @@
 
 pacman::p_load(ggplot2, dplyr, WGCNA, ggplotify)
 
-panel_scale_free <- function(sft_df, chosen_power, rsq_cut = 0.87) {
+panel_scale_free <- function(sft_df, chosen_power, rsq_cut = 0.90) {
   d <- sft_df |>
     mutate(r2 = -sign(slope) * SFT.R.sq, chosen = Power == chosen_power)
   ggplot(d, aes(Power, r2)) +

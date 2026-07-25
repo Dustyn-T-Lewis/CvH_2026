@@ -3,9 +3,12 @@
 # Outputs: 04_Figures/F05_WGCNA/c_data/wgcna_network.rds (consolidated list)
 #          plus panel-ready rds/csv in c_data/ and c_data/wgcna/
 #
-# Parameters mirror YvO (Cahill 2018 / Langfelder & Horvath 2008): signed
-# network and TOM, minModuleSize 30, mergeCutHeight 0.25, soft power = first
-# power with signed R^2 > 0.87 (default 6 fallback). Module-level inference
+# Signed network and TOM, minModuleSize 30, mergeCutHeight 0.25 (Cahill 2018 /
+# Langfelder & Horvath 2008). Correlation is biweight midcorrelation
+# (maxPOutliers 0.05), robust to the outliers and heavy tails proteomics
+# abundances carry. Soft power = first power with signed R^2 > 0.90, which also
+# satisfies the WGCNA sample-size heuristic (>= 14 for a signed network at
+# 30-40 samples) and keeps mean connectivity low. Module-level inference
 # (eigengene contrasts, fry, NES, phenotype) lives in 01_module_stats.R.
 
 pacman::p_load(WGCNA, tidyverse)
@@ -59,16 +62,18 @@ if (!gsg$allOK) {
 
 cor <- WGCNA::cor
 
+RSQ_CUT <- 0.90
+
 powers <- 1:20
 sft <- pickSoftThreshold(datExpr,
-  powerVector = powers,
-  networkType = "signed", verbose = 2
+  powerVector = powers, networkType = "signed",
+  corFnc = bicor, corOptions = list(maxPOutliers = 0.05), verbose = 2
 )
 saveRDS(sft$fitIndices, file.path(DATA_DIR, "sft_fitIndices.rds"))
 
 r2_values <- -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq
-power_idx <- which(r2_values > 0.87)[1]
-soft_power <- if (!is.na(power_idx)) powers[power_idx] else 6L
+power_idx <- which(r2_values > RSQ_CUT)[1]
+soft_power <- if (!is.na(power_idx)) powers[power_idx] else 14L
 message(sprintf("Soft power: %d (R^2 = %.3f)", soft_power, r2_values[soft_power]))
 
 png(file.path(REPORT_DIR, "SUPP_soft_threshold.png"),
@@ -81,7 +86,7 @@ plot(sft$fitIndices$Power, r2_values,
   main = "Scale independence", type = "n"
 )
 text(sft$fitIndices$Power, r2_values, labels = powers, cex = 0.9, col = "red")
-abline(h = 0.85, col = "red", lty = 2)
+abline(h = RSQ_CUT, col = "red", lty = 2)
 plot(sft$fitIndices$Power, sft$fitIndices$mean.k.,
   xlab = "Soft Threshold (power)", ylab = "Mean Connectivity",
   main = "Mean connectivity", type = "n"
@@ -97,6 +102,8 @@ net <- blockwiseModules(
   power             = soft_power,
   networkType       = "signed",
   TOMType           = "signed",
+  corType           = "bicor",
+  maxPOutliers      = 0.05,
   minModuleSize     = 30,
   mergeCutHeight    = 0.25,
   numericLabels     = TRUE,
@@ -111,7 +118,7 @@ message(sprintf("Modules detected: %d (+ grey/unassigned)", n_modules))
 
 MEs <- moduleEigengenes(datExpr, colors = module_colors)$eigengenes
 MEs <- orderMEs(MEs)
-kME <- signedKME(datExpr, MEs)
+kME <- signedKME(datExpr, MEs, corFnc = "bicor", corOptions = "maxPOutliers = 0.05")
 
 module_df <- tibble(
   uniprot_id   = colnames(datExpr),
