@@ -47,38 +47,48 @@ loocv_auc <- function(labels, probs) {
 # second predictor pulls in a noise feature that the inner loop would otherwise reject,
 # and it costs real signal: on separable test data, k_range = 2:3 scores AUC 0.72 where
 # 1:3 scores 0.90.
-run_topk_loocv <- function(labels, x, k_range = 1:5) {
+run_topk_loocv <- function(labels, x, k_range = 1:5, group = NULL) {
   x <- as.matrix(x)
   n <- length(labels)
-  probs <- numeric(n)
-  selected <- vector("list", n)
-  best_k <- integer(n)
+  if (is.null(group)) group <- seq_len(n)
+  folds <- unique(group)
+  scores <- numeric(n)
+  selected <- vector("list", length(folds))
+  best_k <- integer(length(folds))
 
-  for (i in seq_len(n)) {
-    train_x <- x[-i, , drop = FALSE]
-    train_y <- labels[-i]
+  for (f in seq_along(folds)) {
+    test_idx <- which(group == folds[f])
+    train_idx <- which(group != folds[f])
+    train_x <- x[train_idx, , drop = FALSE]
+    train_y <- labels[train_idx]
+    train_g <- group[train_idx]
     ranked <- rank_features(train_x, train_y)
 
     deviance <- vapply(k_range, function(k) {
       top <- ranked[seq_len(min(k, length(ranked)))]
-      sum(vapply(seq_along(train_y), function(j) {
+      sum(vapply(unique(train_g), function(g) {
+        inner_test <- which(train_g == g)
+        inner_train <- which(train_g != g)
         p <- stats::plogis(fit_logistic(
-          train_y[-j], train_x[-j, top, drop = FALSE], train_x[j, top, drop = FALSE]
+          train_y[inner_train], train_x[inner_train, top, drop = FALSE],
+          train_x[inner_test, top, drop = FALSE]
         ))
-        p <- min(max(p, 1e-6), 1 - 1e-6)
-        -(train_y[j] * log(p) + (1 - train_y[j]) * log(1 - p))
+        p <- pmin(pmax(p, 1e-6), 1 - 1e-6)
+        sum(-(train_y[inner_test] * log(p) + (1 - train_y[inner_test]) * log(1 - p)))
       }, numeric(1)))
     }, numeric(1))
 
-    best_k[i] <- k_range[which.min(deviance)]
-    top <- ranked[seq_len(min(best_k[i], length(ranked)))]
-    selected[[i]] <- top
-    probs[i] <- fit_logistic(train_y, train_x[, top, drop = FALSE], x[i, top, drop = FALSE])
+    best_k[f] <- k_range[which.min(deviance)]
+    top <- ranked[seq_len(min(best_k[f], length(ranked)))]
+    selected[[f]] <- top
+    scores[test_idx] <- fit_logistic(
+      train_y, train_x[, top, drop = FALSE], x[test_idx, top, drop = FALSE]
+    )
   }
 
   list(
-    scores = probs,
-    probs = stats::plogis(probs),
+    scores = scores,
+    probs = stats::plogis(scores),
     feature_freq = table(factor(unlist(selected), levels = colnames(x))),
     selected = selected,
     best_k = best_k
@@ -88,14 +98,20 @@ run_topk_loocv <- function(labels, x, k_range = 1:5) {
 # Permutation variant: k is fixed at the complexity the observed run settled on, which
 # drops the inner loop and its factor-of-n cost. Selection still runs inside every fold,
 # so the null absorbs selection optimism.
-run_fast_loocv_auc <- function(labels, x, k_fixed) {
+run_fast_loocv_auc <- function(labels, x, k_fixed, group = NULL) {
   x <- as.matrix(x)
-  scores <- vapply(seq_along(labels), function(i) {
-    train_x <- x[-i, , drop = FALSE]
-    train_y <- labels[-i]
+  if (is.null(group)) group <- seq_along(labels)
+  scores <- numeric(length(labels))
+  for (g in unique(group)) {
+    test_idx <- which(group == g)
+    train_idx <- which(group != g)
+    train_x <- x[train_idx, , drop = FALSE]
+    train_y <- labels[train_idx]
     top <- rank_features(train_x, train_y)[seq_len(min(k_fixed, ncol(x)))]
-    fit_logistic(train_y, train_x[, top, drop = FALSE], x[i, top, drop = FALSE])
-  }, numeric(1))
+    scores[test_idx] <- fit_logistic(
+      train_y, train_x[, top, drop = FALSE], x[test_idx, top, drop = FALSE]
+    )
+  }
   loocv_auc(labels, scores)
 }
 
@@ -115,10 +131,10 @@ within_subject_shuffle <- function(subject) {
 # Phipson-Smyth (b+1)/(m+1), so the p-value floors at 1/(n_perm+1) rather than zero.
 # No direction folding here: model probabilities are already sign-anchored.
 perm_p_classifier <- function(labels, x, k_fixed, obs_auc, n_perm = 1000,
-                              shuffle = sample) {
+                              shuffle = sample, group = NULL) {
   nulls <- vapply(
     seq_len(n_perm),
-    function(i) run_fast_loocv_auc(shuffle(labels), x, k_fixed),
+    function(i) run_fast_loocv_auc(shuffle(labels), x, k_fixed, group = group),
     numeric(1)
   )
   (sum(nulls >= obs_auc) + 1) / (n_perm + 1)

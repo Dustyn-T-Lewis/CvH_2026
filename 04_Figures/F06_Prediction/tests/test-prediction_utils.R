@@ -55,6 +55,25 @@ test_that("in-fold selection never sees the held-out label", {
   expect_equal(base$selected[[3]], flipped$selected[[3]])
 })
 
+# A paired design leaks if only one of a subject's two samples is held out: the partner
+# sample stays in training and carries the subject's level. Grouped hold-out must strip
+# that advantage, so a subject-identity-only signal should score at chance.
+test_that("grouped hold-out removes the paired-partner leak", {
+  set.seed(7)
+  n_subj <- 12
+  subject <- rep(paste0("S", seq_len(n_subj)), each = 2)
+  y <- rep(c(0, 1), times = n_subj)
+  subject_level <- rep(rnorm(n_subj, sd = 3), each = 2)
+  x <- cbind(f1 = subject_level + rnorm(2 * n_subj, sd = 0.1))
+
+  ungrouped <- run_topk_loocv(y, x, k_range = 1)
+  grouped <- run_topk_loocv(y, x, k_range = 1, group = subject)
+
+  expect_lt(abs(loocv_auc(y, grouped$scores) - 0.5), 0.2)
+  expect_length(grouped$best_k, n_subj)
+  expect_length(ungrouped$best_k, 2 * n_subj)
+})
+
 test_that("within_subject_shuffle permutes only inside a subject", {
   subject <- rep(paste0("S", 1:5), each = 2)
   labels <- rep(c(0, 1), times = 5)
