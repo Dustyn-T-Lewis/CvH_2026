@@ -22,7 +22,7 @@ SUPP_PNG <- "04_Figures/F05_WGCNA/b_reports/supp/png"
 SUPP_PDF <- "04_Figures/F05_WGCNA/b_reports/supp/pdf"
 pdf_device <- get_pdf_device()
 
-REF_POWER <- 12L
+REF_POWER <- readRDS(file.path(DAT, "wgcna_network.rds"))$chosen_power
 REF_MIN_SIZE <- 30L
 REF_MERGE <- 0.25
 N_SUBSAMPLE <- 100L
@@ -150,6 +150,17 @@ null_res <- map_dfr(seq_len(N_NULL), function(i) {
 })
 write_csv(null_res, file.path(DAT, "validation_null.csv"))
 
+# 6. Borderline samples. Stage 01 drops a sample on >= 3/4 QC heuristics; these two
+# scored 2/4 and were retained, then flagged again here on network connectivity. Rather
+# than lower a pre-specified threshold after seeing this, rebuild without them and report
+# whether the modules depend on them.
+borderline <- sample_qc$sample_id[sample_qc$outlier]
+keep_rows <- which(!rownames(datExpr) %in% borderline)
+sens_colors <- build_net(datExpr[keep_rows, , drop = FALSE])
+outlier_sens <- match_modules(sens_colors, ref_colors) |>
+  mutate(dropped = paste(borderline, collapse = ", "), n_kept = length(keep_rows))
+write_csv(outlier_sens, file.path(DAT, "validation_outlier_sensitivity.csv"))
+
 cor <- stats::cor
 
 mod_sizes <- table(ref_colors)[ref_modules]
@@ -240,8 +251,10 @@ ggsave(file.path(SUPP_PDF, "SUPP_F05_network_validation.pdf"), validation_fig,
 )
 
 message(sprintf(
-  "validation: %d sample outliers | grid %d-%d modules | null median %d modules",
-  sum(sample_qc$outlier), min(grid_res$n_modules), max(grid_res$n_modules),
+  "validation @ power %d: %d borderline samples | grid %d-%d modules | null median %d modules",
+  REF_POWER, sum(sample_qc$outlier), min(grid_res$n_modules), max(grid_res$n_modules),
   stats::median(null_res$n_modules)
 ))
 print(as.data.frame(stability_summary))
+message("outlier sensitivity (rebuild without borderline samples):")
+print(as.data.frame(outlier_sens[, c("full", "train", "jaccard")]))

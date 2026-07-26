@@ -1,0 +1,6 @@
+full,train,jaccard,dropped,n_kept
+yellow,yellow,0.5437956204379562,"CR386_T1, CR7_T1",37
+turquoise,turquoise,0.7551581843191196,"CR386_T1, CR7_T1",37
+brown,brown,0.7947494033412887,"CR386_T1, CR7_T1",37
+green,red,0.8260869565217391,"CR386_T1, CR7_T1",37
+blue,blue,0.6365461847389559,"CR386_T1, CR7_T1",37

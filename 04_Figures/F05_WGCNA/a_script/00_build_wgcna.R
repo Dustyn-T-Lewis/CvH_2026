@@ -64,6 +64,20 @@ cor <- WGCNA::cor
 
 RSQ_CUT <- 0.90
 
+# WGCNA's published minimum soft power for a signed network, by sample count. At small n
+# the scale-free criterion alone settles too low, so the heuristic acts as a floor.
+signed_power_floor <- function(n) {
+  if (n < 20) {
+    18L
+  } else if (n < 30) {
+    16L
+  } else if (n < 40) {
+    14L
+  } else {
+    12L
+  }
+}
+
 powers <- 1:20
 sft <- pickSoftThreshold(datExpr,
   powerVector = powers, networkType = "signed",
@@ -73,8 +87,12 @@ saveRDS(sft$fitIndices, file.path(DATA_DIR, "sft_fitIndices.rds"))
 
 r2_values <- -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq
 power_idx <- which(r2_values > RSQ_CUT)[1]
-soft_power <- if (!is.na(power_idx)) powers[power_idx] else 14L
-message(sprintf("Soft power: %d (R^2 = %.3f)", soft_power, r2_values[soft_power]))
+r2_power <- if (!is.na(power_idx)) powers[power_idx] else NA_integer_
+soft_power <- max(r2_power, signed_power_floor(nrow(datExpr)), na.rm = TRUE)
+message(sprintf(
+  "Soft power: %d (R^2 criterion gave %s, signed-network floor for n=%d is %d)",
+  soft_power, r2_power, nrow(datExpr), signed_power_floor(nrow(datExpr))
+))
 
 png(file.path(REPORT_DIR, "SUPP_soft_threshold.png"),
   width = 3000, height = 1500, res = 300
