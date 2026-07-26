@@ -7,6 +7,7 @@ source("04_Figures/F05_WGCNA/a_script/style.R")
 source("04_Figures/F05_WGCNA/a_script/panels/module_card.R")
 source("04_Figures/F05_WGCNA/a_script/panels/construction.R")
 source("04_Figures/F05_WGCNA/a_script/supp/construction.R")
+source("04_Figures/F05_WGCNA/a_script/supp/supplement_arm.R")
 source("04_Figures/shared/pathway_utils.R")
 source("04_Figures/shared/figure_supplement_helpers.R")
 pacman::p_load(readr, dplyr, tidyr, purrr, patchwork)
@@ -98,6 +99,7 @@ cor_matched <- read_csv(file.path(DAT, "module_trait_cor_matched.csv"), show_col
 lmm_pheno <- read_csv(file.path(DAT, "module_trait_lmm.csv"), show_col_types = FALSE)
 render_construction_supp(DAT, SUPP_PNG, SUPP_PDF, pdf_device)
 render_phenotype_supp(cor_pheno, cor_matched, lmm_pheno, SUPP_PNG, SUPP_PDF, pdf_device)
+render_supplement_arm(DAT, SUPP_PNG, SUPP_PDF, pdf_device)
 
 # --- one supplementary workbook ---
 overview <- tibble::tribble(

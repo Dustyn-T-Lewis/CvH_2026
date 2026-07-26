@@ -122,6 +122,73 @@ module_genes <- lapply(
 nes <- run_module_fgsea(rank_wide, module_genes, names(crvh_contrasts))
 write_csv(nes, file.path(DAT, "module_fgsea_nes.csv"))
 
+# --- supplement arm: the CR-only 2x2, with creatine and placebo kept apart ---
+# The main card pools the two arms because only 6 subjects per arm are paired. This
+# block keeps them separate so the supplement can show what pooling hides.
+cr_levels <- intersect(c("CRE_T1", "CRE_T2", "PLA_T1", "PLA_T2"), gt_levels)
+cr_idx <- which(grp %in% cr_levels)
+grp_cr <- droplevels(factor(grp[cr_idx], levels = cr_levels))
+design_cr <- model.matrix(~ 0 + grp_cr)
+colnames(design_cr) <- levels(grp_cr)
+block_cr <- block[cr_idx]
+expr_cr <- expr[, cr_idx, drop = FALSE]
+
+supp_contrasts <- makeContrasts(
+  Baseline_Supplement = CRE_T1 - PLA_T1,
+  Training_CRE = CRE_T2 - CRE_T1,
+  Training_PLA = PLA_T2 - PLA_T1,
+  Supplement_Interaction = (CRE_T2 - CRE_T1) - (PLA_T2 - PLA_T1),
+  levels = design_cr
+)
+rho_cr <- max(duplicateCorrelation(expr_cr, design_cr, block = block_cr)$consensus, 0)
+settests_supp <- bind_rows(lapply(colnames(supp_contrasts), function(cn) {
+  fr <- fry(expr_cr, idx, design_cr,
+    contrast = supp_contrasts[, cn], block = block_cr, correlation = rho_cr
+  )
+  tibble(
+    module_color = rownames(fr), contrast = cn,
+    direction = fr$Direction, fry_p = fr$PValue, fry_fdr = fr$FDR
+  )
+}))
+write_csv(settests_supp, file.path(DAT, "module_set_tests_supp.csv"))
+
+nes_supp <- run_module_fgsea(
+  read_csv(here::here("03_DEP/a_non_imputed/c_data/combined_results_pi.csv"),
+    show_col_types = FALSE
+  ) |>
+    filter(!is.na(gene), gene != "", contrast %in% colnames(supp_contrasts)) |>
+    select(gene, contrast, t) |>
+    pivot_wider(
+      names_from = contrast, values_from = t,
+      names_prefix = "t_", values_fn = mean
+    ),
+  module_genes, colnames(supp_contrasts)
+)
+write_csv(nes_supp, file.path(DAT, "module_fgsea_nes_supp.csv"))
+
+# Five-cell eigengene means: healthy is shared by both arms, so each arm's line starts
+# from the same control point.
+traj_supp <- as.data.frame(MEs) |>
+  rownames_to_column("sample_id") |>
+  pivot_longer(-sample_id, names_to = "module", values_to = "eigengene") |>
+  left_join(select(meta, sample_id, group_time, supplement, cancer), by = "sample_id") |>
+  filter(module != "MEgrey") |>
+  mutate(
+    arm = if_else(cancer == "CTL", "Ctl", supplement),
+    stage = case_when(
+      cancer == "CTL" ~ "Ctl",
+      grepl("_T1$", group_time) ~ "pre",
+      TRUE ~ "post"
+    )
+  ) |>
+  group_by(module, arm, stage) |>
+  summarise(
+    mean_eig = mean(eigengene), se = sd(eigengene) / sqrt(dplyr::n()),
+    n = dplyr::n(), .groups = "drop"
+  ) |>
+  mutate(module_color = sub("^ME", "", module))
+write_csv(traj_supp, file.path(DAT, "trajectory_eigengenes_supp.csv"))
+
 # --- module-eigengene x clinical outcome association ---
 eig <- as.matrix(MEs)
 colnames(eig) <- sub("^ME", "", colnames(eig))
