@@ -89,16 +89,6 @@ theme_cvh <- function(base_size = 10, panel_width_mm = PANEL_MD) {
 
 FIG_THEME <- theme_cvh()
 
-# Panel letter baked into the title at a constant gap, so every panel reads
-# uniformly regardless of its y-axis width (steadier than a floating plot.tag).
-add_tag <- function(p, tag) {
-  cur <- p$labels$title
-  p + ggplot2::labs(
-    tag = NULL,
-    title = paste0(tag, "  ", if (is.null(cur)) "" else cur)
-  )
-}
-
 # ── Utility functions ──
 get_pdf_device <- function() {
   cairo_ok <- capabilities("cairo") && tryCatch(

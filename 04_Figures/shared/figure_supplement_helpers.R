@@ -76,11 +76,6 @@ build_workbook <- function(out_file, title, description, overview_df, sheet_spec
   cat(sprintf("  Saved: %s (%.0f KB)\n\n", out_file, file.size(out_file) / 1e3))
 }
 
-read_sheet_df <- function(xlsx, sheet) {
-  stopifnot("supplementary workbook missing" = file.exists(xlsx))
-  as.data.frame(readxl::read_excel(xlsx, sheet = sheet))
-}
-
 cleanup_after_workbook <- function(sheet_specs,
                                    extra_subdirs = character(),
                                    extra_files = character(),
