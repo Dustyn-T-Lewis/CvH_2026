@@ -32,29 +32,37 @@ build_workbook <- function(out_file, title, description, overview_df, sheet_spec
   writeData(wb, "Overview", title, startRow = 1, startCol = 1, colNames = FALSE)
   mergeCells(wb, "Overview", cols = 1:2, rows = 1)
   addStyle(wb, "Overview",
-           createStyle(fontSize = 14, textDecoration = "bold"),
-           rows = 1, cols = 1)
+    createStyle(fontSize = 14, textDecoration = "bold"),
+    rows = 1, cols = 1
+  )
 
   writeData(wb, "Overview", description, startRow = 2, startCol = 1, colNames = FALSE)
   mergeCells(wb, "Overview", cols = 1:2, rows = 2)
   addStyle(wb, "Overview",
-           createStyle(fontSize = 11, textDecoration = "italic",
-                       fontColour = "#555555",
-                       wrapText = TRUE, valign = "top"),
-           rows = 2, cols = 1)
+    createStyle(
+      fontSize = 11, textDecoration = "italic",
+      fontColour = "#555555",
+      wrapText = TRUE, valign = "top"
+    ),
+    rows = 2, cols = 1
+  )
   setRowHeights(wb, "Overview", rows = 2, heights = 40)
 
   writeData(wb, "Overview", overview_df, startRow = 4, startCol = 1, colNames = TRUE)
   addStyle(wb, "Overview",
-           createStyle(fontSize = 11, fontColour = "#FFFFFF",
-                       textDecoration = "bold", fgFill = "#2F4F4F",
-                       valign = "center"),
-           rows = 4, cols = 1:2, gridExpand = TRUE)
+    createStyle(
+      fontSize = 11, fontColour = "#FFFFFF",
+      textDecoration = "bold", fgFill = "#2F4F4F",
+      valign = "center"
+    ),
+    rows = 4, cols = 1:2, gridExpand = TRUE
+  )
   n_rows <- nrow(overview_df)
   if (n_rows > 0) {
     addStyle(wb, "Overview",
-             createStyle(wrapText = TRUE, valign = "top"),
-             rows = 5:(4 + n_rows), cols = 1:2, gridExpand = TRUE)
+      createStyle(wrapText = TRUE, valign = "top"),
+      rows = 5:(4 + n_rows), cols = 1:2, gridExpand = TRUE
+    )
   }
   setRowHeights(wb, "Overview", rows = 4, heights = 20)
   setColWidths(wb, "Overview", cols = 1:2, widths = c(32, 95))
@@ -81,41 +89,55 @@ read_matrix_sheet <- function(xlsx, sheet, row_col = "sample_id") {
 }
 
 matrix_to_df <- function(mat, row_col = "sample_id") {
-  df <- data.frame(rn = rownames(mat),
-                   as.data.frame(mat, check.names = FALSE),
-                   check.names = FALSE, stringsAsFactors = FALSE)
+  df <- data.frame(
+    rn = rownames(mat),
+    as.data.frame(mat, check.names = FALSE),
+    check.names = FALSE, stringsAsFactors = FALSE
+  )
   names(df)[1] <- row_col
   df
 }
 
 cleanup_after_workbook <- function(sheet_specs,
-                                    extra_subdirs = character(),
-                                    extra_files = character(),
-                                    preserve_patterns = c(
-                                      "^00_input/",
-                                      "^01_normalization/",
-                                      "^02_Imputation/",
-                                      "^03_DEP/",
-                                      "^04_Figures/shared/")) {
+                                   extra_subdirs = character(),
+                                   extra_files = character(),
+                                   preserve_patterns = c(
+                                     "^00_input/",
+                                     "^01_Filtering/",
+                                     "^02_Normalization/",
+                                     "^03_DEP/",
+                                     "^04_Figures/shared/"
+                                   )) {
   is_preserved <- function(path) {
+    path <- paste0(sub("/$", "", path), "/")
     any(vapply(preserve_patterns, function(p) grepl(p, path), logical(1)))
   }
-  removed <- 0L; preserved <- 0L
+  removed <- 0L
+  preserved <- 0L
   for (sp in sheet_specs) {
     if (!is.null(sp$path) && file.exists(sp$path)) {
       if (is_preserved(sp$path)) {
         preserved <- preserved + 1L
       } else {
-        unlink(sp$path); removed <- removed + 1L
+        unlink(sp$path)
+        removed <- removed + 1L
       }
     }
   }
   for (sd in extra_subdirs) {
-    if (dir.exists(sd)) { unlink(sd, recursive = TRUE); removed <- removed + 1L }
+    if (dir.exists(sd) && !is_preserved(sd)) {
+      unlink(sd, recursive = TRUE)
+      removed <- removed + 1L
+    }
   }
   for (f in extra_files) {
-    if (file.exists(f) && !is_preserved(f)) { unlink(f); removed <- removed + 1L }
+    if (file.exists(f) && !is_preserved(f)) {
+      unlink(f)
+      removed <- removed + 1L
+    }
   }
-  cat(sprintf("  cleanup: removed %d intermediate(s); preserved %d upstream/shared path(s)\n",
-              removed, preserved))
+  cat(sprintf(
+    "  cleanup: removed %d intermediate(s); preserved %d upstream/shared path(s)\n",
+    removed, preserved
+  ))
 }
