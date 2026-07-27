@@ -26,5 +26,6 @@ CvH_pipeline.html
 tutorials/*.html
 *_cache/
 
-# Process scratch — briefs, audits, checksums; deletable at project completion
-docs/
+# Process scratch is gone; the decision log stays tracked
+docs/*
+!docs/decisions.md
