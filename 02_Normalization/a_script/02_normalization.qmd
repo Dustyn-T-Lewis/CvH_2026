@@ -57,7 +57,7 @@ single native call:
 #| label: normalize
 before <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
 dal <- normalize_data(dal, norm_method = "cycloess")
-after <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
+after <- apply(as.matrix(dal$data), 2, median, na.rm = TRUE)
 
 rbind(before = summary(before), after = summary(after)) # spread collapses to a tight band
 dal$tags # new 'normalized' + 'norm_method' tags
