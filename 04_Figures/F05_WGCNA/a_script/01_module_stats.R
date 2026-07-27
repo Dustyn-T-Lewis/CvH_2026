@@ -22,8 +22,11 @@ module_df <- read_csv(file.path(DAT, "wgcna_module_assignments.csv"), show_col_t
 gt_levels <- intersect(
   c("CRE_T1", "CRE_T2", "PLA_T1", "PLA_T2", "H_T1"), unique(meta$group_time)
 )
+# Weights mirror 03_DEP exactly: the NES row of each tile is read from the DE table by
+# contrast name, so the fry row has to test the same thing or the tile compares two
+# different contrasts under one label.
 crvh_contrasts <- list(
-  CRvH_Baseline = c(CRE_T1 = 0.25, CRE_T2 = 0.25, PLA_T1 = 0.25, PLA_T2 = 0.25, H_T1 = -1),
+  CRvH_Baseline = c(CRE_T1 = 0.5, CRE_T2 = 0, PLA_T1 = 0.5, PLA_T2 = 0, H_T1 = -1),
   CR_Training = c(CRE_T1 = -0.5, CRE_T2 = 0.5, PLA_T1 = -0.5, PLA_T2 = 0.5, H_T1 = 0)
 )
 
