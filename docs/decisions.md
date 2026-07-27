@@ -82,3 +82,111 @@ every surviving output byte-identical.
 
 `docs/` was gitignored, so that deletion has no git backup and cannot be undone.
 `decisions.md` is now tracked to stop the same thing happening to this log.
+
+## 2026-07-27 — trim to the minimum that runs
+
+Scope: cut anything not feeding a figure or a documented result, collapse
+duplicated logic, strip AI tells. Roots unchanged from the dead-weight sweep.
+All 67 R files were reachable again, so nothing was cut wholesale; the dead
+weight was inside live files.
+
+### Result-changing, each verified against a before/after run
+
+| Change | Effect |
+|---|---|
+| `circularity_ladder.R` read `chosen_power` off the committed network instead of hardcoding `12` | Tier 2 refits now run at 14, the power the network was actually built at. Mean Jaccard 0.451 -> 0.455, failed folds 71 -> 66. Tier 1 byte-identical. `baseline/turquoise` unmoved (0.960 in-sample, 0.953 out-of-fold), so the one positive F06 result stands. `training/turquoise` crossed 1 -> 0 failed folds and so gained a stability box in F06 panel C. |
+| F01 jitter pinned with `position_jitter(seed = 42)` | F01 was nondeterministic: two runs of identical code produced different PNGs, because every panel jittered unseeded against the README's own `set.seed(42)` rule. Point positions are now fixed. All seven F01 audit CSVs stayed byte-identical, so no statistic moved. |
+| F01 panels D-G collapsed onto `pre_post_panel()` | Adopted panel D's behaviour per the brief: `max(abs(delta))` for the bracket position (robust when every delta is negative) and jitter alpha 0.35. E/F/G previously used `max(delta)` and alpha 0.5. 504 lines -> 196. Audit CSVs byte-identical. |
+| F02 contrast palettes derived from `CONTRAST_COLORS` | F02 was painting `CRvH_Baseline` in `#D6604D`, the same hex every other figure uses for `Training_PLA`, and `Resid` in `Baseline_Supplement`'s teal. `SUPP_PAL` derived identically, so only the main figure recoloured. No count changed. |
+
+### Cut
+
+- `reversal.R` 209 -> 58 lines. `compute_phi`, `directional_asymmetry`,
+  `reversal_permutation_null` and `reversal_rotation_test` had zero callers;
+  the analyses they implement were re-implemented inline in
+  `SUPP_directional_asymmetry.R`, `SUPP_melov_proportion.R`,
+  `panel_F_trajectory.R` and `panel_D_fry.R`. Only `load_reversal_table` is
+  live, via `f04_data.R:6`. The four inline copies are left alone: folding them
+  back onto one engine would change results and is a separate decision.
+- 35 top-level objects computed and never read, found by iterating "name occurs
+  once repo-wide" to a fixpoint over five rounds. Every one was a pure
+  expression, so no write or other side effect was lost.
+- `style.R:add_tag` (shadowed by a different local definition in
+  `90_stitch_F02.R`) and `figure_supplement_helpers.R:read_sheet_df`.
+- Four F05 artifacts whose contents already live inside the consolidated
+  `wgcna_network.rds`: the raw `net`, `sft_summary`, a byte-identical second
+  copy of `wgcna_module_assignments.csv`, plus `kME_all.rds` and
+  `key_modules.txt`. `c_data/wgcna/wgcna_lmm_contrast_audit.csv` had no writer
+  at all. `c_data/wgcna/sft_fitIndices.rds` stays: `supp/construction.R:7`
+  reads it.
+
+### Fixed
+
+- `SUPP_fry_leading.R` read `panel_D_fry/driving_proteins.csv` with an xlsx
+  fallback, but `90_stitch_F04.R:183` deletes that directory at `:180` and only
+  sources the script at `:211`. The CSV branch could never run. It now reads the
+  workbook directly, which is what always happened.
+- `reversal.R:4` named `reversal_inputs.R` and `00_build_fgsea_cache.R`, neither
+  of which exists, and claimed "no file IO" while defining `load_reversal_table`.
+- `overview_panels.R` and `01_enrich_volcanoes.R` read the fgsea cache with no
+  guard. `panel_B_nes_scatter.R:22` already had one; they now match it.
+
+### Conventions settled
+
+`# === SECTION ===` was recorded as the house header form but appeared **zero**
+times in the repo. What existed was 160 banner separators in four other forms
+(`# --- x ---` x43, `# ── x ──` x81, `# -- x ----` x15, `# ═══` x12). All 160 are
+gone, rewritten to plain one-line comments or deleted where they carried no
+words. Treat a plain `# label` as the house form; there is no rule-decorated
+variant any more.
+
+23 ceremonial `message("...done")` / `cat("...done\n")` calls removed. One
+terminal message per top-level driver stays, as does every message carrying a
+count, p-value or dimension.
+
+### Gene dedup divergence — documented, deliberately not unified
+
+The same operation, collapsing multiple rows per gene, is done five different
+ways:
+
+| Rule | Site |
+|---|---|
+| `slice_max(abs(t))` | `build_fgsea_cache.R:30` |
+| `pivot_wider(values_fn = mean)` | `01_module_stats.R:115`, `:160` |
+| `tapply(mean)` | `wgcna_stats.R:15` |
+| `slice_min(pi_score)` | `01_enrich_volcanoes.R:44` |
+| bare `distinct(gene, .keep_all = TRUE)` | `panel_E_rrho2.R:23`, `panel_G_resid_volcano.R:50` |
+
+`slice_max(abs(t))` is the most defensible and `distinct()` the least, but
+switching any caller changes that figure's numbers. Left as-is on purpose;
+settle it as a statistical question, not a refactor.
+
+### Reversal design note, moved here from `reversal.R`
+
+Shared-baseline circularity: D and T share the CR_pre samples, so a structural
+negative `cor(D, T)` is mathematically guaranteed (Smyth & Altman 2013, PMID
+23705896). Every directional claim is therefore tested against a protein-label
+permutation null asking whether the disease-DEP set reverses *more* than random
+proteins under the same shared-baseline structure, not merely whether reversal
+exceeds zero. fry (rotation, within the limma model) and RRHO2 (rank-based)
+corroborate from model-aware and non-parametric frameworks.
+
+Method lineage: Melov 2007 (PMID 17520024, proportion + permutation), Robinson
+2017 (PMID 28273480, logFC correlation), Wu & Smyth 2010/2012 (PMID 20610611 /
+22638577, ROAST/CAMERA), Cahill 2018 (RRHO2), Smyth & Altman 2013 (PMID
+23705896, shared baseline).
+
+### Still duplicated, not yet collapsed
+
+Measured, left for a follow-up because each changes many call sites at once:
+
+- The PNG+PDF `ggsave` pair, 88 calls across 44 sites. Flags are inconsistent:
+  16 of 44 PNG calls set `bg = "white"`, 28 do not.
+- The F04 panel prologue (`setwd` + `source` + path constants + `dir.create` +
+  `get_pdf_device`), 16 files, ~165 lines. 78 `dir.create` calls repo-wide.
+- `clear_dir` defined four times identically across stages 01-03, which have no
+  shared file to hold it.
+- `CONSOLIDATED_PATHWAY_ORDER` / `CONSOLIDATED_COLORS` duplicated between
+  `pathway_utils.R:316` and `go_slim_categories.R:42`, the latter behind an
+  `if (!exists(...))` load-order guard.
+- `compute_cv` (twice), `boot_median_ci` (twice, byte-identical).

@@ -101,11 +101,12 @@ Rscript 04_Figures/F06_Prediction/a_script/00_run_F06.R          # needs F04 and
 `04_Figures/F05_WGCNA/a_script/supp/network_validation.R` is a long parameter
 sweep. Run it on demand, not from the driver.
 
-Two test suites cover the shared statistics helpers:
+Three test suites cover the shared statistics helpers (59 tests):
 
 ```sh
 Rscript -e "testthat::test_file('04_Figures/F05_WGCNA/tests/test-wgcna_stats.R')"
 Rscript -e "testthat::test_file('04_Figures/F06_Prediction/tests/test-prediction_utils.R')"
+Rscript -e "testthat::test_file('04_Figures/shared/tests/test-stats.R')"
 ```
 
 `docs/decisions.md` records the choices behind the pipeline and why they were
@@ -114,7 +115,13 @@ made. Read it before changing anything statistical.
 ## Rules that matter
 
 Paths resolve from the project root; figure scripts anchor with
-`setwd(here::here())`. Anything stochastic uses `set.seed(42)`.
+`setwd(here::here())`. Anything stochastic uses `set.seed(42)`, and that includes
+plot jitter — F01 pins it with `position_jitter(seed = 42)` so the panels render
+byte-identically twice in a row.
+
+Every figure writes to `b_reports/{main,supp}/{pdf,png}/`, per-panel output one
+level down in `panels/`. Style lives in `shared/style.R`; the statistics the
+panels share live in `shared/stats.R`, which is what the third test suite covers.
 
 The primary DEP uses the non-imputed matrix. Imputation feeds only the
 concordance check, PCA, and WGCNA.
