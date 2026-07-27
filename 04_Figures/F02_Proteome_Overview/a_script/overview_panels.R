@@ -7,6 +7,7 @@ pacman::p_load(dplyr, tidyr, ggplot2, eulerr, ggplotify, patchwork, vegan)
 DEP_CSV <- "03_DEP/a_non_imputed/c_data/combined_results_pi.csv"
 FGSEA_CSV <- "04_Figures/shared/fgsea_CRvH.csv"
 IMP_RDS <- "02_Normalization/imputation/c_data/DAList_imputed_missforest.rds"
+stopifnot("fGSEA cache missing" = file.exists(FGSEA_CSV))
 
 MAIN_CTR <- c(CRvH_Baseline = "CR vs H", CR_Training = "Training", Resid = "Residual")
 SUPP_CTR <- c(

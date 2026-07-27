@@ -29,11 +29,14 @@ contrasts <- tibble::tribble(
   "Resid", "Residual", "residual", "CR post − Healthy (residual)"
 )
 
+FGSEA_CSV <- "04_Figures/shared/fgsea_CRvH.csv"
+stopifnot("fGSEA cache missing" = file.exists(FGSEA_CSV))
+
 dep <- read_csv(
   "03_DEP/a_non_imputed/c_data/combined_results_pi.csv",
   show_col_types = FALSE
 )
-fgsea_all <- read_csv("04_Figures/shared/fgsea_CRvH.csv", show_col_types = FALSE) |>
+fgsea_all <- read_csv(FGSEA_CSV, show_col_types = FALSE) |>
   filter(contrast %in% contrasts$ctr)
 
 # Per contrast: a gene-level volcano (pi-score = significance, one point per
