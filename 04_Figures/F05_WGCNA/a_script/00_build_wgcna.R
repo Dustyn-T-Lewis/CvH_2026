@@ -1,7 +1,7 @@
 # F05 stage 00: build the signed co-abundance network from the imputed DAList.
 # Inputs:  02_Normalization/imputation/c_data/DAList_imputed_missforest.rds
 # Outputs: 04_Figures/F05_WGCNA/c_data/wgcna_network.rds (consolidated list)
-#          plus panel-ready rds/csv in c_data/ and c_data/wgcna/
+#          plus panel-ready rds/csv in c_data/
 #
 # Signed network and TOM, minModuleSize 30, mergeCutHeight 0.25 (Cahill 2018 /
 # Langfelder & Horvath 2008). Correlation is biweight midcorrelation
@@ -169,13 +169,9 @@ sft_summary <- tibble(
   n_samples         = nrow(datExpr)
 )
 
-saveRDS(net, file.path(DATA_DIR, "wgcna_network.rds"))
-write_csv(sft_summary, file.path(DATA_DIR, "wgcna_sft_summary.csv"))
-write_csv(module_df, file.path(DATA_DIR, "wgcna_module_assignments.csv"))
 
 imp_mat <- t(datExpr)
 saveRDS(MEs, file.path(PANEL_DIR, "MEs.rds"))
-saveRDS(kME, file.path(PANEL_DIR, "kME_all.rds"))
 saveRDS(datExpr, file.path(PANEL_DIR, "datExpr.rds"))
 saveRDS(imp_mat, file.path(PANEL_DIR, "imp_mat.rds"))
 saveRDS(module_colors, file.path(PANEL_DIR, "module_colors.rds"))
@@ -202,8 +198,6 @@ traj_summary <- as.data.frame(MEs) |>
   mutate(module_color = sub("^ME", "", module))
 write_csv(traj_summary, file.path(PANEL_DIR, "trajectory_eigengenes.csv"))
 
-key_modules <- head(mod_bio_labels$module_color, 5)
-writeLines(key_modules, file.path(PANEL_DIR, "key_modules.txt"))
 
 # Consolidated network object mirroring MITO's wgcna_network.rds list.
 w <- list(
