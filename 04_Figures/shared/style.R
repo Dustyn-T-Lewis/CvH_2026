@@ -46,12 +46,9 @@ ORA_DB_COLORS <- c(
 
 # ── Sizing ──
 PANEL_MD <- 180
-BASE_PATHWAY <- 4.0
 BASE_GENE <- 3.2
 BASE_STAT <- 3.5
-BASE_QUADRANT <- 4.0
 BASE_COUNT <- 3.5
-BASE_TAG <- 18
 
 scale_text <- function(base_size, panel_width_mm, ref_width = PANEL_MD) {
   base_size * sqrt(panel_width_mm / ref_width)
@@ -131,28 +128,9 @@ fmt_p <- function(p) {
   )
 }
 
-sig_stars <- function(padj) {
-  ifelse(padj < 0.001, "***",
-    ifelse(padj < 0.01, "**",
-      ifelse(padj < 0.05, "*", "ns")
-    )
-  )
-}
 
-reorder_within <- function(x, by, within, fun = mean, sep = "___") {
-  new_x <- paste(x, within, sep = sep)
-  stats::reorder(new_x, by, FUN = fun)
-}
 
-scale_y_reordered <- function(..., sep = "___") {
-  reg <- paste0(sep, ".+$")
-  ggplot2::scale_y_discrete(labels = function(x) gsub(reg, "", x), ...)
-}
 
-darken_color <- function(col, factor = 0.7) {
-  r <- grDevices::col2rgb(col)
-  grDevices::rgb(r[1] * factor, r[2] * factor, r[3] * factor, maxColorValue = 255)
-}
 
 fisher_z_ci <- function(r, n, level = 0.95) {
   z <- atanh(r)
@@ -249,12 +227,6 @@ SIG_LABEL_TEXT_F4 <- c(
   "NS"                = "white"
 )
 
-ORA_QUAD_COLORS_F4 <- c(
-  "Reversed (Cancer Up)"   = "#64B5F6",
-  "Reversed (Cancer Down)" = "#E57373",
-  "Exacerbated Up"         = "#FFB74D",
-  "Exacerbated Down"       = "#81C784"
-)
 
 # ── Contrast palette (all 6 contrasts, both models) ──
 CONTRAST_COLORS <- c(
@@ -268,18 +240,7 @@ CONTRAST_COLORS <- c(
 )
 
 # ── Contrast labels ──
-CTR_SHORT <- c(
-  CRvH_Baseline          = "CR vs H",
-  CR_Training            = "Tr.(CR)",
-  Resid                  = "Residual",
-  Baseline_Supplement    = "BL(CRE\u2013PLA)",
-  Training_CRE           = "Tr.(CRE)",
-  Training_PLA           = "Tr.(PLA)",
-  Supplement_Interaction = "CRE\u2013PLA"
-)
 
-CTR_FACET <- CTR_SHORT
-CTR_AXIS <- CTR_SHORT
 
 # ── PCA palette (5 groups, F01) ──
 PCA_COLORS <- c(
@@ -295,39 +256,13 @@ PCA_SHAPES <- c(
 )
 
 # ── Supplement group labels (F01) ──
-SUPP_LABELS <- c(
-  CRE = "Creatine", PLA = "Placebo", H = "Healthy",
-  CR = "Cancer Recovery"
-)
 
 # ── F04 Reversal pattern colors (Cancer Recovery) ──
-PATTERN_COLS_F4 <- c(
-  "Reversed"           = "#2563EB",
-  "Partially Reversed" = "#64B5F6",
-  "Persistent"         = "#FFB74D",
-  "Exacerbated"        = "#DC2626"
-)
 
-PATTERN_ORDER_F4 <- c(
-  "Reversed", "Partially Reversed",
-  "Persistent", "Exacerbated"
-)
 
 # ── F05 model-specific contrast groupings ──
-ALL_CONTRASTS_CRVH <- c("CRvH_Baseline", "CR_Training", "Resid")
-ALL_CONTRASTS_CR <- c(
-  "Baseline_Supplement", "Training_CRE",
-  "Training_PLA", "Supplement_Interaction"
-)
-ALL_CONTRASTS <- c(ALL_CONTRASTS_CRVH, ALL_CONTRASTS_CR)
 
 # ── F04 CRvH concordance quadrant colors ──
-ORA_QUAD_COLORS_F4_CONC <- c(
-  "Concordant Up" = "#E57373",
-  "Concordant Down" = "#64B5F6",
-  "Discordant (Cancer Up / Training Down)" = "#FFB74D",
-  "Discordant (Cancer Down / Training Up)" = "#81C784"
-)
 
 # ── F05 cancer-direction colors ──
 CANCER_DIR_COLORS <- c(
