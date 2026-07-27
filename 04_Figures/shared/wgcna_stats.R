@@ -1,7 +1,10 @@
 # Module-level statistics for F05_WGCNA: fGSEA NES with modules as gene sets,
 # and module-eigengene associations with clinical outcomes.
 
-pacman::p_load(fgsea, dplyr, tibble, tidyr, purrr, WGCNA, lme4)
+# WGCNA is called namespace-qualified below and deliberately not attached: it exports its
+# own cor(), which returns a 1x1 matrix instead of a scalar and breaks any bare cor() in a
+# script sourced after this one.
+pacman::p_load(fgsea, dplyr, tibble, tidyr, purrr, lme4)
 
 run_module_fgsea <- function(rank_wide, module_genes, contrasts,
                              min_size = 10, max_size = 5000, eps = 1e-10) {

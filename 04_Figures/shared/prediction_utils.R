@@ -6,7 +6,7 @@
 # n = 25 a penalized or ensemble learner would fit noise, and its tuning would need a
 # third nesting level to stay honest.
 
-pacman::p_load(pROC, dplyr, tibble, WGCNA)
+pacman::p_load(pROC, dplyr, tibble)
 
 # Returns the linear predictor, not the fitted probability. Small samples with a strong
 # signal are often perfectly separable, which sends the coefficients to +/-Inf and
