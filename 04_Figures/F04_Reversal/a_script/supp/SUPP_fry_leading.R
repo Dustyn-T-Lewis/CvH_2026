@@ -15,19 +15,11 @@ dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-# Load driving proteins (CSV with xlsx fallback)
-csv_path <- "04_Figures/F04_Reversal/c_data/panel_D_fry/driving_proteins.csv"
+# The workbook, not panel_D_fry/driving_proteins.csv: 90_stitch_F04.R sources this
+# script after cleanup_after_workbook() has already deleted that c_data subdir.
 xlsx_path <- "04_Figures/F04_Reversal/c_data/F04_supplementary.xlsx"
-
-if (file.exists(csv_path)) {
-  drivers <- read_csv(csv_path, show_col_types = FALSE)
-  message("Read driving proteins from CSV")
-} else if (file.exists(xlsx_path)) {
-  drivers <- read.xlsx(xlsx_path, sheet = "panel_C_fry_driving")
-  message("Read driving proteins from xlsx fallback")
-} else {
-  stop("Cannot find driving proteins at CSV or xlsx path")
-}
+stopifnot("F04 supplementary workbook missing" = file.exists(xlsx_path))
+drivers <- read.xlsx(xlsx_path, sheet = "panel_C_fry_driving")
 
 # Load DEP results for t-statistics
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
