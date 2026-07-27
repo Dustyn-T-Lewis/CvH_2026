@@ -72,6 +72,7 @@ runs <- imap(methods, function(rds, m) {
       mutate(
         pi_score = P.Value^abs(logFC),
         sig_pi = case_when(
+          is.na(pi_score) ~ NA_integer_,
           pi_score < 0.05 & logFC > 0 ~ 1L,
           pi_score < 0.05 & logFC < 0 ~ -1L, TRUE ~ 0L
         ),
