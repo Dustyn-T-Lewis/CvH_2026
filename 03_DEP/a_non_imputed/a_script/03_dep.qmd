@@ -42,7 +42,7 @@ primary hand-off:
 pacman::p_load(proteoDA)
 dal <- readRDS(here("02_Normalization", "c_data", "DAList_normalized.rds"))
 dim(dal$data)
-table(dal$metadata$group_time)            # three groups, 39 samples
+table(dal$metadata$group_time) # three groups, 39 samples
 ```
 
 # Step 1 — describe the design {#sec-design}
@@ -67,9 +67,11 @@ Each contrast is a name and a difference of group means:
 
 ```{r}
 #| label: add-contrasts
-CONTRASTS <- c("CRvH_Baseline = CR_pre - H_pre",     # D: disease deviation from healthy
-               "CR_Training   = CR_post - CR_pre",   # T: effect of training
-               "Resid         = CR_post - H_pre")    # R: what remains after training (R = D + T)
+CONTRASTS <- c(
+  "CRvH_Baseline = CR_pre - H_pre", # D: disease deviation from healthy
+  "CR_Training   = CR_post - CR_pre", # T: effect of training
+  "Resid         = CR_post - H_pre"
+) # R: what remains after training (R = D + T)
 dal <- add_contrasts(dal, contrasts_vector = CONTRASTS)
 dal$contrasts
 ```
@@ -117,7 +119,7 @@ and applies robust empirical-Bayes moderation:
 ```{r}
 #| label: fit
 dal <- fit_limma_model(dal)
-dal$eBayes_fit$correlation     # consensus within-subject correlation
+dal$eBayes_fit$correlation # consensus within-subject correlation
 ```
 
 That one consensus correlation lets a single model respect the paired design
@@ -145,11 +147,15 @@ lot. Each protein is tagged `+1` (up), `−1` (down), or `0` at Π < 0.05:
 #| label: pi
 pacman::p_load(purrr, tibble, dplyr)
 res <- imap(dal$results, \(r, cn) as_tibble(r, rownames = "uniprot_id") |>
-  mutate(contrast = cn,
-         pi_score = P.Value ^ abs(logFC),
-         sig_pi = case_when(pi_score < 0.05 & logFC > 0 ~ 1L,
-                            pi_score < 0.05 & logFC < 0 ~ -1L, TRUE ~ 0L)))
-res$CRvH_Baseline |> dplyr::count(sig_pi)   # disease axis: up (+1) / down (-1) / not-sig (0)
+  mutate(
+    contrast = cn,
+    pi_score = P.Value^abs(logFC),
+    sig_pi = case_when(
+      pi_score < 0.05 & logFC > 0 ~ 1L,
+      pi_score < 0.05 & logFC < 0 ~ -1L, TRUE ~ 0L
+    )
+  ))
+res$CRvH_Baseline |> dplyr::count(sig_pi) # disease axis: up (+1) / down (-1) / not-sig (0)
 ```
 
 # Headline numbers {#sec-results}
@@ -160,9 +166,11 @@ Summary across the three contrasts, computed from the live fit:
 #| label: summary
 bind_rows(res) |>
   group_by(contrast) |>
-  summarise(n = n(),
-            FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
-            Pi_0.05  = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop")
+  summarise(
+    n = n(),
+    FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
+    Pi_0.05 = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop"
+  )
 ```
 
 The disease axis has hundreds of hits; `CR_Training` has **zero** at FDR —
@@ -177,10 +185,14 @@ MD / p-value-histogram plots to `b_reports`:
 ```{r}
 #| label: writers
 #| eval: false
-write_limma_tables(dal, output_dir = here("03_DEP", "a_non_imputed", "c_data"),
-                   annot_cols = c("uniprot_id", "gene", "protein", "description"), overwrite = TRUE)
-write_limma_plots(dal, grouping_column = "group_time",
-                  output_dir = here("03_DEP", "a_non_imputed", "b_reports"), overwrite = TRUE)
+write_limma_tables(dal,
+  output_dir = here("03_DEP", "a_non_imputed", "c_data"),
+  annot_cols = c("uniprot_id", "gene", "protein", "description"), overwrite = TRUE
+)
+write_limma_plots(dal,
+  grouping_column = "group_time",
+  output_dir = here("03_DEP", "a_non_imputed", "b_reports"), overwrite = TRUE
+)
 ```
 
 The live summary matches the committed `combined_results_pi.csv`:
@@ -189,10 +201,13 @@ The live summary matches the committed `combined_results_pi.csv`:
 #| label: verify
 pacman::p_load(readr)
 read_csv(here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"),
-         show_col_types = FALSE) |>
+  show_col_types = FALSE
+) |>
   group_by(contrast) |>
-  summarise(n = n(), FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
-            Pi_0.05 = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop")
+  summarise(
+    n = n(), FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
+    Pi_0.05 = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop"
+  )
 ```
 
 # Did imputation matter? {#sec-concordance}
@@ -202,8 +217,9 @@ the fold changes against the non-imputed answer:
 
 ```{r}
 #| label: concordance
-read_csv(here("03_DEP", "b_imputed", "c_data", "logFC_vs_nonimputed.csv"),
-         show_col_types = FALSE) |> as.data.frame()
+read_csv(here("03_DEP", "b_imputed", "logFC_vs_nonimputed.csv"),
+  show_col_types = FALSE
+) |> as.data.frame()
 ```
 
 The strong contrasts agree almost perfectly (ρ ≈ 0.9+); only the weak training
