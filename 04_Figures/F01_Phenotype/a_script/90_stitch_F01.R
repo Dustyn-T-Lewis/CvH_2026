@@ -10,7 +10,10 @@ source(file.path(A, "panel_A.R"))
 source(file.path(A, "panel_B.R"))
 source(file.path(A, "panel_C.R"))
 
-RPT <- "04_Figures/F01_Phenotype/b_reports"
+RPT <- "04_Figures/F01_Phenotype/b_reports/main"
+for (sub in c("pdf", "png")) {
+  dir.create(file.path(RPT, sub), recursive = TRUE, showWarnings = FALSE)
+}
 pdf_device <- get_pdf_device()
 
 composite <- (pA | (pB / pC)) +
@@ -18,11 +21,11 @@ composite <- (pA | (pB / pC)) +
 
 COMP_W <- 260
 COMP_H <- 180
-ggsave(file.path(RPT, "F01_phenotype_MAIN.pdf"), composite,
+ggsave(file.path(RPT, "pdf/F01_phenotype_MAIN.pdf"), composite,
   width = COMP_W, height = COMP_H, units = "mm",
   device = pdf_device, limitsize = FALSE
 )
-ggsave(file.path(RPT, "F01_phenotype_MAIN.png"), composite,
+ggsave(file.path(RPT, "png/F01_phenotype_MAIN.png"), composite,
   width = COMP_W, height = COMP_H, units = "mm", dpi = 300, limitsize = FALSE
 )
 message("F01 composite saved (live-grob)")

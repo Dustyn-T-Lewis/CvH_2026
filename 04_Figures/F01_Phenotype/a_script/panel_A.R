@@ -5,7 +5,10 @@ source("04_Figures/shared/style.R")
 pacman::p_load(dplyr, ggsignif)
 
 PW <- 90; PH <- 100
-RPT <- "04_Figures/F01_Phenotype/b_reports"
+RPT <- "04_Figures/F01_Phenotype/b_reports/main"
+for (sub in c("pdf/panels", "png/panels")) {
+  dir.create(file.path(RPT, sub), recursive = TRUE, showWarnings = FALSE)
+}
 DAT <- "04_Figures/F01_Phenotype/c_data"
 
 meta <- read.csv("00_input/CvH_meta.csv", stringsAsFactors = FALSE) |>
@@ -70,7 +73,7 @@ pA <- ggplot(subj, aes(x = group, y = age, fill = group)) +
                     plot.subtitle = element_text(size = 8, color = "grey30",
                                                 face = "bold.italic"))
 
-ggsave(file.path(RPT, "panel_A_age_MAIN.pdf"), pA,
+ggsave(file.path(RPT, "pdf/panels/panel_A_age_MAIN.pdf"), pA,
        width = PW, height = PH, units = "mm", device = get_pdf_device())
-ggsave(file.path(RPT, "panel_A_age_MAIN.png"), pA,
+ggsave(file.path(RPT, "png/panels/panel_A_age_MAIN.png"), pA,
        width = PW, height = PH, units = "mm", dpi = 300)

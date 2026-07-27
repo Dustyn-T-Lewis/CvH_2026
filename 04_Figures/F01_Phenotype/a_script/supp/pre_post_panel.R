@@ -10,6 +10,9 @@ pacman::p_load(dplyr, tidyr, patchwork, ggsignif, rstatix)
 PW <- 170
 PH <- 80
 RPT <- "04_Figures/F01_Phenotype/b_reports/supp"
+for (sub in c("pdf/panels", "png/panels")) {
+  dir.create(file.path(RPT, sub), recursive = TRUE, showWarnings = FALSE)
+}
 DAT <- "04_Figures/F01_Phenotype/c_data/supp"
 
 pre_post_panel <- function(pre_col, post_col, title, y_lab, tag, stem) {
@@ -154,10 +157,10 @@ pre_post_panel <- function(pre_col, post_col, title, y_lab, tag, stem) {
 
   panel <- (left | right) + plot_layout(widths = c(0.65, 0.35))
 
-  ggsave(file.path(RPT, paste0(stem, "_SUPP.pdf")), panel,
+  ggsave(file.path(RPT, "pdf/panels", paste0(stem, "_SUPP.pdf")), panel,
     width = PW, height = PH, units = "mm", device = get_pdf_device()
   )
-  ggsave(file.path(RPT, paste0(stem, "_SUPP.png")), panel,
+  ggsave(file.path(RPT, "png/panels", paste0(stem, "_SUPP.png")), panel,
     width = PW, height = PH, units = "mm", dpi = 300
   )
   panel

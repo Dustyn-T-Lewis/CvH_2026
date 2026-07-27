@@ -5,7 +5,10 @@ source("04_Figures/shared/style.R")
 pacman::p_load(dplyr, tidyr, patchwork, ggsignif, rstatix)
 
 PW <- 170; PH <- 80
-RPT <- "04_Figures/F01_Phenotype/b_reports"
+RPT <- "04_Figures/F01_Phenotype/b_reports/main"
+for (sub in c("pdf/panels", "png/panels")) {
+  dir.create(file.path(RPT, sub), recursive = TRUE, showWarnings = FALSE)
+}
 DAT <- "04_Figures/F01_Phenotype/c_data"
 
 meta <- read.csv("00_input/CvH_meta.csv", stringsAsFactors = FALSE) |>
@@ -189,7 +192,7 @@ pB_right <- ggplot(cr_subj, aes(x = supp, y = delta_alm, fill = supp)) +
 
 pB <- (pB_left | pB_right) + plot_layout(widths = c(0.70, 0.30))
 
-ggsave(file.path(RPT, "panel_B_alm_MAIN.pdf"), pB,
+ggsave(file.path(RPT, "pdf/panels/panel_B_alm_MAIN.pdf"), pB,
        width = PW, height = PH, units = "mm", device = get_pdf_device())
-ggsave(file.path(RPT, "panel_B_alm_MAIN.png"), pB,
+ggsave(file.path(RPT, "png/panels/panel_B_alm_MAIN.png"), pB,
        width = PW, height = PH, units = "mm", dpi = 300)
