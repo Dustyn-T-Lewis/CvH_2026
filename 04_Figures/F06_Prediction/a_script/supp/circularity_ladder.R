@@ -16,7 +16,6 @@ source("04_Figures/shared/prediction_utils.R")
 DAT <- "04_Figures/F06_Prediction/c_data"
 F05 <- "04_Figures/F05_WGCNA/c_data"
 JACCARD_FLOOR <- 0.4
-SOFT_POWER <- 12L
 set.seed(42)
 
 bundle <- readRDS(file.path(DAT, "feature_bundle.rds"))
@@ -25,8 +24,9 @@ module_colors <- readRDS(file.path(F05, "module_colors.rds"))
 names(module_colors) <- colnames(datExpr)
 modules <- setdiff(unique(module_colors), "grey")
 
-summary_in <- read_csv(file.path(DAT, "classifier_summary.csv"), show_col_types = FALSE) |>
-  filter(space == "module")
+# Read the power off the committed network rather than restating it, so a Tier-2
+# refit cannot drift from the network it is supposed to be testing.
+SOFT_POWER <- readRDS(file.path(F05, "wgcna_network.rds"))$chosen_power
 
 tier1 <- map_dfr(names(bundle$outcomes), function(outcome_name) {
   out <- bundle$outcomes[[outcome_name]]
