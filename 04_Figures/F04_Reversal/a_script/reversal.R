@@ -1,10 +1,9 @@
 # reversal.R  --  rejuvenation / signature-reversal engine for CvH.
 #
-# Pure analytical functions (no plotting, no file IO) consumed by the 04_Figures
-# Reversal panels (via reversal_inputs.R + 00_build_fgsea_cache.R). Quantifies
-# whether the training response (T = CR_post - CR_pre) reverses the disease
-# deviation (D = CR_pre - H_pre), with a residual axis (R = CR_post - H_pre = D + T)
-# tracking what remains.
+# Analytical functions (no plotting) sourced by f04_data.R, which assembles the
+# inputs every F04 panel reads. Quantifies whether the training response
+# (T = CR_post - CR_pre) reverses the disease deviation (D = CR_pre - H_pre),
+# with a residual axis (R = CR_post - H_pre = D + T) tracking what remains.
 #
 # Design note (shared-baseline circularity): D and T share the CR_pre samples,
 # so a structural negative cor(D, T) is mathematically guaranteed (Smyth & Altman
