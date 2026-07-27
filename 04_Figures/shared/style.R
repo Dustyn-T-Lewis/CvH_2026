@@ -126,15 +126,6 @@ fmt_p <- function(p) {
 
 
 
-fisher_z_ci <- function(r, n, level = 0.95) {
-  z <- atanh(r)
-  se <- 1 / sqrt(n - 3)
-  q <- qnorm((1 + level) / 2)
-  lo <- tanh(z - q * se)
-  hi <- tanh(z + q * se)
-  c(lo = lo, hi = hi)
-}
-
 clean_pathway_name <- function(name, max_chars = NULL) {
   name |>
     stringr::str_remove("^HALLMARK_") |>
@@ -188,19 +179,6 @@ make_sigmoid_ribbon <- function(x0, x1, y0_top, y0_bot, y1_top, y1_bot,
 }
 
 # ── F04 Reversal (Cancer Recovery: CRvH_Baseline vs CR_Training) ──
-classify_proteins_f4 <- function(pi_CvH, pi_TR, threshold = 0.05) {
-  dplyr::case_when(
-    pi_CvH < threshold & pi_TR < threshold ~ "Sig Both",
-    pi_CvH < threshold ~ "Sig Cancer only",
-    pi_TR < threshold ~ "Sig Training only",
-    TRUE ~ "NS"
-  ) |>
-    factor(levels = c(
-      "Sig Both",
-      "Sig Cancer only", "Sig Training only", "NS"
-    ))
-}
-
 SIG_COLORS_F4 <- c(
   "Sig Both"          = "#2E7D32",
   "Sig Cancer only"   = "#4CAF50",

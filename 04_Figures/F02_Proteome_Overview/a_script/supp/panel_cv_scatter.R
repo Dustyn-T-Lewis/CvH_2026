@@ -5,6 +5,7 @@
 
 setwd(here::here())
 source("04_Figures/shared/style.R")
+source("04_Figures/shared/stats.R")
 
 pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, ggrepel, cowplot)
 

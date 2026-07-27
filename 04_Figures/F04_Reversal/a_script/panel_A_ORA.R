@@ -4,6 +4,7 @@
 # Blue = reversed (off-diagonal), Red = exacerbated (diagonal)
 setwd(here::here())
 source("04_Figures/shared/style.R")
+source("04_Figures/shared/stats.R")
 source("04_Figures/shared/pathway_utils.R")
 pacman::p_load(tidyverse, fgsea, ggrepel, patchwork)
 
