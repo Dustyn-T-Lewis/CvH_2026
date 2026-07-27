@@ -158,17 +158,6 @@ uni_auc <- function(y, x) {
 # to the same scale before comparing.
 fold_auc <- function(a) max(a, 1 - a)
 
-perm_p_unpaired <- function(y, x, obs_auc, n_perm = 1000) {
-  ok <- !is.na(y) & !is.na(x)
-  y <- y[ok]
-  x <- x[ok]
-  nulls <- vapply(seq_len(n_perm), function(i) {
-    r <- suppressMessages(pROC::roc(sample(y), x, quiet = TRUE, direction = "auto"))
-    fold_auc(as.numeric(pROC::auc(r)))
-  }, numeric(1))
-  (sum(nulls >= fold_auc(obs_auc)) + 1) / (n_perm + 1)
-}
-
 perm_p_paired <- function(tp, subject, x, obs_auc, n_perm = 1000) {
   shuffler <- within_subject_shuffle(subject)
   nulls <- vapply(seq_len(n_perm), function(i) {

@@ -81,23 +81,6 @@ read_sheet_df <- function(xlsx, sheet) {
   as.data.frame(readxl::read_excel(xlsx, sheet = sheet))
 }
 
-read_matrix_sheet <- function(xlsx, sheet, row_col = "sample_id") {
-  df <- read_sheet_df(xlsx, sheet)
-  mat <- as.matrix(df[, -1, drop = FALSE])
-  rownames(mat) <- df[[row_col]]
-  mat
-}
-
-matrix_to_df <- function(mat, row_col = "sample_id") {
-  df <- data.frame(
-    rn = rownames(mat),
-    as.data.frame(mat, check.names = FALSE),
-    check.names = FALSE, stringsAsFactors = FALSE
-  )
-  names(df)[1] <- row_col
-  df
-}
-
 cleanup_after_workbook <- function(sheet_specs,
                                    extra_subdirs = character(),
                                    extra_files = character(),

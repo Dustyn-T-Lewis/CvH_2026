@@ -4,12 +4,6 @@
 pacman::p_load(ggplot2, scales)
 
 # ── Palettes ──
-GROUP_COLORS <- c(
-  CRE_T1 = "#2166AC", CRE_T2 = "#67A9CF",
-  PLA_T1 = "#D6604D", PLA_T2 = "#F4A582",
-  H_T1   = "#4DAF4A"
-)
-
 DIR_COLORS <- c(Up = "#D6604D", Down = "#4393C3", NS = "grey70")
 
 GROUP_FILL <- c(
