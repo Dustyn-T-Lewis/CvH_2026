@@ -25,11 +25,14 @@ ms <- model.Selector(mat)
 randna <- as.logical(ms[[1]]) # TRUE = MAR feature
 cat(sprintf("[mscoreutils] model.Selector split: %d MAR / %d MNAR features\n", sum(randna), sum(!randna)))
 
-# impute_mixed defaults both arms to MARGIN 1; QRILC's own default is 2, and fitting the
-# truncated Gaussian per sample rather than per protein is what makes it left-censored.
+# QRILC belongs on MARGIN 2 (per sample) -- that is its own default and the orientation the
+# left-censoring model assumes. It will not run here: model.Selector calls only 10 of 2176
+# features MNAR, and several samples are missing all 10, so a per-sample fit has no observed
+# values left and lm.fit fails. MARGIN 1 fits per protein across 39 samples instead, which is
+# the wrong model but the only one this block supports. Treat the MNAR arm as nominal; at 10
+# of 2176 features this hybrid is kNN either way.
 imp <- impute_matrix(mat,
-  method = "mixed", randna = randna, mar = "knn", mnar = "QRILC",
-  MARGIN = c(1L, 2L)
+  method = "mixed", randna = randna, mar = "knn", mnar = "QRILC"
 )
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
 
