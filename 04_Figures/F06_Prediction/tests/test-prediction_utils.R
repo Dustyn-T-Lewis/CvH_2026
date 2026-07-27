@@ -121,6 +121,13 @@ test_that("loso_me projects the held-out sample using training-fold scaling", {
   expect_true(is.finite(proj))
 })
 
+test_that("loocv_auc reports an anti-predictive score below chance", {
+  y <- rep(c(0, 1), each = 15)
+  anti <- ifelse(y == 1, -1, 1) + rnorm(30, sd = 0.1)
+  expect_lt(loocv_auc(y, anti), 0.1)
+  expect_gt(loocv_auc(y, -anti), 0.9)
+})
+
 test_that("match_modules scores identical partitions at Jaccard 1", {
   mods <- setNames(rep(c("blue", "brown"), each = 10), paste0("p", 1:20))
   out <- match_modules(mods, mods)

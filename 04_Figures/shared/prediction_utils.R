@@ -34,9 +34,11 @@ rank_features <- function(x, y) {
   rownames(r)[order(r[, 1], decreasing = TRUE)]
 }
 
+# direction is pinned: a logistic link score already runs low-to-high with P(y=1), so
+# letting pROC re-detect it would fold an anti-predictive model up above 0.5.
 loocv_auc <- function(labels, probs) {
   tryCatch(
-    as.numeric(pROC::auc(pROC::roc(labels, probs, quiet = TRUE))),
+    as.numeric(pROC::auc(pROC::roc(labels, probs, quiet = TRUE, direction = "<"))),
     error = function(e) 0.5
   )
 }
@@ -200,7 +202,7 @@ fit_kfold_perm <- function(x, y, n_perm = 200, k_folds = 10, seed = 42) {
   }
 
   scores <- cv_scores(y)
-  roc_obj <- pROC::roc(y, scores, quiet = TRUE)
+  roc_obj <- pROC::roc(y, scores, quiet = TRUE, direction = "<")
   auc_val <- as.numeric(pROC::auc(roc_obj))
   nulls <- vapply(seq_len(n_perm), function(i) {
     ys <- sample(y)

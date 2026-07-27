@@ -31,7 +31,7 @@ run_one <- function(space, outcome_name) {
   x <- features[[space]][out$ids, , drop = FALSE]
   group <- if (out$paired) out$subject else NULL
   fit <- run_topk_loocv(out$y, x, k_range = K_RANGE[[space]], group = group)
-  roc_obj <- pROC::roc(out$y, fit$scores, quiet = TRUE)
+  roc_obj <- pROC::roc(out$y, fit$scores, quiet = TRUE, direction = "<")
   ci <- as.numeric(pROC::ci.auc(roc_obj))
   list(
     space = space, outcome = outcome_name, label = out$label,
