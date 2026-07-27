@@ -17,7 +17,7 @@ subj <- meta %>%
   mutate(group = ifelse(cancer == "SURV", "CR", "H"),
          group = factor(group, levels = c("CR", "H")))
 
-# --- Statistics
+# Statistics
 stats_A <- t.test(age ~ group, data = subj)
 
 sw_cr <- shapiro.test(subj$age[subj$group == "CR"])
@@ -30,7 +30,7 @@ norm_sub <- sprintf("n = %d (CR %d, H %d) | Welch t %s\nShapiro-Wilk: CR %s, H %
                     n_cr + n_h, n_cr, n_h, fmt_p(stats_A$p.value),
                     fmt_p(sw_cr$p.value), fmt_p(sw_h$p.value))
 
-# --- Audit CSV
+# Audit CSV
 audit_A <- subj %>%
   group_by(group) %>%
   summarise(n = n(), mean = mean(age), sd = sd(age),
@@ -53,7 +53,7 @@ pA <- ggplot(subj, aes(x = group, y = age, fill = group)) +
            color = "grey30", linewidth = 0.3) +
   geom_errorbar(stat = "summary", fun.data = mean_se,
                 width = 0.2, linewidth = 0.4) +
-  geom_jitter(width = 0.15, size = 1.5, alpha = 0.35,
+  geom_point(position = position_jitter(width = 0.15, seed = 42), size = 1.5, alpha = 0.35,
               shape = 16, color = "grey30") +
   geom_signif(
     comparisons = list(c("CR", "H")),
@@ -74,4 +74,3 @@ ggsave(file.path(RPT, "panel_A_age_MAIN.pdf"), pA,
        width = PW, height = PH, units = "mm", device = get_pdf_device())
 ggsave(file.path(RPT, "panel_A_age_MAIN.png"), pA,
        width = PW, height = PH, units = "mm", dpi = 300)
-cat("F01 Panel A done\n")

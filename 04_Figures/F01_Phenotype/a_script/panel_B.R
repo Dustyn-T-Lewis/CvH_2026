@@ -11,18 +11,18 @@ DAT <- "04_Figures/F01_Phenotype/c_data"
 meta <- read.csv("00_input/CvH_meta.csv", stringsAsFactors = FALSE) |>
   dplyr::rename(pid = Subject_ID, timepoint = Timepoint, supp = Supplement)
 
-# --- CR subjects: complete pre+post ALM (one row per subject = T1 row)
+# CR subjects: complete pre+post ALM (one row per subject = T1 row)
 cr_subj <- meta %>%
   filter(timepoint == "T1", cancer == "SURV",
          !is.na(pre_ALM_kg), !is.na(post_ALM_kg)) %>%
   mutate(supp = factor(supp, levels = c("CRE", "PLA")),
          delta_alm = post_ALM_kg - pre_ALM_kg)
 
-# --- Healthy subjects: baseline ALM only
+# Healthy subjects: baseline ALM only
 h_subj <- meta %>%
   filter(timepoint == "T1", cancer == "CTL", !is.na(pre_ALM_kg))
 
-# --- Long form for CR (ANOVA + bars)
+# Long form for CR (ANOVA + bars)
 cr_long <- cr_subj %>%
   select(pid, supp, pre_ALM_kg, post_ALM_kg) %>%
   pivot_longer(cols = c(pre_ALM_kg, post_ALM_kg),
@@ -34,15 +34,13 @@ cr_long <- cr_subj %>%
                             levels = c("CRE_T1", "CRE_T2",
                                        "PLA_T1", "PLA_T2")))
 
-# --- Combined long form for 5-bar plot
+# Combined long form for 5-bar plot
 all_long <- bind_rows(
   h_subj %>% transmute(pid, supp_time = "H_T1", alm = pre_ALM_kg),
   cr_long %>% select(pid, supp_time, alm)
 ) %>%
   mutate(supp_time = factor(supp_time,
     levels = c("H_T1", "CRE_T1", "CRE_T2", "PLA_T1", "PLA_T2")))
-
-# --- Statistics ---
 
 # 1. Mixed ANOVA: Supplement x Time (CR only)
 stats_anova <- rstatix::anova_test(data = cr_long, dv = alm,
@@ -71,7 +69,7 @@ stats_delta <- t.test(delta_alm ~ supp, data = cr_subj)
 sw_cre <- shapiro.test(cre_subj$delta_alm)
 sw_pla <- shapiro.test(pla_subj$delta_alm)
 
-# --- Subtitle
+# Subtitle
 anova_tbl <- as.data.frame(stats_anova)
 anova_sub <- sprintf("Supp %s   Time %s   Interaction %s",
                      fmt_p(anova_tbl$p[anova_tbl$Effect == "supp"]),
@@ -85,7 +83,7 @@ norm_sub <- sprintf("H vs CR(BL) %s | Shapiro-Wilk (delta): CRE %s, PLA %s | CRE
                     n_cre, n_pla, n_h)
 full_sub <- paste0(anova_sub, "\n", norm_sub)
 
-# --- Audit CSV
+# Audit CSV
 audit_B <- data.frame(
   test = c("mixed_anova_supp", "mixed_anova_time", "mixed_anova_int",
            "baseline_CR_vs_H", "paired_t_CRE", "paired_t_PLA",
@@ -111,7 +109,7 @@ audit_B <- data.frame(
 )
 write.csv(audit_B, file.path(DAT, "panel_B_alm.csv"), row.names = FALSE)
 
-# --- Left plot: 5-bar (H_T1 | CRE_T1, CRE_T2 | PLA_T1, PLA_T2)
+# Left plot: 5-bar (H_T1 | CRE_T1, CRE_T2 | PLA_T1, PLA_T2)
 y_max_left <- max(all_long$alm, na.rm = TRUE)
 
 pB_left <- ggplot(all_long, aes(x = supp_time, y = alm, fill = supp_time)) +
@@ -129,7 +127,7 @@ pB_left <- ggplot(all_long, aes(x = supp_time, y = alm, fill = supp_time)) +
            color = "grey30", linewidth = 0.3) +
   geom_errorbar(stat = "summary", fun.data = mean_se,
                 width = 0.2, linewidth = 0.4) +
-  geom_jitter(width = 0.12, size = 1.2, alpha = 0.35,
+  geom_point(position = position_jitter(width = 0.12, seed = 42), size = 1.2, alpha = 0.35,
               shape = 21, color = "black", stroke = 0.3) +
   # Paired t-test brackets within CRE and PLA
   geom_signif(comparisons = list(c("CRE_T1", "CRE_T2")),
@@ -159,7 +157,7 @@ pB_left <- ggplot(all_long, aes(x = supp_time, y = alm, fill = supp_time)) +
                                      face = "bold.italic"),
         plot.margin = margin(5, 5, 20, 5), legend.position = "none")
 
-# --- Right plot: Delta by supplement (CRE vs PLA)
+# Right plot: Delta by supplement (CRE vs PLA)
 delta_bar_colors <- c(CRE = unname(SUPP_COLORS["CRE"]),
                       PLA = unname(SUPP_COLORS["PLA"]))
 
@@ -178,7 +176,7 @@ pB_right <- ggplot(cr_subj, aes(x = supp, y = delta_alm, fill = supp)) +
            color = "grey30", linewidth = 0.3) +
   geom_errorbar(stat = "summary", fun.data = mean_se,
                 width = 0.15, linewidth = 0.4) +
-  geom_jitter(width = 0.12, size = 1.2, alpha = 0.35,
+  geom_point(position = position_jitter(width = 0.12, seed = 42), size = 1.2, alpha = 0.35,
               shape = 21, color = "black", stroke = 0.3) +
   geom_signif(comparisons = list(c("CRE", "PLA")),
               annotations = fmt_p(stats_delta$p.value),
@@ -195,4 +193,3 @@ ggsave(file.path(RPT, "panel_B_alm_MAIN.pdf"), pB,
        width = PW, height = PH, units = "mm", device = get_pdf_device())
 ggsave(file.path(RPT, "panel_B_alm_MAIN.png"), pB,
        width = PW, height = PH, units = "mm", dpi = 300)
-cat("F01 Panel B done\n")

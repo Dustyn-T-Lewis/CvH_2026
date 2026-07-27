@@ -30,7 +30,7 @@ subj_long <- subj %>%
                             levels = c("CRE_T1", "CRE_T2",
                                        "PLA_T1", "PLA_T2")))
 
-# --- Mixed ANOVA: Supplement (between) x Time (within)
+# Mixed ANOVA: Supplement (between) x Time (within)
 stats_anova <- rstatix::anova_test(data = subj_long, dv = sts,
                                     wid = pid,
                                     between = supp, within = time)
@@ -60,7 +60,7 @@ norm_sub <- sprintf("Shapiro-Wilk (delta): CRE %s, PLA %s | CRE n=%d, PLA n=%d",
                     n_cre, n_pla)
 full_sub <- paste0(anova_sub, "\n", norm_sub)
 
-# --- Audit CSV
+# Audit CSV
 audit_C <- data.frame(
   test = c("paired_t_CRE", "paired_t_PLA", "unpaired_t_delta"),
   group = c("CRE", "PLA", "CRE vs PLA"),
@@ -80,7 +80,7 @@ audit_C <- data.frame(
 )
 write.csv(audit_C, file.path(DAT, "panel_C_sts.csv"), row.names = FALSE)
 
-# --- Left plot: Absolute pre/post by supplement
+# Left plot: Absolute pre/post by supplement
 y_max_left <- max(subj_long$sts, na.rm = TRUE)
 
 pC_left <- ggplot(subj_long, aes(x = supp_time, y = sts, fill = supp_time)) +
@@ -94,7 +94,7 @@ pC_left <- ggplot(subj_long, aes(x = supp_time, y = sts, fill = supp_time)) +
            color = "grey30", linewidth = 0.3) +
   geom_errorbar(stat = "summary", fun.data = mean_se,
                 width = 0.2, linewidth = 0.4) +
-  geom_jitter(width = 0.12, size = 1.2, alpha = 0.35,
+  geom_point(position = position_jitter(width = 0.12, seed = 42), size = 1.2, alpha = 0.35,
               shape = 21, color = "black", stroke = 0.3) +
   geom_signif(comparisons = list(c("CRE_T1", "CRE_T2")),
               annotations = fmt_p(stats_paired_cre$p.value),
@@ -120,7 +120,7 @@ pC_left <- ggplot(subj_long, aes(x = supp_time, y = sts, fill = supp_time)) +
                                      face = "bold.italic"),
         plot.margin = margin(5, 5, 20, 5), legend.position = "none")
 
-# --- Right plot: Delta by supplement
+# Right plot: Delta by supplement
 delta_bar_colors <- c(CRE = unname(SUPP_COLORS["CRE"]),
                       PLA = unname(SUPP_COLORS["PLA"]))
 
@@ -139,7 +139,7 @@ pC_right <- ggplot(subj, aes(x = supp, y = delta_sts, fill = supp)) +
            color = "grey30", linewidth = 0.3) +
   geom_errorbar(stat = "summary", fun.data = mean_se,
                 width = 0.15, linewidth = 0.4) +
-  geom_jitter(width = 0.12, size = 1.2, alpha = 0.35,
+  geom_point(position = position_jitter(width = 0.12, seed = 42), size = 1.2, alpha = 0.35,
               shape = 21, color = "black", stroke = 0.3) +
   geom_signif(comparisons = list(c("CRE", "PLA")),
               annotations = fmt_p(stats_delta$p.value),
@@ -156,4 +156,3 @@ ggsave(file.path(RPT, "panel_C_sts_MAIN.pdf"), pC,
        width = PW, height = PH, units = "mm", device = get_pdf_device())
 ggsave(file.path(RPT, "panel_C_sts_MAIN.png"), pC,
        width = PW, height = PH, units = "mm", dpi = 300)
-cat("F01 Panel C done\n")
