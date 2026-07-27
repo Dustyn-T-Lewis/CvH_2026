@@ -37,8 +37,10 @@ REVERSAL_CONTRASTS <- c(D = "CRvH_Baseline", T = "CR_Training", R = "Resid")
 load_reversal_table <- function(combined_pi_path,
                                 contrasts = REVERSAL_CONTRASTS) {
   long <- readr::read_csv(combined_pi_path, show_col_types = FALSE)
-  stopifnot(all(c("uniprot_id", "logFC", "t", "P.Value", "pi_score",
-                  "sig_pi", "contrast", "gene") %in% names(long)))
+  stopifnot(all(c(
+    "uniprot_id", "logFC", "t", "P.Value", "pi_score",
+    "sig_pi", "contrast", "gene"
+  ) %in% names(long)))
   long <- long |> filter(contrast %in% contrasts)
 
   # dplyr:: qualified -- AnnotationDbi (pulled in by RRHO2/GO.db) masks select()
@@ -49,9 +51,11 @@ load_reversal_table <- function(combined_pi_path,
   vals <- long |>
     mutate(axis = names(contrasts)[match(contrast, contrasts)]) |>
     dplyr::select(uniprot_id, axis, logFC, t, P.Value, pi_score, sig_pi) |>
-    pivot_wider(names_from = axis,
-                values_from = c(logFC, t, P.Value, pi_score, sig_pi),
-                names_sep = "_")
+    pivot_wider(
+      names_from = axis,
+      values_from = c(logFC, t, P.Value, pi_score, sig_pi),
+      names_sep = "_"
+    )
 
   ann |> inner_join(vals, by = "uniprot_id")
 }
@@ -70,17 +74,18 @@ compute_phi <- function(wide, band = REVERSAL_PHI_BAND, signature_axis = "D") {
 
   wide |>
     mutate(
-      # sig_pi encodes direction (+1 up / -1 down / 0 ns) -- signature = non-zero
+      # sig_pi is +1 up / -1 down / 0 ns / NA not estimable; signature = non-zero, and
+      # the NAs fall out at the filter rather than counting as unchanged
       disease_sig = .data[[sig_col]] != 0,
       disease_dir = if_else(logFC_D > 0, "Disease Up", "Disease Down"),
-      phi         = -logFC_T / logFC_D,
-      reversed    = sign(logFC_T) != sign(logFC_D),   # phi > 0
+      phi = -logFC_T / logFC_D,
+      reversed = sign(logFC_T) != sign(logFC_D), # phi > 0
       # residual fraction remaining relative to disease deviation: R = D * (1 - phi)
-      resid_frac  = logFC_R / logFC_D,
+      resid_frac = logFC_R / logFC_D,
       reversal_class = factor(case_when(
-        phi >=  band ~ "Normalized",
+        phi >= band ~ "Normalized",
         phi <= -band ~ "Exacerbated",
-        TRUE         ~ "Persistent"
+        TRUE ~ "Persistent"
       ), levels = c("Normalized", "Persistent", "Exacerbated"))
     )
 }
@@ -93,20 +98,30 @@ directional_asymmetry <- function(phi_tbl) {
   sig <- phi_tbl |> filter(disease_sig, is.finite(phi))
   by_dir <- sig |>
     group_by(disease_dir) |>
-    summarise(n = n(), n_reversed = sum(reversed),
-              pct_reversed = 100 * mean(reversed), .groups = "drop")
+    summarise(
+      n = n(), n_reversed = sum(reversed),
+      pct_reversed = 100 * mean(reversed), .groups = "drop"
+    )
 
   up <- by_dir |> filter(disease_dir == "Disease Up")
   dn <- by_dir |> filter(disease_dir == "Disease Down")
   test <- if (nrow(up) == 1 && nrow(dn) == 1) {
-    pt <- suppressWarnings(prop.test(c(dn$n_reversed, up$n_reversed),
-                                     c(dn$n, up$n)))
-    tibble(comparison = "Disease Down vs Disease Up",
-           pct_down = dn$pct_reversed, pct_up = up$pct_reversed,
-           chisq = unname(pt$statistic), p_value = pt$p.value)
-  } else tibble(comparison = "Disease Down vs Disease Up",
-                pct_down = NA_real_, pct_up = NA_real_,
-                chisq = NA_real_, p_value = NA_real_)
+    pt <- suppressWarnings(prop.test(
+      c(dn$n_reversed, up$n_reversed),
+      c(dn$n, up$n)
+    ))
+    tibble(
+      comparison = "Disease Down vs Disease Up",
+      pct_down = dn$pct_reversed, pct_up = up$pct_reversed,
+      chisq = unname(pt$statistic), p_value = pt$p.value
+    )
+  } else {
+    tibble(
+      comparison = "Disease Down vs Disease Up",
+      pct_down = NA_real_, pct_up = NA_real_,
+      chisq = NA_real_, p_value = NA_real_
+    )
+  }
   list(by_direction = by_dir, test = test)
 }
 
@@ -117,8 +132,8 @@ directional_asymmetry <- function(phi_tbl) {
 #' Tests excess reversal in disease-DEPs over background, not reversal vs zero.
 reversal_permutation_null <- function(phi_tbl, n_perm = 2000, seed = 42) {
   usable <- phi_tbl |> filter(is.finite(phi))
-  n_dep  <- sum(usable$disease_sig)
-  obs    <- mean(usable$reversed[usable$disease_sig])
+  n_dep <- sum(usable$disease_sig)
+  obs <- mean(usable$reversed[usable$disease_sig])
   rev_all <- usable$reversed
   set.seed(seed)
   null <- replicate(n_perm, mean(rev_all[sample.int(length(rev_all), n_dep)]))
@@ -143,46 +158,55 @@ reversal_rotation_test <- function(dal, phi_tbl,
                                    training_contrast = c(CR_post = 1, CR_pre = -1),
                                    block_col = "Subject_ID") {
   requireNamespace("limma", quietly = TRUE)
-  y    <- as.matrix(dal$data)
-  if (anyNA(y)) {                       # rotation tests need a complete matrix
+  y <- as.matrix(dal$data)
+  if (anyNA(y)) { # rotation tests need a complete matrix
     keep <- rowSums(is.na(y)) == 0
-    warning(sprintf("rotation test: dropping %d/%d proteins with NAs (pass the imputed DAList to avoid this)",
-                    sum(!keep), length(keep)))
+    warning(sprintf(
+      "rotation test: dropping %d/%d proteins with NAs (pass the imputed DAList to avoid this)",
+      sum(!keep), length(keep)
+    ))
     y <- y[keep, , drop = FALSE]
   }
   meta <- dal$metadata
-  gt   <- factor(meta$group_time)
+  gt <- factor(meta$group_time)
   design <- model.matrix(design_formula, data = meta)
   colnames(design) <- sub("^group_time", "", colnames(design))
 
   # training contrast vector aligned to design columns
-  con <- numeric(ncol(design)); names(con) <- colnames(design)
+  con <- numeric(ncol(design))
+  names(con) <- colnames(design)
   con[names(training_contrast)] <- training_contrast
 
   block <- meta[[block_col]]
   dc <- limma::duplicateCorrelation(y, design, block = block)
-  fit_args <- list(y = y, design = design, contrast = con,
-                   block = block, correlation = dc$consensus.correlation)
+  fit_args <- list(
+    y = y, design = design, contrast = con,
+    block = block, correlation = dc$consensus.correlation
+  )
 
   sig <- phi_tbl |> filter(disease_sig)
   idx <- list(
     Disease_Up   = which(rownames(y) %in% sig$uniprot_id[sig$logFC_D > 0]),
     Disease_Down = which(rownames(y) %in% sig$uniprot_id[sig$logFC_D < 0])
   )
-  idx <- idx[vapply(idx, length, integer(1)) >= 3]   # fry needs >= ~3 members
+  idx <- idx[vapply(idx, length, integer(1)) >= 3] # fry needs >= ~3 members
 
   fry_res <- do.call(limma::fry, c(list(index = idx), fit_args)) |>
-    as.data.frame() |> rownames_to_column("set")
+    as.data.frame() |>
+    rownames_to_column("set")
   # camera (competitive) does not support duplicateCorrelation -> no block here;
   # fry above is the repeated-measures-aware primary, camera is a robustness check
   cam_res <- limma::camera(y = y, index = idx, design = design, contrast = con) |>
-    as.data.frame() |> rownames_to_column("set")
+    as.data.frame() |>
+    rownames_to_column("set")
 
   # reversal expectation: Up set should fall (Down), Down set should rise (Up)
   expect <- c(Disease_Up = "Down", Disease_Down = "Up")
   fry_res$reversing <- fry_res$Direction == expect[fry_res$set]
-  list(fry = fry_res, camera = cam_res,
-       consensus_correlation = dc$consensus.correlation)
+  list(
+    fry = fry_res, camera = cam_res,
+    consensus_correlation = dc$consensus.correlation
+  )
 }
 
 # 6. RRHO2 (threshold-free 4-quadrant concordance/discordance)
@@ -192,54 +216,73 @@ reversal_rotation_test <- function(dal, phi_tbl,
 #' tryCatch because RRHO2 is sensitive to ties / tiny inputs.
 reversal_rrho2 <- function(phi_tbl, labels = c("Disease", "Training"),
                            stepsize = NULL) {
-  if (!requireNamespace("RRHO2", quietly = TRUE)) return(NULL)
+  if (!requireNamespace("RRHO2", quietly = TRUE)) {
+    return(NULL)
+  }
   d <- phi_tbl |>
-    filter(is.finite(logFC_D), is.finite(logFC_T),
-           is.finite(P.Value_D), is.finite(P.Value_T))
+    filter(
+      is.finite(logFC_D), is.finite(logFC_T),
+      is.finite(P.Value_D), is.finite(P.Value_T)
+    )
   mk <- function(lfc, p) -log10(p) * sign(lfc)
   l1 <- data.frame(gene = d$uniprot_id, score = mk(d$logFC_D, d$P.Value_D))
   l2 <- data.frame(gene = d$uniprot_id, score = mk(d$logFC_T, d$P.Value_T))
   if (is.null(stepsize)) stepsize <- floor(sqrt(nrow(d)))
 
-  tryCatch({
-    obj <- RRHO2::RRHO2_initialize(l1, l2, labels = labels,
-                                   log10.ind = TRUE, boundary = 0.02)
-    obj
-  }, error = function(e) {
-    message("RRHO2 failed: ", conditionMessage(e)); NULL
-  })
+  tryCatch(
+    {
+      obj <- RRHO2::RRHO2_initialize(l1, l2,
+        labels = labels,
+        log10.ind = TRUE, boundary = 0.02
+      )
+      obj
+    },
+    error = function(e) {
+      message("RRHO2 failed: ", conditionMessage(e))
+      NULL
+    }
+  )
 }
 
 # 7. One-call summary
 #' Runs phi classification, asymmetry, permutation null and (optionally) the
 #' rotation test; returns a named list of tidy tables for the caller to persist.
 run_reversal_analysis <- function(combined_pi_path, dal = NULL,
-                                   band = REVERSAL_PHI_BAND, n_perm = 2000,
-                                   seed = 42) {
-  wide  <- load_reversal_table(combined_pi_path)
-  phi   <- compute_phi(wide, band = band)
-  asym  <- directional_asymmetry(phi)
-  null  <- reversal_permutation_null(phi, n_perm = n_perm, seed = seed)
+                                  band = REVERSAL_PHI_BAND, n_perm = 2000,
+                                  seed = 42) {
+  wide <- load_reversal_table(combined_pi_path)
+  phi <- compute_phi(wide, band = band)
+  asym <- directional_asymmetry(phi)
+  null <- reversal_permutation_null(phi, n_perm = n_perm, seed = seed)
 
-  class_counts <- phi |> filter(disease_sig) |>
+  class_counts <- phi |>
+    filter(disease_sig) |>
     count(disease_dir, reversal_class, name = "n") |>
-    group_by(disease_dir) |> mutate(pct = 100 * n / sum(n)) |> ungroup()
+    group_by(disease_dir) |>
+    mutate(pct = 100 * n / sum(n)) |>
+    ungroup()
 
   rho <- phi |> filter(is.finite(logFC_D), is.finite(logFC_T))
   global_cor <- tibble(
     set = c("All proteins", "Disease signature"),
     n = c(nrow(rho), sum(rho$disease_sig)),
-    spearman = c(cor(rho$logFC_D, rho$logFC_T, method = "spearman"),
-                 cor(rho$logFC_D[rho$disease_sig], rho$logFC_T[rho$disease_sig],
-                     method = "spearman"))
+    spearman = c(
+      cor(rho$logFC_D, rho$logFC_T, method = "spearman"),
+      cor(rho$logFC_D[rho$disease_sig], rho$logFC_T[rho$disease_sig],
+        method = "spearman"
+      )
+    )
   )
 
-  out <- list(phi_table = phi, class_counts = class_counts,
-              asymmetry_by_dir = asym$by_direction, asymmetry_test = asym$test,
-              permutation_null = null, global_correlation = global_cor)
+  out <- list(
+    phi_table = phi, class_counts = class_counts,
+    asymmetry_by_dir = asym$by_direction, asymmetry_test = asym$test,
+    permutation_null = null, global_correlation = global_cor
+  )
   if (!is.null(dal)) {
     rot <- reversal_rotation_test(dal, phi)
-    out$fry <- rot$fry; out$camera <- rot$camera
+    out$fry <- rot$fry
+    out$camera <- rot$camera
     out$rotation_meta <- tibble(consensus_correlation = rot$consensus_correlation)
   }
   out

@@ -96,7 +96,8 @@ panel_effect <- function(dep, pal) {
 
 # Panel D — area-proportional overlap of the Pi-significant protein sets
 panel_overlap <- function(dep, pal) {
-  sets <- split(dep$uniprot_id[dep$sig_pi != 0], dep$ctr[dep$sig_pi != 0])
+  hit <- which(dep$sig_pi != 0)
+  sets <- split(dep$uniprot_id[hit], dep$ctr[hit])
   sets <- sets[lengths(sets) > 0]
   fit <- eulerr::euler(sets, shape = "ellipse")
   grob <- plot(fit,
