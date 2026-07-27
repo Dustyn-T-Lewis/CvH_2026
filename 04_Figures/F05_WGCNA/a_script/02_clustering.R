@@ -3,7 +3,7 @@
 # phenotype-method supplements, and writes one supplementary workbook.
 
 setwd(here::here())
-source("04_Figures/F05_WGCNA/a_script/style.R")
+source("04_Figures/shared/style.R")
 source("04_Figures/F05_WGCNA/a_script/panels/module_card.R")
 source("04_Figures/F05_WGCNA/a_script/panels/construction.R")
 source("04_Figures/F05_WGCNA/a_script/supp/construction.R")

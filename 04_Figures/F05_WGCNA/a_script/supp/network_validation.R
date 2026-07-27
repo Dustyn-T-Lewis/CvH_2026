@@ -11,7 +11,7 @@
 
 setwd(here::here())
 pacman::p_load(WGCNA, dplyr, tidyr, tibble, readr, purrr, ggplot2, patchwork)
-source("04_Figures/F05_WGCNA/a_script/style.R")
+source("04_Figures/shared/style.R")
 source("04_Figures/shared/prediction_utils.R")
 
 allowWGCNAThreads()

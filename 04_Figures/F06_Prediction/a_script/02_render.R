@@ -5,7 +5,7 @@
 # in-sample by construction and are labelled as such.
 
 setwd(here::here())
-source("04_Figures/F06_Prediction/a_script/style.R")
+source("04_Figures/shared/style.R")
 source("04_Figures/shared/prediction_utils.R")
 source("04_Figures/shared/figure_supplement_helpers.R")
 pacman::p_load(ggplot2, dplyr, tidyr, tibble, readr, purrr, patchwork, ggtext)
