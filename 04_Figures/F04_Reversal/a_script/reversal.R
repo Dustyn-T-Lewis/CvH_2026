@@ -23,7 +23,7 @@
 # Method lineage: Melov 2007 (PMID 17520024, proportion + permutation), Robinson
 # 2017 (PMID 28273480, logFC correlation), Wu & Smyth 2010/2012 (PMID 20610611 /
 # 22638577, ROAST/CAMERA), Cahill 2018 (RRHO2), Smyth & Altman 2013 (PMID
-# 23705896, shared-baseline). Full citation catalog: see CvH_pipeline.qmd §5.
+# 23705896, shared-baseline).
 
 pacman::p_load(dplyr, tidyr, tibble, purrr, readr)
 
