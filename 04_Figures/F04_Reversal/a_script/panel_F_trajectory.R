@@ -25,7 +25,7 @@ K <- 6 # soft clusters
 M_FUZZ <- 1.25 # fuzzifier (Mfuzz-style)
 PHI_BAND <- 0.25 # engine band (REVERSAL_PHI_BAND)
 
-# ── Data: group-mean trajectories of the disease signature ───────────────────
+# Data: group-mean trajectories of the disease signature
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dep_df, dal
 stopifnot(all(ORDER %in% dal$metadata$group_time))
 
@@ -55,7 +55,7 @@ z <- t(apply(gmean, 1, function(r) (r - mean(r)) / sd(r)))
 z <- z[is.finite(rowSums(z)), , drop = FALSE]
 message(sprintf("  Trajectory clustering: %d disease-signature proteins", nrow(z)))
 
-# ── Trajectory clustering (pluggable: fuzzy c-means, k-means, hierarchical) ───
+# Trajectory clustering (pluggable: fuzzy c-means, k-means, hierarchical)
 # Each method returns cluster, membership (1 for hard methods), and k x 3
 # centres in ORDER column order, so the plotting is method-agnostic.
 cluster_trajectories <- function(z, method = c("cmeans", "kmeans", "hierarchical"),
@@ -112,7 +112,7 @@ clab <- cent |>
 class_n <- assign |> count(reversal_class)
 rev_dir <- mean(assign$phi > 0, na.rm = TRUE) # directional reverse fraction (phi > 0)
 
-# ── Per-cluster ORA (top 5 pathways per cluster) ─────────────────────────────
+# Per-cluster ORA (top 5 pathways per cluster)
 universe <- unique(dep_df$gene)
 pw <- build_pathway_collection(
   min_size = 15, max_size = 500,
@@ -152,7 +152,7 @@ if (nrow(top_path)) write_csv(top_path, file.path(DAT, "cluster_top_pathway.csv"
 class_n <- assign |> count(reversal_class)
 rev_dir <- mean(assign$phi > 0, na.rm = TRUE)
 
-# ── Cluster ↔ phenotype: per-sample cluster score vs baseline outcomes ────────
+# Cluster ↔ phenotype: per-sample cluster score vs baseline outcomes
 # Cluster score = mean of member proteins' sample-standardized abundance, the
 # hard-clustering analog of a WGCNA module eigengene. Reuses module_trait_cor.
 source("04_Figures/shared/wgcna_stats.R")
@@ -209,7 +209,7 @@ ggsave(file.path(SUPP_PDF, "SUPP_F04_cluster_phenotype.pdf"), cluster_pheno_fig,
   width = 150, height = 90, units = "mm", device = pdf_device
 )
 
-# ── Long frame for trajectory plotting ───────────────────────────────────────
+# Long frame for trajectory plotting
 long <- as_tibble(z, rownames = "uniprot_id") |>
   pivot_longer(all_of(ORDER), names_to = "cond", values_to = "zval") |>
   left_join(select(assign, uniprot_id, cluster, membership, reversal_class), by = "uniprot_id") |>
@@ -219,7 +219,7 @@ cent_long <- cent |>
   pivot_longer(all_of(ORDER), names_to = "cond", values_to = "zval") |>
   mutate(cond = factor(cond, levels = ORDER))
 
-# ── Per-cluster unit: trajectory line (left) + top-5 ORA bars (right) ─────────
+# Per-cluster unit: trajectory line (left) + top-5 ORA bars (right)
 CLUSTER_COLORS <- c(
   "#4477AA", "#EE6677", "#228833", "#CCBB44", "#66CCEE", "#AA3377"
 )
@@ -339,4 +339,3 @@ ggsave(file.path(RPT_PNG, "MAIN_F04_trajectory.png"), traj_fig,
 ggsave(file.path(RPT_PDF, "MAIN_F04_trajectory.pdf"), traj_fig,
   width = COMP_W, height = COMP_H, units = "mm", device = pdf_device
 )
-message("Reversal trajectory figure (clusters + ORA) done")

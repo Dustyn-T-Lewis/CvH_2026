@@ -29,7 +29,7 @@ dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   filter(!is.na(logFC_CRvH_Baseline), !is.na(logFC_CR_Training))
@@ -38,7 +38,7 @@ all_df <- dep_df %>%
   mutate(reversed = sign(logFC_CRvH_Baseline) != sign(logFC_CR_Training),
          cancer_dir = ifelse(logFC_CRvH_Baseline > 0, "Cancer Up", "Cancer Down"))
 
-# ── Primary analysis at Pi < 0.05 ───────────────────────────────────────────
+# Primary analysis at Pi < 0.05
 cancer_dep <- all_df %>% filter(pi_score_CRvH_Baseline < 0.05)
 
 n_up   <- sum(cancer_dep$cancer_dir == "Cancer Up")
@@ -78,7 +78,7 @@ boot_delta <- replicate(B, {
 boot_delta <- boot_delta[!is.na(boot_delta)]
 boot_ci <- quantile(boot_delta, probs = c(0.025, 0.975))
 
-# ── Threshold sensitivity ────────────────────────────────────────────────────
+# Threshold sensitivity
 thresholds <- list(
   "Pi < 0.01"    = all_df %>% filter(pi_score_CRvH_Baseline < 0.01),
   "Pi < 0.05"    = all_df %>% filter(pi_score_CRvH_Baseline < 0.05),
@@ -104,7 +104,7 @@ thresh_df <- map_dfr(names(thresholds), function(thr) {
          delta = pct_d - pct_u, p_value = pt)
 })
 
-# ── Export ───────────────────────────────────────────────────────────────────
+# Export
 asymmetry_summary <- tibble(
   cancer_up_n = n_up, cancer_up_reversed = rev_up, cancer_up_pct = round(pct_up, 1),
   cancer_dn_n = n_dn, cancer_dn_reversed = rev_dn, cancer_dn_pct = round(pct_dn, 1),
@@ -117,7 +117,7 @@ asymmetry_summary <- tibble(
 write_csv(asymmetry_summary, file.path(DAT, "SUPP_directional_asymmetry.csv"))
 write_csv(thresh_df, file.path(DAT, "SUPP_asymmetry_threshold_sensitivity.csv"))
 
-# ── Visualization ────────────────────────────────────────────────────────────
+# Visualization
 # Panel 1: Side-by-side bars showing reversal rate by cancer direction
 bar_df <- tibble(
   direction = factor(c("Cancer Up", "Cancer Down"),
@@ -206,5 +206,3 @@ ggsave(file.path(RPT_PNG, "SUPP_directional_asymmetry.png"), pS_asym,
        width = 320, height = 110, units = "mm", dpi = 300)
 ggsave(file.path(RPT_PDF, "SUPP_directional_asymmetry.pdf"), pS_asym,
        width = 320, height = 110, units = "mm", device = pdf_device)
-
-message("Done: SUPP_directional_asymmetry")

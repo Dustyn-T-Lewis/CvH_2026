@@ -18,7 +18,7 @@ dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   filter(!is.na(logFC_CRvH_Baseline), !is.na(logFC_CR_Training))
@@ -32,13 +32,13 @@ n_cancer   <- nrow(cancer_dep)
 n_reversed <- sum(cancer_dep$reversed)
 pct_rev    <- 100 * n_reversed / n_cancer
 
-# ── Test 1: Binomial test vs 50% ────────────────────────────────────────────
+# Test 1: Binomial test vs 50%
 binom_res <- binom.test(n_reversed, n_cancer, p = 0.5, alternative = "greater")
 message(sprintf("  Melov: %d/%d (%.1f%%) reversed, binom p = %s",
                 n_reversed, n_cancer, pct_rev,
                 format.pval(binom_res$p.value, digits = 3)))
 
-# ── Test 2: Permutation (10,000×) ───────────────────────────────────────────
+# Test 2: Permutation (10,000×)
 # Null: randomly select n_cancer proteins from the full proteome and compute
 # reversal fraction. Tests whether cancer-DEPs reverse MORE than random proteins.
 set.seed(42)
@@ -54,7 +54,7 @@ perm_p <- (sum(null_frac >= observed_frac) + 1) / (B + 1)
 message(sprintf("  Permutation: observed = %.3f, p = %.4f (n_perm = %d)",
                 observed_frac, perm_p, B))
 
-# ── Test 3: Fisher exact 2×2 (within cancer-DEPs, up vs down direction) ────
+# Test 3: Fisher exact 2×2 (within cancer-DEPs, up vs down direction)
 tab <- table(
   cancer_dep$logFC_CRvH_Baseline > 0,
   cancer_dep$reversed
@@ -63,7 +63,7 @@ dimnames(tab) <- list(cancer_dir = c("Cancer Down", "Cancer Up"),
                       reversed = c("Not reversed", "Reversed"))
 fisher_res <- fisher.test(tab)
 
-# ── Export CSV ───────────────────────────────────────────────────────────────
+# Export CSV
 melov_summary <- tibble(
   test = c("binomial_vs_50pct", "permutation_vs_random", "fisher_up_vs_down"),
   n = c(n_cancer, n_cancer, n_cancer),
@@ -81,7 +81,7 @@ write_csv(melov_summary, file.path(DAT, "SUPP_melov_proportion.csv"))
 write_csv(tibble(replicate = seq_len(B), null_frac = null_frac),
           file.path(DAT, "SUPP_melov_null_dist.csv"))
 
-# ── Visualization ────────────────────────────────────────────────────────────
+# Visualization
 # Left: stacked bar (reversal by cancer direction)
 bar_df <- cancer_dep %>%
   mutate(cancer_dir = ifelse(logFC_CRvH_Baseline > 0, "Cancer Up", "Cancer Down"),
@@ -134,5 +134,3 @@ ggsave(file.path(RPT_PNG, "SUPP_melov_proportion.png"), pS_melov,
        width = 240, height = 100, units = "mm", dpi = 300)
 ggsave(file.path(RPT_PDF, "SUPP_melov_proportion.pdf"), pS_melov,
        width = 240, height = 100, units = "mm", device = pdf_device)
-
-message("Done: SUPP_melov_proportion")

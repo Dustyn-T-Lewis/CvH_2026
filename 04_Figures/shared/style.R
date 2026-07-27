@@ -3,7 +3,7 @@
 
 pacman::p_load(ggplot2, scales)
 
-# ── Palettes ──
+# Palettes
 DIR_COLORS <- c(Up = "#D6604D", Down = "#4393C3", NS = "grey70")
 
 GROUP_FILL <- c(
@@ -38,7 +38,7 @@ ORA_DB_COLORS <- c(
   WikiPathways = "#D3BCE0", Other = "grey80"
 )
 
-# ── Sizing ──
+# Sizing
 PANEL_MD <- 180
 BASE_GENE <- 3.2
 BASE_STAT <- 3.5
@@ -48,7 +48,7 @@ scale_text <- function(base_size, panel_width_mm, ref_width = PANEL_MD) {
   base_size * sqrt(panel_width_mm / ref_width)
 }
 
-# ── Font sizing constants ──
+# Font sizing constants
 FIG_TITLE_SIZE <- 12
 FIG_SUBTITLE_SIZE <- 9
 FIG_STRIP_SIZE <- 10
@@ -56,7 +56,7 @@ FIG_AXIS_TEXT <- 8.5
 FIG_LEGEND_TITLE <- 9.5
 FIG_LEGEND_TEXT <- 8.5
 
-# ── Theme ──
+# Theme
 # Sizes scale by panel width (scale_text): at the reference width (PANEL_MD) the
 # function reproduces the base hierarchy, so a narrower panel gets smaller type.
 # FIG_THEME is the default-width object every panel appends with + FIG_THEME.
@@ -89,7 +89,7 @@ theme_cvh <- function(base_size = 10, panel_width_mm = PANEL_MD) {
 
 FIG_THEME <- theme_cvh()
 
-# ── Utility functions ──
+# Utility functions
 get_pdf_device <- function() {
   cairo_ok <- capabilities("cairo") && tryCatch(
     {
@@ -111,9 +111,6 @@ fmt_p <- function(p) {
     )
   )
 }
-
-
-
 
 
 clean_pathway_name <- function(name, max_chars = NULL) {
@@ -168,7 +165,7 @@ make_sigmoid_ribbon <- function(x0, x1, y0_top, y0_bot, y1_top, y1_bot,
   )
 }
 
-# ── F04 Reversal (Cancer Recovery: CRvH_Baseline vs CR_Training) ──
+# F04 Reversal (Cancer Recovery: CRvH_Baseline vs CR_Training)
 SIG_COLORS_F4 <- c(
   "Sig Both"          = "#2E7D32",
   "Sig Cancer only"   = "#4CAF50",
@@ -190,7 +187,7 @@ SIG_LABEL_TEXT_F4 <- c(
 )
 
 
-# ── Contrast palette (all 6 contrasts, both models) ──
+# Contrast palette (all 6 contrasts, both models)
 CONTRAST_COLORS <- c(
   CRvH_Baseline          = "#4CAF50",
   CR_Training            = "#9C27B0",
@@ -201,10 +198,7 @@ CONTRAST_COLORS <- c(
   Supplement_Interaction = "#FF8F00"
 )
 
-# ── Contrast labels ──
-
-
-# ── PCA palette (5 groups, F01) ──
+# PCA palette (5 groups, F01)
 PCA_COLORS <- c(
   CRE_T1 = "#2166AC", CRE_T2 = "#67A9CF",
   PLA_T1 = "#D6604D", PLA_T2 = "#F4A582",
@@ -217,16 +211,7 @@ PCA_SHAPES <- c(
   H_T1   = 15
 )
 
-# ── Supplement group labels (F01) ──
-
-# ── F04 Reversal pattern colors (Cancer Recovery) ──
-
-
-# ── F05 model-specific contrast groupings ──
-
-# ── F04 CRvH concordance quadrant colors ──
-
-# ── F05 cancer-direction colors ──
+# F05 cancer-direction colors
 CANCER_DIR_COLORS <- c(
   "Cancer Up"   = "#E57373",
   "Cancer Down" = "#64B5F6"

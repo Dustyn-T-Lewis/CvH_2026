@@ -18,7 +18,7 @@ set.seed(42)
 
 source("04_Figures/F04_Reversal/a_script/f04_data.R")   # dep_df
 
-# ── Volcano frame: residual contrast ─────────────────────────────────────────
+# Volcano frame: residual contrast
 v <- dep_df |>
   transmute(gene,
             logFC = logFC_Resid,
@@ -46,7 +46,7 @@ p_volc <- ggplot(v, aes(logFC, neglogP)) +
   FIG_THEME +
   theme(legend.position = "top", panel.grid.minor = element_blank())
 
-# ── Pathway enrichment on the residual t-statistic (fgsea) ───────────────────
+# Pathway enrichment on the residual t-statistic (fgsea)
 rr <- dep_df |> select(gene, t_Resid) |> filter(is.finite(t_Resid)) |> distinct(gene, .keep_all = TRUE)
 ranks <- setNames(rr$t_Resid, rr$gene)
 pw <- build_pathway_collection(min_size = 15, max_size = 500,

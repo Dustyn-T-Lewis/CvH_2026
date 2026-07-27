@@ -20,7 +20,7 @@ COMP_RED <- unname(DIR_COLORS["Up"])
 COMP_BLUE <- unname(DIR_COLORS["Down"])
 N_SHOW <- 5
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dep_df + imputation_df
 
 scatter_df <- dep_df %>%
@@ -50,7 +50,7 @@ message(sprintf(
   nrow(scatter_df), sum(scatter_df$is_sig)
 ))
 
-# ── ORA ──────────────────────────────────────────────────────────────────────
+# ORA
 pw_collection <- build_pathway_collection(
   min_size = 15, max_size = 500,
   include_goslim = FALSE,
@@ -107,7 +107,7 @@ if (nrow(all_quad_ora) > 0) {
   write_csv(all_quad_ora, file.path(DAT, "panel_A", "ora_quadrant.csv"))
 }
 
-# ── Scatter panel ────────────────────────────────────────────────────────────
+# Scatter panel
 xlim_range <- range(scatter_df$logFC_CvH, na.rm = TRUE) * 1.15
 ylim_range <- range(scatter_df$logFC_TR, na.rm = TRUE) * 1.15
 
@@ -272,7 +272,7 @@ p_scatter <- ggplot(mapping = aes(x = logFC_CvH, y = logFC_TR)) +
     legend.position = "none"
   )
 
-# ── Custom Significance key ──────────────────────────────────────────────────
+# Custom Significance key
 key_lvls <- c("Sig Both", "Sig Cancer only", "Sig Training only")
 key_display <- c("Sig Both", "Sig Cancer", "Sig Training")
 key_df <- tibble(
@@ -299,7 +299,7 @@ p_key <- ggplot(key_df, aes(x = x, y = y)) +
   theme_void() +
   theme(plot.margin = margin(-24, 0, 0, 0, "mm"))
 
-# ── Half-bar builder ─────────────────────────────────────────────────────────
+# Half-bar builder
 make_half_bars <- function(df, fill_color, side, ylim) {
   bar_h <- 0.42
   n_bars <- if (is.null(df) || nrow(df) == 0) 0L else min(nrow(df), 5L)
@@ -445,7 +445,7 @@ p_lr <- make_half_bars(
   c(-abs(ylim_range[2]), 0)
 )
 
-# ── Composite ────────────────────────────────────────────────────────────────
+# Composite
 design <- c(
   area(1, 1), # p_ul
   area(1, 2, 2, 2), # p_scatter (rows 1-2, center)
@@ -501,5 +501,3 @@ composite <- composite +
       plot.subtitle = element_blank()
     )
   )
-
-message("\nReversal Panel A ORA composite done")

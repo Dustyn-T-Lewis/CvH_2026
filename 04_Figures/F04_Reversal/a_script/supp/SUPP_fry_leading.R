@@ -15,7 +15,7 @@ dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-# -- Load driving proteins (CSV with xlsx fallback) ----------------------------
+# Load driving proteins (CSV with xlsx fallback)
 csv_path <- "04_Figures/F04_Reversal/c_data/panel_D_fry/driving_proteins.csv"
 xlsx_path <- "04_Figures/F04_Reversal/c_data/F04_supplementary.xlsx"
 
@@ -29,7 +29,7 @@ if (file.exists(csv_path)) {
   stop("Cannot find driving proteins at CSV or xlsx path")
 }
 
-# -- Load DEP results for t-statistics ----------------------------------------
+# Load DEP results for t-statistics
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep <- dep_df %>%
   dplyr::select(gene,
@@ -37,7 +37,7 @@ dep <- dep_df %>%
     logFC_CvH = logFC_CRvH_Baseline
   )
 
-# -- Merge and rank ------------------------------------------------------------
+# Merge and rank
 drivers_ann <- drivers %>%
   left_join(dep, by = "gene") %>%
   filter(!is.na(t_TR)) %>%
@@ -48,20 +48,20 @@ drivers_ann <- drivers %>%
     gene       = fct_reorder(gene, abs(t_TR))
   )
 
-# -- Cancer direction colors ---------------------------------------------------
+# Cancer direction colors
 dir_cols <- if (exists("CANCER_DIR_COLORS")) {
   CANCER_DIR_COLORS
 } else {
   c("Cancer Up" = "#E57373", "Cancer Down" = "#64B5F6")
 }
 
-# -- Export CSV ----------------------------------------------------------------
+# Export CSV
 write.csv(drivers_ann %>% dplyr::select(gene, t_TR, t_CvH, logFC_CvH, cancer_dir),
   file.path(DAT, "SUPP_fry_leading_edge.csv"),
   row.names = FALSE
 )
 
-# -- Plot ----------------------------------------------------------------------
+# Plot
 pS_fry_lead <- ggplot(
   drivers_ann,
   aes(

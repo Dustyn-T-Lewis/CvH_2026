@@ -17,7 +17,7 @@ DAT <- "04_Figures/F02_Proteome_Overview/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
-# --- Load data ---
+# Load data
 .dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
 norm_df <- tibble::as_tibble(cbind(
   .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
@@ -32,11 +32,11 @@ ann_cols <- c("uniprot_id", "protein", "gene", "description")
 samp_names <- setdiff(names(norm_df), ann_cols)
 meta <- meta |> filter(Col_ID %in% samp_names)
 
-# --- Sample groups ---
+# Sample groups
 cr_t1_ids <- meta$Col_ID[meta$Group %in% c("CR_CRE", "CR_PLA") & meta$Timepoint == "T1"]
 h_t1_ids <- meta$Col_ID[meta$Group == "PPS"]
 
-# --- CV on linear scale (Brenes 2024) ---
+# CV on linear scale (Brenes 2024)
 lin_mat <- 2^as.matrix(norm_df[, samp_names])
 
 compute_cv <- function(mat, idx) {
@@ -53,7 +53,7 @@ compute_cv <- function(mat, idx) {
 cv_cr <- compute_cv(lin_mat, cr_t1_ids)
 cv_h <- compute_cv(lin_mat, h_t1_ids)
 
-# --- HPA annotation ---
+# HPA annotation
 hpa_sub <- hpa[, c("Gene", "Protein class")]
 names(hpa_sub) <- c("gene", "protein_class")
 hpa_sub <- hpa_sub[!duplicated(hpa_sub$gene), ]
@@ -72,14 +72,14 @@ scatter_df <- tibble(
     max_cv     = pmax(cv_cr, cv_h)
   )
 
-# --- Blood markers ---
+# Blood markers
 blood_markers <- c(
   "HBB", "HBA1", "HBA2", "ALB", "TF", "HP", "SERPINA1",
   "C3", "A2M", "FGA", "FGB", "FGG", "APOA1", "HPX"
 )
 blood_df <- scatter_df |> filter(gene %in% blood_markers)
 
-# --- Correlations ---
+# Correlations
 n_all <- sum(!is.na(scatter_df$cv_cr) & !is.na(scatter_df$cv_h))
 r_all <- cor(scatter_df$cv_cr, scatter_df$cv_h, use = "complete.obs")
 ci_all <- fisher_z_ci(r_all, n_all)
@@ -110,7 +110,7 @@ cor_label <- paste0(
   sprintf("Non-plasma: r = %.2f [%.2f, %.2f] (n=%d)", r_np, ci_np["lo"], ci_np["hi"], n_np)
 )
 
-# --- Plot ---
+# Plot
 axis_max <- quantile(pmax(scatter_df$cv_cr, scatter_df$cv_h), 0.995, na.rm = TRUE)
 
 PLASMA_COL <- "#C62828"
@@ -164,7 +164,7 @@ pF <- ggplot(scatter_df, aes(x = cv_h, y = cv_cr)) +
     legend.position  = "none"
   )
 
-# --- Save ---
+# Save
 ggsave(file.path(RPT, "baseline_cv.png"), pF,
   width = PF_W, height = PF_H, units = "mm", dpi = 300
 )
@@ -188,5 +188,3 @@ write_csv(
   ),
   file.path(DAT, "audit_baseline_cv_cor.csv")
 )
-
-message("F02/CRvH Panel F done")

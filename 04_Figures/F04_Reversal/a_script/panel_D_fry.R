@@ -31,9 +31,7 @@ dir.create(file.path(DAT, "panel_D_fry"), recursive = TRUE, showWarnings = FALSE
 
 pdf_device <- get_pdf_device()
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # SHARED: Load data
-# ═══════════════════════════════════════════════════════════════════════════════
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dal (imp4p) + dep_df
 
 mat <- dal$data
@@ -228,9 +226,7 @@ pw_collection <- build_pathway_collection(
 )
 all_genes <- unique(dep_df$gene[dep_df$uniprot_id %in% imp_ids])
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # TEST 1: Cancer-sig sets → CR_Training contrast (CR subjects only)
-# ═══════════════════════════════════════════════════════════════════════════════
 message("\n--- Test 1: Cancer sets on CR_Training rank ---")
 
 cr_idx <- which(meta$Group_Time != "H_T1")
@@ -360,9 +356,7 @@ ora_t1_dn <- if (nrow(driving_dn_t1) >= 5) {
   tibble()
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # TEST 2: Training-sig sets → CRvH_Baseline contrast (ALL samples)
-# ═══════════════════════════════════════════════════════════════════════════════
 message("\n--- Test 2: Training sets on CRvH_Baseline rank ---")
 
 meta_all <- meta
@@ -460,7 +454,7 @@ driving_dn_t2 <- dep_df %>%
     logFC_CRvH_Baseline, logFC_CR_Training, pi_score_CR_Training
   )
 
-# --- Test 2: leading-edge ORA (relaxed FDR; small sets may yield none) ---
+# Test 2: leading-edge ORA (relaxed FDR; small sets may yield none)
 ora_t2_up <- if (nrow(driving_up_t2) >= 5) {
   tryCatch(
     run_ora_deduplicated(
@@ -490,7 +484,6 @@ ora_t2_dn <- if (nrow(driving_dn_t2) >= 5) {
   tibble()
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # EFFECTIVE SIGNATURE SIZE (CAMERA formula + roastgsa cross-check)
 # Wu & Smyth 2012 NAR (PMID 22638577): n_eff = n / (1 + (n-1) * r_bar)
 # Caballé-Mestres et al. 2023 BMC Bioinform (PMID 37904108): roastgsa
@@ -498,7 +491,6 @@ ora_t2_dn <- if (nrow(driving_dn_t2) >= 5) {
 # When proteins in a set are correlated, the "effective" number of
 # independent observations is smaller than the nominal set size.
 # This inflates rotation test power if unaccounted for.
-# ═══════════════════════════════════════════════════════════════════════════════
 compute_neff <- function(mat_sub, idx, label) {
   if (length(idx) < 3) {
     return(list(n = length(idx), r_bar = NA, n_eff = length(idx)))
@@ -538,9 +530,7 @@ neff_df <- tibble(
 )
 write_csv(neff_df, file.path(DAT, "panel_D_fry", "effective_signature_size.csv"))
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # COMBINED EXPORTS
-# ═══════════════════════════════════════════════════════════════════════════════
 fry_all <- bind_rows(fry_c_up, fry_c_dn, fry_t_up, fry_t_dn) %>%
   mutate(
     cor_within_cr = cor_cr, cor_within_all = cor_all, circularity_r = circ_r,
@@ -555,15 +545,13 @@ write_csv(fry_all, file.path(DAT, "panel_D_fry", "fry_results_all.csv"))
 driving_df <- bind_rows(driving_up_t1, driving_dn_t1, driving_up_t2, driving_dn_t2)
 write_csv(driving_df, file.path(DAT, "panel_D_fry", "driving_proteins.csv"))
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # VISUALISATION: 2-column composite
 # Left column:  Test 1 (cancer sets → CR_Training rank)
 # Right column: Test 2 (training sets → CRvH_Baseline rank)
-# ═══════════════════════════════════════════════════════════════════════════════
 COLOR_CANCER <- unname(CONTRAST_COLORS["CRvH_Baseline"])
 COLOR_TRAINING <- unname(CONTRAST_COLORS["CR_Training"])
 
-# --- Test 1 barcodes (left) ---
+# Test 1 barcodes (left)
 p1a <- make_barcode(t_rank_tr, "in_up", "es_up", fry_c_up,
   sprintf(
     "Cancer-Up (n = %d, n_eff = %.0f)",
@@ -599,7 +587,7 @@ p_t1 <- ggplot(t_rank_tr, aes(x = rank, y = t_CR_Training)) +
 p_ora_t1_up <- make_flanking_ora(ora_t1_up, "Reversed Cancer-Up", DIR_COLORS["Up"])
 p_ora_t1_dn <- make_flanking_ora(ora_t1_dn, "Reversed Cancer-Down", DIR_COLORS["Down"])
 
-# --- Test 2 barcodes (right) ---
+# Test 2 barcodes (right)
 p2a <- make_barcode(t_rank_cvh, "in_up", "es_up", fry_t_up,
   sprintf("Training-Up (n = %d)", length(sets_training$up)),
   COLOR_TRAINING, n_cvh,
@@ -631,7 +619,7 @@ p_t2 <- ggplot(t_rank_cvh, aes(x = rank, y = t_CRvH_Baseline)) +
 p_ora_t2_up <- make_flanking_ora(ora_t2_up, "Reversed Training-Up", DIR_COLORS["Up"])
 p_ora_t2_dn <- make_flanking_ora(ora_t2_dn, "Reversed Training-Down", DIR_COLORS["Down"])
 
-# --- Build 2-column composite ---
+# Build 2-column composite
 # Each column: 2 ES curves + 2 barcodes + 1 t-stat + 2 ORA bars
 fry_design_bidir <- c(
   # Column 1: Test 1
@@ -700,5 +688,3 @@ pD_fry <- pD_fry +
 # Backward compat
 fry_up <- fry_c_up
 fry_dn <- fry_c_dn
-
-message("Reversal Panel D (fry bidirectional) done")

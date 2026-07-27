@@ -16,11 +16,11 @@ dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-# -- Load data -----------------------------------------------------------------
+# Load data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep <- dep_df
 
-# -- Filter Pi-significant cancer proteins & classify --------------------------
+# Filter Pi-significant cancer proteins & classify
 sig <- dep %>%
   filter(pi_score_CRvH_Baseline < 0.05) %>%
   mutate(quadrant = case_when(
@@ -29,7 +29,7 @@ sig <- dep %>%
     TRUE ~ "Non-reversed"
   ))
 
-# -- Assign GO Slim categories -------------------------------------------------
+# Assign GO Slim categories
 all_genes <- unique(dep$gene)
 fg_genes  <- unique(sig$gene)
 
@@ -39,7 +39,7 @@ sig_slim <- sig %>%
   left_join(slim_map, by = "gene") %>%
   filter(!is.na(consolidated))
 
-# -- Count per quadrant x category ---------------------------------------------
+# Count per quadrant x category
 count_df <- sig_slim %>%
   count(quadrant, consolidated, name = "n") %>%
   group_by(quadrant) %>%
@@ -54,7 +54,7 @@ count_df$quadrant <- factor(count_df$quadrant,
 write.csv(count_df, file.path(DAT, "SUPP_goslim_distribution.csv"),
           row.names = FALSE)
 
-# -- Plot ----------------------------------------------------------------------
+# Plot
 pS_goslim <- ggplot(count_df, aes(x = n, y = consolidated, fill = consolidated)) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~ quadrant, ncol = 1, scales = "free_x") +

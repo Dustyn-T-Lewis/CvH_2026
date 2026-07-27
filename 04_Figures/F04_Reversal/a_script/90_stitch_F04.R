@@ -16,7 +16,7 @@ filter <- dplyr::filter
 
 A <- "04_Figures/F04_Reversal/a_script"
 
-# ── Main composite (A–E). Panel C sourced last: AnnotationDbi masks select(). ──
+# Main composite (A–E). Panel C sourced last: AnnotationDbi masks select().
 source(file.path(A, "panel_A_ORA.R"))
 n_total_A <- nrow(scatter_df)
 n_sig_A <- sum(scatter_df$is_sig)
@@ -115,9 +115,8 @@ ggsave(file.path(RPT_PDF, "MAIN_F04_composite.pdf"), composite_final,
 ggsave(file.path(RPT_PNG, "MAIN_F04_composite.png"), composite_final,
   width = COMP_W, height = COMP_H, units = "mm", dpi = 300
 )
-message("F04 main composite saved")
 
-# ── Source-data workbook ──
+# Source-data workbook
 source("04_Figures/shared/figure_supplement_helpers.R")
 
 summary_stats <- data.frame(
@@ -186,7 +185,7 @@ cleanup_after_workbook(rev_specs,
   )
 )
 
-# ── Residual volcano -> supplement (Resid = what training did NOT fix) ──
+# Residual volcano -> supplement (Resid = what training did NOT fix)
 source(file.path(A, "panel_G_resid_volcano.R"))
 pG_resid <- composite
 RESID_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png"
@@ -199,9 +198,8 @@ ggsave(file.path(RESID_PNG, "SUPP_F04_residual_volcano.png"), pG_resid,
 ggsave(file.path(RESID_PDF, "SUPP_F04_residual_volcano.pdf"), pG_resid,
   width = 220, height = 120, units = "mm", device = pdf_device
 )
-message("F04 residual volcano saved to supplement")
 
-# ── Supplementary composites (two pages) ──
+# Supplementary composites (two pages)
 S <- file.path(A, "supp")
 source(file.path(S, "SUPP_melov_proportion.R"))
 source(file.path(S, "SUPP_cmap_connectivity.R"))
@@ -248,5 +246,4 @@ ggsave(file.path(RPT_SUPP_PDF, "SUPP_F04_methods.pdf"), methods,
   width = 360, height = 340, units = "mm", device = pdf_device
 )
 
-message("F04 supplementary composites saved")
 message("F04 driver complete")

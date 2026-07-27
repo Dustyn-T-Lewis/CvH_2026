@@ -16,7 +16,7 @@ DAT_DIR <- "04_Figures/F02_Proteome_Overview/c_data"
 dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ── Load data & metadata ──
+# Load data & metadata
 # Normalized (non-imputed) matrix from the proteoDA DAList.
 .dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
 norm_df <- tibble::as_tibble(cbind(
@@ -34,7 +34,7 @@ meta <- meta_full |>
 
 pdf_device <- get_pdf_device()
 
-# ── CV on linear scale per Brenes 2024 ──
+# CV on linear scale per Brenes 2024
 lin_mat <- 2^as.matrix(norm_df[, samp_names])
 
 compute_cv <- function(mat, idx) {
@@ -124,7 +124,7 @@ n_delta <- nrow(delta_wide)
 r_delta <- cor(delta_wide$dcv_CRE, delta_wide$dcv_PLA, use = "complete.obs")
 ci_delta <- fisher_z_ci(r_delta, n_delta)
 
-# ── Heatmap colors (not in CvH shared/style.R) ──
+# Heatmap colors (not in CvH shared/style.R)
 HEATMAP_LO <- "#2166AC"
 HEATMAP_HI <- "#D6604D"
 
@@ -139,7 +139,7 @@ theme_B <- FIG_THEME +
 
 axis_max_cv <- 300
 
-# ── B1-B3: CV scatter faceted by group ──
+# B1-B3: CV scatter faceted by group
 pB_scatter <- ggplot(scatter_df, aes(x = cv_t1, y = cv_t2)) +
   facet_wrap(~group, nrow = 1) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
@@ -195,7 +195,7 @@ pB_scatter <- ggplot(scatter_df, aes(x = cv_t1, y = cv_t2)) +
         legend.key.size = unit(3, "mm"),
         plot.margin = margin(5.5, 0, 5.5, 5.5))
 
-# ── B4: DeltaCV CRE vs PLA ──
+# B4: DeltaCV CRE vs PLA
 pB_delta <- ggplot(delta_wide, aes(x = dcv_CRE, y = dcv_PLA)) +
   geom_hline(yintercept = 0, color = "grey70", linewidth = 0.3) +
   geom_vline(xintercept = 0, color = "grey70", linewidth = 0.3) +
@@ -238,7 +238,7 @@ pB_delta <- ggplot(delta_wide, aes(x = dcv_CRE, y = dcv_PLA)) +
         axis.title.y = element_text(margin = margin(r = 0, l = 0)),
         plot.margin = margin(5.5, 5.5, 5.5, 0))
 
-# ── Save audit data ──
+# Save audit data
 write.csv(scatter_df |> select(gene, cv_t1, cv_t2, delta_cv, group),
           file.path(DAT_DIR, "audit_cv_scatter.csv"), row.names = FALSE)
 write.csv(delta_wide |> select(gene, dcv_CRE, dcv_PLA, mean_dcv, dist_origin),

@@ -15,13 +15,13 @@ dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-# -- Load data -----------------------------------------------------------------
+# Load data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep <- dep_df %>%
   dplyr::select(gene, logFC_CvH = logFC_CRvH_Baseline,
          logFC_TR = logFC_CR_Training)
 
-# -- Sweep thresholds ---------------------------------------------------------
+# Sweep thresholds
 thresholds <- seq(0.05, 0.30, by = 0.01)
 n_total    <- nrow(dep)
 
@@ -43,11 +43,11 @@ sweep_df <- map_dfr(thresholds, function(thr) {
 sweep_df$class <- factor(sweep_df$class,
                          levels = c("Reversed", "Exacerbated", "Negligible"))
 
-# -- Export CSV ----------------------------------------------------------------
+# Export CSV
 write.csv(sweep_df, file.path(DAT, "SUPP_reversal_threshold.csv"),
           row.names = FALSE)
 
-# -- Plot ----------------------------------------------------------------------
+# Plot
 line_cols <- c(Reversed = "#2563EB", Exacerbated = "#DC2626",
                Negligible = "grey50")
 

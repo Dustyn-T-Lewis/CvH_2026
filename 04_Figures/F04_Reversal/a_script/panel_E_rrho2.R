@@ -17,7 +17,7 @@ dir.create(file.path(DAT, "panel_E"), recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
 
-# --- Load DEP data & build rank lists ---
+# Load DEP data & build rank lists
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dep_df (old column names)
 
 rr_df <- dep_df %>%
@@ -27,7 +27,7 @@ rr_df <- dep_df %>%
 
 n_shared <- nrow(rr_df)
 
-# --- RRHO2 computation (Cahill et al. 2018) ---
+# RRHO2 computation (Cahill et al. 2018)
 list1 <- data.frame(gene = rr_df$gene, score = rr_df$t_1, stringsAsFactors = FALSE)
 list2 <- data.frame(gene = rr_df$gene, score = rr_df$t_2, stringsAsFactors = FALSE)
 
@@ -92,7 +92,7 @@ n_UD <- length(hotspot_genes$UD)
 n_DU <- length(hotspot_genes$DU)
 message(sprintf("  Hotspot genes: UU=%d, DD=%d, UD=%d, DU=%d", n_UU, n_DD, n_UD, n_DU))
 
-# --- Jet colormap heatmap ---
+# Jet colormap heatmap
 JET_COLORS <- c(
   "#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
   "yellow", "#FF7F00", "red", "#7F0000"
@@ -194,7 +194,7 @@ ggsave(file.path(RPT_PDF, "SUPP_F04_rrho2.pdf"), pE_heat,
   width = PE_W, height = PE_W, units = "mm", device = pdf_device
 )
 
-# --- Export hotspot genes ---
+# Export hotspot genes
 hotspot_export <- bind_rows(
   tibble(quadrant = "Exacerbated Up", gene = hotspot_genes$UU),
   tibble(quadrant = "Exacerbated Down", gene = hotspot_genes$DD),
@@ -203,7 +203,7 @@ hotspot_export <- bind_rows(
 )
 write_csv(hotspot_export, file.path(DAT, "panel_E", "rrho2_hotspot_genes.csv"))
 
-# --- Per-quadrant ORA ---
+# Per-quadrant ORA
 pw_collection_E <- build_pathway_collection(
   min_size = 15, max_size = 500,
   include_goslim = FALSE,
@@ -243,7 +243,7 @@ ora_discordant <- bind_rows(ora_rev_up, ora_rev_down)
 write_csv(ora_concordant, file.path(DAT, "panel_E", "rrho2_ora_concordant.csv"))
 write_csv(ora_discordant, file.path(DAT, "panel_E", "rrho2_ora_discordant.csv"))
 
-# --- Summary CSV ---
+# Summary CSV
 rrho2_meta <- tibble(
   quadrant = c(
     "Exacerbated Up", "Exacerbated Down",
@@ -262,5 +262,3 @@ write_csv(rrho2_meta, file.path(DAT, "panel_E", "rrho2_summary.csv"))
 pE_heat <- pE_heat +
   labs(title = NULL, subtitle = NULL, tag = NULL) +
   coord_fixed(ratio = 1, clip = "off")
-
-message("Reversal Panel E (RRHO2) done")

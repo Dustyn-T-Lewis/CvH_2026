@@ -15,7 +15,7 @@ DAT_DIR <- "04_Figures/F02_Proteome_Overview/c_data/supp"
 dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ── Load data & metadata ──
+# Load data & metadata
 .dal <- readRDS("02_Normalization/imputation/c_data/DAList_imputed_missforest.rds")
 imp_df <- tibble::as_tibble(cbind(
   .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
@@ -44,7 +44,7 @@ pdf_device <- get_pdf_device()
 # Reorder meta to match samp_crvh
 meta_ordered <- meta[match(samp_crvh, meta$Col_ID), ]
 
-# ── db-RDA: constrained ordination ──
+# db-RDA: constrained ordination
 dist_mat <- vegdist(scale(t(imp_mat)), method = "euclidean")
 
 # Full model: Group_Time
@@ -123,7 +123,7 @@ subtitle_txt <- sprintf(
   constrained_var, format(nrow(imp_df), big.mark = ",")
 )
 
-# ── PCA labels ──
+# PCA labels
 pca_labels <- c(CRE_T1 = "CRE T1", CRE_T2 = "CRE T2",
                 PLA_T1 = "PLA T1", PLA_T2 = "PLA T2",
                 H_T1   = "Healthy T1")
@@ -156,7 +156,7 @@ pE_dbrda <- ggplot(site_scores, aes(x = dbRDA1, y = dbRDA2,
                     legend.key.size = unit(3, "mm"),
                     legend.spacing.y = unit(0.5, "mm"))
 
-# ── Save ──
+# Save
 audit_df <- data.frame(
   term         = c("Group_Time", "Timepoint_conditioned"),
   R2           = as.numeric(c(gt_r2, tp_r2)),

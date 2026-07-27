@@ -168,7 +168,6 @@ ggsave(file.path(RPT_PNG, "MAIN_F06_prediction.png"), main_fig,
 ggsave(file.path(RPT_PDF, "MAIN_F06_prediction.pdf"), main_fig,
   width = 280, height = 210, units = "mm", device = pdf_device
 )
-message("F06 main figure saved")
 
 supp_circ <- tier2 |>
   filter(!is.na(mean_jaccard)) |>

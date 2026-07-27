@@ -27,7 +27,7 @@ dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   transmute(gene,
@@ -40,7 +40,7 @@ n_all <- nrow(dep_df)
 cancer_dep <- dep_df %>% filter(pi_CvH < 0.05)
 n_dep <- nrow(cancer_dep)
 
-# ── Test 1: Background correlation (structural baseline) ────────────────────
+# Test 1: Background correlation (structural baseline)
 r_all <- cor(dep_df$logFC_CvH, dep_df$logFC_TR, method = "pearson")
 r_dep <- cor(cancer_dep$logFC_CvH, cancer_dep$logFC_TR, method = "pearson")
 
@@ -57,7 +57,7 @@ message(sprintf("  Cancer-DEP r (%d proteins):     %.3f", n_dep, r_dep))
 message(sprintf("  Background %% reversed: %.1f%% | Cancer-DEP: %.1f%%",
                 100 * frac_all, 100 * frac_dep))
 
-# ── Test 2: Subset specificity permutation (correlation) ────────────────────
+# Test 2: Subset specificity permutation (correlation)
 # Null: randomly draw n_dep proteins from the full proteome, compute r.
 # This preserves the shared-baseline structure (all fold changes are real)
 # and tests whether cancer-DEPs are MORE anti-correlated than random subsets.
@@ -72,7 +72,7 @@ null_r <- replicate(B, {
 p_r <- (sum(null_r <= r_dep) + 1) / (B + 1)
 message(sprintf("  Subset r test: observed = %.3f, perm p = %.4f", r_dep, p_r))
 
-# ── Test 3: Subset specificity permutation (reversal fraction) ──────────────
+# Test 3: Subset specificity permutation (reversal fraction)
 null_frac <- replicate(B, {
   idx <- sample.int(n_all, n_dep)
   mean(dep_df$reversed[idx])
@@ -82,7 +82,7 @@ p_frac <- (sum(null_frac >= frac_dep) + 1) / (B + 1)
 message(sprintf("  Subset frac test: observed = %.1f%%, perm p = %.4f",
                 100 * frac_dep, p_frac))
 
-# ── Export ───────────────────────────────────────────────────────────────────
+# Export
 circ_summary <- tibble(
   metric = c("pearson_r", "pct_reversed"),
   background_all = c(r_all, 100 * frac_all),
@@ -96,7 +96,7 @@ write_csv(circ_summary, file.path(DAT, "SUPP_fry_circularity.csv"))
 write_csv(tibble(replicate = seq_len(B), null_r = null_r, null_frac = null_frac),
           file.path(DAT, "SUPP_fry_circularity_null.csv"))
 
-# ── Visualization ────────────────────────────────────────────────────────────
+# Visualization
 # Panel 1: Subset correlation specificity
 p_r_null <- ggplot(tibble(x = null_r), aes(x = x)) +
   geom_histogram(bins = 50, fill = "grey70", colour = "grey40", linewidth = 0.2) +

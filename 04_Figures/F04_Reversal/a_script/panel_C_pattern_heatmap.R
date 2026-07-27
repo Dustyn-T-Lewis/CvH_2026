@@ -422,5 +422,3 @@ p <- p + labs(title = NULL, subtitle = NULL, tag = NULL) +
     expand = FALSE
   ) +
   theme(plot.margin = margin(2, -30, 6, -12, "mm"))
-
-message("Reversal Panel C (pattern heatmap) done")

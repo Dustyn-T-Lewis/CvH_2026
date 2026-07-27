@@ -30,7 +30,7 @@ crvh_contrasts <- list(
   CR_Training = c(CRE_T1 = -0.5, CRE_T2 = 0.5, PLA_T1 = -0.5, PLA_T2 = 0.5, H_T1 = 0)
 )
 
-# --- Eigengene LMM contrasts: ME ~ group_time + (1 | subject) ---
+# Eigengene LMM contrasts: ME ~ group_time + (1 | subject)
 fit_lmm_contrasts <- function(gt_levels, contrasts_named) {
   lmm_meta <- meta |>
     filter(group_time %in% gt_levels) |>
@@ -68,7 +68,7 @@ lmm_df <- fit_lmm_contrasts(gt_levels, crvh_contrasts)
 lmm_df$p_bh <- p.adjust(lmm_df$p_raw, method = "BH")
 write_csv(lmm_df, file.path(DAT, "wgcna_lmm_contrast_audit.csv"))
 
-# --- fry + camera + omnibus F ---
+# fry + camera + omnibus F
 samp <- colnames(expr)
 grp <- factor(meta$group_time[match(samp, meta$sample_id)], levels = gt_levels)
 block <- meta$subject[match(samp, meta$sample_id)]
@@ -110,7 +110,7 @@ omnibus <- tibble(
 )
 write_csv(omnibus, file.path(DAT, "module_omnibus_F.csv"))
 
-# --- per-module fGSEA NES: modules as gene sets, ranked by DE moderated-t ---
+# per-module fGSEA NES: modules as gene sets, ranked by DE moderated-t
 rank_wide <- read_csv(
   here::here("03_DEP/a_non_imputed/c_data/combined_results_pi.csv"),
   show_col_types = FALSE
@@ -125,7 +125,7 @@ module_genes <- lapply(
 nes <- run_module_fgsea(rank_wide, module_genes, names(crvh_contrasts))
 write_csv(nes, file.path(DAT, "module_fgsea_nes.csv"))
 
-# --- supplement arm: the CR-only 2x2, with creatine and placebo kept apart ---
+# supplement arm: the CR-only 2x2, with creatine and placebo kept apart
 # The main card pools the two arms because only 6 subjects per arm are paired. This
 # block keeps them separate so the supplement can show what pooling hides.
 cr_levels <- intersect(c("CRE_T1", "CRE_T2", "PLA_T1", "PLA_T2"), gt_levels)
@@ -192,7 +192,7 @@ traj_supp <- as.data.frame(MEs) |>
   mutate(module_color = sub("^ME", "", module))
 write_csv(traj_supp, file.path(DAT, "trajectory_eigengenes_supp.csv"))
 
-# --- module-eigengene x clinical outcome association ---
+# module-eigengene x clinical outcome association
 eig <- as.matrix(MEs)
 colnames(eig) <- sub("^ME", "", colnames(eig))
 eig <- eig[, colnames(eig) != "grey", drop = FALSE]

@@ -21,7 +21,7 @@ dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   filter(!is.na(logFC_CRvH_Baseline), !is.na(logFC_CR_Training),
@@ -47,7 +47,7 @@ dn_weights <- abs(all_ranked$t_CRvH_Baseline[dn_ranks])
 
 message(sprintf("  Cancer signature: %d up, %d down", n_up, n_dn))
 
-# ── Weighted KS enrichment score ─────────────────────────────────────────────
+# Weighted KS enrichment score
 compute_es <- function(ranks_in_set, n_total, weights = NULL) {
   n_set <- length(ranks_in_set)
   if (n_set == 0) return(list(es = 0, running = rep(0, n_total)))
@@ -86,7 +86,7 @@ message(sprintf("  ES(up) = %.3f, ES(down) = %.3f, Connectivity = %.3f (%s)",
                 es_up_obj$es, es_dn_obj$es, connectivity,
                 ifelse(connectivity < 0, "REVERSAL", "EXACERBATION")))
 
-# ── Permutation test (10,000×) ──────────────────────────────────────────────
+# Permutation test (10,000×)
 set.seed(42)
 B <- 10000
 null_conn <- numeric(B)
@@ -100,7 +100,7 @@ for (i in seq_len(B)) {
 perm_p <- (sum(null_conn <= connectivity) + 1) / (B + 1)
 message(sprintf("  Permutation p = %.5f (n_perm = %d)", perm_p, B))
 
-# ── Export CSV ───────────────────────────────────────────────────────────────
+# Export CSV
 cmap_summary <- tibble(
   ES_up = es_up_obj$es, ES_down = es_dn_obj$es,
   connectivity = connectivity, coherent = coherent,
@@ -111,7 +111,7 @@ write_csv(cmap_summary, file.path(DAT, "SUPP_cmap_connectivity.csv"))
 write_csv(tibble(replicate = seq_len(B), null_connectivity = null_conn),
           file.path(DAT, "SUPP_cmap_null_dist.csv"))
 
-# ── Visualization ────────────────────────────────────────────────────────────
+# Visualization
 # Left: running enrichment curves
 run_df <- tibble(
   rank = rep(1:n_all, 2),
@@ -173,5 +173,3 @@ ggsave(file.path(RPT_PNG, "SUPP_cmap_connectivity.png"), pS_cmap,
        width = 260, height = 100, units = "mm", dpi = 300)
 ggsave(file.path(RPT_PDF, "SUPP_cmap_connectivity.pdf"), pS_cmap,
        width = 260, height = 100, units = "mm", device = pdf_device)
-
-message("Done: SUPP_cmap_connectivity")

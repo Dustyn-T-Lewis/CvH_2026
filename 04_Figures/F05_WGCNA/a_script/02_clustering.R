@@ -22,7 +22,7 @@ for (d in c(RPT_PNG, RPT_PDF, SUPP_PNG, SUPP_PDF)) {
 }
 pdf_device <- get_pdf_device()
 
-# --- per-module ORA cache ---
+# per-module ORA cache
 module_df <- read_csv(file.path(DAT, "wgcna_module_assignments.csv"), show_col_types = FALSE)
 mod_bio <- read_csv(file.path(DAT, "mod_bio_labels.csv"), show_col_types = FALSE)
 universe <- unique(na.omit(module_df$gene))
@@ -42,7 +42,7 @@ ora <- map_dfr(mod_bio$module_color, function(mod) {
 })
 write_csv(ora, file.path(DAT, "module_ora.csv"))
 
-# --- assemble the card ---
+# assemble the card
 nes <- read_csv(file.path(DAT, "module_fgsea_nes.csv"), show_col_types = FALSE)
 settests <- read_csv(file.path(DAT, "module_set_tests.csv"), show_col_types = FALSE)
 omnibus <- read_csv(file.path(DAT, "module_omnibus_F.csv"), show_col_types = FALSE)
@@ -94,14 +94,14 @@ if (length(supp_mods)) {
   message(sprintf("F05 supplement card saved (%d modules)", length(supp_mods)))
 }
 
-# --- supplements ---
+# supplements
 cor_matched <- read_csv(file.path(DAT, "module_trait_cor_matched.csv"), show_col_types = FALSE)
 lmm_pheno <- read_csv(file.path(DAT, "module_trait_lmm.csv"), show_col_types = FALSE)
 render_construction_supp(DAT, SUPP_PNG, SUPP_PDF, pdf_device)
 render_phenotype_supp(cor_pheno, cor_matched, lmm_pheno, SUPP_PNG, SUPP_PDF, pdf_device)
 render_supplement_arm(DAT, SUPP_PNG, SUPP_PDF, pdf_device)
 
-# --- one supplementary workbook ---
+# one supplementary workbook
 overview <- tibble::tribble(
   ~Sheet, ~Contents,
   "module_summary", "Module id, colour, protein count.",

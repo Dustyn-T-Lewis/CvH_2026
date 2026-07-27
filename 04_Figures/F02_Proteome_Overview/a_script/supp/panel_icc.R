@@ -16,7 +16,7 @@ DAT_DIR <- "04_Figures/F02_Proteome_Overview/c_data/supp"
 dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ── Load data & metadata ──
+# Load data & metadata
 .dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
 norm_df <- tibble::as_tibble(cbind(
   .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
@@ -39,7 +39,7 @@ rownames(log_mat) <- norm_df$gene
 
 pdf_device <- get_pdf_device()
 
-# ── ICC(3,1) per protein within each supplement group ──
+# ICC(3,1) per protein within each supplement group
 compute_icc_per_group <- function(supp_group) {
   grp_meta <- meta |> filter(Supplement == supp_group)
   subjects <- unique(grp_meta$Subject_ID)
@@ -85,7 +85,7 @@ icc_pla <- compute_icc_per_group("PLA")
 icc_df  <- bind_rows(icc_cre, icc_pla) |> filter(!is.na(icc))
 icc_df$group <- factor(icc_df$group, levels = c("CRE", "PLA"))
 
-# ── Bootstrap 95% CI on median ICC per group ──
+# Bootstrap 95% CI on median ICC per group
 set.seed(42)
 boot_median_ci <- function(x, R = 2000, conf = 0.95) {
   meds <- replicate(R, median(sample(x, replace = TRUE)))
@@ -139,7 +139,7 @@ pA_ICC <- ggplot(icc_df, aes(x = group, y = icc, fill = group)) +
        tag = "A'") +
   FIG_THEME + theme(legend.position = "none")
 
-# ── Save ──
+# Save
 write.csv(icc_summary, file.path(DAT_DIR, "icc.csv"),
           row.names = FALSE)
 

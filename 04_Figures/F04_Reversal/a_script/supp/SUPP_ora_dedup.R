@@ -13,7 +13,7 @@ dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# ── Data ─────────────────────────────────────────────────────────────────────
+# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   transmute(gene,
@@ -30,7 +30,7 @@ pathways <- build_pathway_collection(min_size = 15, max_size = 500,
                                      include_goslim = FALSE,
                                      exclude_variants = TRUE)
 
-# ── Sweep Jaccard cutoffs ────────────────────────────────────────────────────
+# Sweep Jaccard cutoffs
 cutoffs <- c(0.3, 0.5, 0.7, 1.0)
 quad_list <- list(
   `Cancer Up / Training Down` = cancer_up_train_dn,
@@ -47,7 +47,7 @@ sweep_res <- map_dfr(cutoffs, function(jc) {
 
 write_csv(sweep_res, file.path(DAT, "SUPP_ora_dedup_sensitivity.csv"))
 
-# ── Plot ─────────────────────────────────────────────────────────────────────
+# Plot
 QUAD_COLORS <- c(
   `Cancer Up / Training Down` = unname(DIR_COLORS["Up"]),
   `Cancer Down / Training Up` = unname(DIR_COLORS["Down"])
@@ -71,5 +71,3 @@ ggsave(file.path(RPT_PNG, "SUPP_ora_dedup.png"), pS_ora_dedup,
        width = 140, height = 100, units = "mm", dpi = 300)
 ggsave(file.path(RPT_PDF, "SUPP_ora_dedup.pdf"), pS_ora_dedup,
        width = 140, height = 100, units = "mm", device = pdf_device)
-
-message("Done: SUPP_ora_dedup")

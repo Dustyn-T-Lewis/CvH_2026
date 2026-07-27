@@ -15,7 +15,7 @@ DAT_DIR <- "04_Figures/F02_Proteome_Overview/c_data"
 dir.create(RPT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ── Load data & metadata ──
+# Load data & metadata
 # Normalized (non-imputed) matrix from the proteoDA DAList.
 .dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
 norm_df <- tibble::as_tibble(cbind(
@@ -35,7 +35,7 @@ samp_crvh <- meta$Col_ID
 
 pdf_device <- get_pdf_device()
 
-# ── CV on linear (not log) scale per Brenes 2024 ──
+# CV on linear (not log) scale per Brenes 2024
 lin_mat <- 2^as.matrix(norm_df[, samp_crvh])
 
 # Group_Time levels: CRE_T1, CRE_T2, PLA_T1, PLA_T2, H_T1
@@ -76,7 +76,7 @@ cv_all <- bind_rows(cv_df, cv_pooled)
 cv_all$facet <- factor(cv_all$facet,
                        levels = c("CR (pooled)", "CRE", "PLA", "Healthy"))
 
-# ── Bootstrap 95% CI on median CV per group ──
+# Bootstrap 95% CI on median CV per group
 set.seed(42)
 boot_median_ci <- function(x, R = 2000, conf = 0.95) {
   meds <- replicate(R, median(sample(x, replace = TRUE)))
@@ -84,7 +84,7 @@ boot_median_ci <- function(x, R = 2000, conf = 0.95) {
   c(lower = unname(qs[1]), upper = unname(qs[2]))
 }
 
-# ── Wilcoxon tests: T1 vs T2 within each facet (paired where possible) ──
+# Wilcoxon tests: T1 vs T2 within each facet (paired where possible)
 cliffs_delta <- function(x, y) {
   nx <- length(x); ny <- length(y)
   d <- outer(x, y, function(a, b) sign(a - b))
@@ -106,7 +106,7 @@ wilcox_results <- lapply(bracket_facets, function(f) {
 wilcox_df <- bind_rows(wilcox_results)
 wilcox_df$p_bh <- p.adjust(wilcox_df$p_raw, method = "BH")
 
-# ── Summary stats per facet x timepoint ──
+# Summary stats per facet x timepoint
 cv_ci <- cv_all |>
   group_by(facet, timepoint) |>
   summarise(
@@ -141,7 +141,7 @@ sub_txt <- sprintf(
   delta_cv$delta[delta_cv$facet == "PLA"]
 )
 
-# ── Plot ──
+# Plot
 pA <- ggplot(cv_all, aes(x = timepoint, y = cv, fill = group_time)) +
   geom_violin(alpha = 0.5, linewidth = 0.3, color = "black", scale = "width") +
   geom_quasirandom(aes(color = group_time), alpha = 0.15, size = 0.5,
@@ -181,7 +181,7 @@ pA <- ggplot(cv_all, aes(x = timepoint, y = cv, fill = group_time)) +
   FIG_THEME + theme(legend.position = "none",
                     panel.spacing = unit(8, "mm"))
 
-# ── Save ──
+# Save
 write.csv(as.data.frame(cv_ci),
           file.path(DAT_DIR, "audit_cv_violin_median_ci.csv"), row.names = FALSE)
 write.csv(wilcox_df,

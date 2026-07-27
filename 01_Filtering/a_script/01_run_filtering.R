@@ -64,8 +64,6 @@ names(blood_cor) <- annotation$uniprot_id
 rbc <- read_tsv(here("00_input", "RBC_proteome_reference.tsv"), show_col_types = FALSE)
 strip_iso <- function(x) sub("-\\d+$", "", x)
 
-# Contaminant removal
-
 # Remove a protein iff blood-derived AND NOT myofiber-expressed:
 #   blood-derived = HPA "Secreted to blood" | immunoglobulin | erythrocyte-high
 #   keep-override = high single-cell Myonuclei signal (genuine muscle protein)
@@ -149,8 +147,6 @@ flog <- bind_rows(flog, tibble(
   n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)
 ))
 flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
-
-# Outlier consensus
 
 # Four independent QC heuristics; a sample is dropped only on >= 3/4 agreement.
 # Missingness adds a paired arm: a within-subject pre->post jump in NA rate is

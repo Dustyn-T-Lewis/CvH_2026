@@ -18,12 +18,12 @@ COMP_RED <- unname(DIR_COLORS["Up"])
 COMP_BLUE <- unname(DIR_COLORS["Down"])
 PG_W <- 146
 
-# --- Load fGSEA cache (LONG format) ---
+# Load fGSEA cache (LONG format)
 fgsea_cache <- "04_Figures/shared/fgsea_CRvH.csv"
 stopifnot("fGSEA cache missing" = file.exists(fgsea_cache))
 fgsea_long <- read_csv(fgsea_cache, show_col_types = FALSE)
 
-# --- Pivot to wide ---
+# Pivot to wide
 fgsea_wide <- fgsea_long %>%
   dplyr::select(pathway, NES, padj, size, database, contrast) %>%
   pivot_wider(
@@ -34,7 +34,7 @@ fgsea_wide <- fgsea_long %>%
   ) %>%
   filter(!is.na(NES_CRvH_Baseline), !is.na(NES_CR_Training))
 
-# --- Filter to Hallmark + GO Slim ---
+# Filter to Hallmark + GO Slim
 fgsea_hg <- fgsea_wide %>%
   filter(database %in% c("Hallmark", "GO Slim"))
 
@@ -63,7 +63,7 @@ message(sprintf(
   nrow(fgsea_sig)
 ))
 
-# --- Spearman correlation ---
+# Spearman correlation
 nes_cor_all <- cor.test(fgsea_hg$NES_CRvH_Baseline,
   fgsea_hg$NES_CR_Training,
   method = "spearman"
@@ -83,7 +83,7 @@ nes_lim <- max(abs(c(
   fgsea_hg$NES_CR_Training
 ))) * 1.15
 
-# --- Quadrant counts ---
+# Quadrant counts
 n_q1 <- sum(fgsea_sig$NES_CRvH_Baseline > 0 & fgsea_sig$NES_CR_Training > 0)
 n_q2 <- sum(fgsea_sig$NES_CRvH_Baseline < 0 & fgsea_sig$NES_CR_Training > 0)
 n_q3 <- sum(fgsea_sig$NES_CRvH_Baseline < 0 & fgsea_sig$NES_CR_Training < 0)
@@ -97,14 +97,14 @@ message(sprintf(
   nes_cor_all$estimate, nes_ci_all[1], nes_ci_all[2]
 ))
 
-# --- Sizes ---
+# Sizes
 txt_quad <- 2.8
 
-# --- Split for layered plotting ---
+# Split for layered plotting
 ns_df <- fgsea_hg %>% filter(significance == "NS")
 sig_df <- fgsea_hg %>% filter(significance != "NS")
 
-# --- Subtitle ---
+# Subtitle
 rho_sig_str <- if (!is.null(nes_cor_sig)) {
   sprintf(", \u03c1(sig) = %.2f", nes_cor_sig$estimate)
 } else {
@@ -120,7 +120,7 @@ subtitle_str <- sprintf(
   rho_sig_str, rev_frac * 100
 )
 
-# --- Build plot ---
+# Build plot
 pB <- ggplot(mapping = aes(x = NES_CRvH_Baseline, y = NES_CR_Training)) +
   # Quadrant backgrounds: blue = reversed (off-diagonal), red = exacerbated
   annotate("rect",
@@ -240,7 +240,7 @@ ggsave(file.path(RPT_PDF, "MAIN_panel_B_nes_scatter.pdf"), pB,
   width = PG_W, height = PG_W, units = "mm", device = pdf_device
 )
 
-# --- Export ---
+# Export
 export_df <- fgsea_hg %>%
   transmute(
     pathway, pathway_label, database,
@@ -255,6 +255,3 @@ export_df <- fgsea_hg %>%
 write_csv(export_df, file.path(DAT, "panel_B", "nes_scatter.csv"))
 
 pB <- pB + labs(title = NULL, subtitle = NULL, tag = NULL)
-
-
-message("Reversal Panel B NES scatter done")
