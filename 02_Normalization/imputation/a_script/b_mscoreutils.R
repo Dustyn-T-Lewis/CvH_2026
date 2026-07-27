@@ -7,9 +7,9 @@
 #      QRILC (left-censored) to the MNAR subset.
 
 pacman::p_load(proteoDA, here, MsCoreUtils, imputeLCMD)
-set.seed(42)                                       # QRILC draws from a truncated Gaussian (stochastic)
-norm_dir <- here("02_Normalization", "c_data")                  # read stage-02 normalized matrix
-data_dir <- here("02_Normalization", "imputation", "c_data")     # write imputed DAList here
+set.seed(42) # QRILC draws from a truncated Gaussian (stochastic)
+norm_dir <- here("02_Normalization", "c_data") # read stage-02 normalized matrix
+data_dir <- here("02_Normalization", "imputation", "c_data") # write imputed DAList here
 dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
 
 # Load normalized DAList
@@ -21,17 +21,24 @@ cat(sprintf("[mscoreutils] %d x %d | %.1f%% missing\n", nrow(mat), ncol(mat), me
 # Impute
 # model.Selector gives the MAR mask; impute_matrix routes MAR->knn, MNAR->QRILC.
 
-ms     <- model.Selector(mat)
-randna <- as.logical(ms[[1]])                      # TRUE = MAR feature
+ms <- model.Selector(mat)
+randna <- as.logical(ms[[1]]) # TRUE = MAR feature
 cat(sprintf("[mscoreutils] model.Selector split: %d MAR / %d MNAR features\n", sum(randna), sum(!randna)))
 
-imp <- impute_matrix(mat, method = "mixed", randna = randna, mar = "knn", mnar = "QRILC")
+# impute_mixed defaults both arms to MARGIN 1; QRILC's own default is 2, and fitting the
+# truncated Gaussian per sample rather than per protein is what makes it left-censored.
+imp <- impute_matrix(mat,
+  method = "mixed", randna = randna, mar = "knn", mnar = "QRILC",
+  MARGIN = c(1L, 2L)
+)
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
 
 # Export
 
 dal$data <- imp
-dal$imputation <- list(method = "MsCoreUtils mixed (imputeLCMD model.Selector)",
-                       mar = "knn", mnar = "QRILC", n_mar = sum(randna), n_mnar = sum(!randna))
+dal$imputation <- list(
+  method = "MsCoreUtils mixed (imputeLCMD model.Selector)",
+  mar = "knn", mnar = "QRILC", n_mar = sum(randna), n_mnar = sum(!randna)
+)
 saveRDS(dal, file.path(data_dir, "DAList_imputed_mscoreutils.rds"))
 cat(sprintf("[mscoreutils] done: hybrid (knn/QRILC) imputed %d cells -> DAList_imputed_mscoreutils.rds\n", sum(is.na(mat))))
