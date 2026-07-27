@@ -114,7 +114,7 @@ sub_txt <- sprintf(
   fmt_p(wt$p.value)
 )
 
-SUPP_FILL <- c(CRE = "#2166AC", PLA = "#D6604D")
+ICC_FILL <- c(CRE = "#2166AC", PLA = "#D6604D")
 
 pA_ICC <- ggplot(icc_df, aes(x = group, y = icc, fill = group)) +
   geom_violin(alpha = 0.5, linewidth = 0.3, color = "black", scale = "width") +
@@ -131,7 +131,7 @@ pA_ICC <- ggplot(icc_df, aes(x = group, y = icc, fill = group)) +
              size = scale_text(BASE_COUNT + 0.5, PA_ICC_W),
              fontface = "bold", fill = scales::alpha("white", 0.8),
              linewidth = 0.2, label.padding = unit(1.5, "pt")) +
-  scale_fill_manual(values = SUPP_FILL) +
+  scale_fill_manual(values = ICC_FILL) +
   coord_cartesian(ylim = c(-0.2, 1.1)) +
   labs(title = "Test-Retest Reliability (ICC)",
        subtitle = sub_txt,
