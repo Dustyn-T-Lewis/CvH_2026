@@ -106,7 +106,11 @@ overview <- tibble::tribble(
   ~Sheet, ~Contents,
   "module_summary", "Module id, colour, protein count.",
   "eigengene_lmm", "Eigengene ME ~ group_time contrasts (r_equiv, Kenward-Roger).",
-  "fry_camera", "fry (gate) and camera (reported) per module per contrast.",
+  "fry_camera", paste(
+    "fry (reported; subject block via duplicateCorrelation) and camera",
+    "(sensitivity only: takes no block and assumes inter.gene.cor = 0.01,",
+    "so its p-values are far smaller and are not the figure's test)."
+  ),
   "module_omnibus_F", "Eigengene omnibus moderated-F; main-figure gate.",
   "module_fgsea_nes", "Per-module fGSEA NES, modules as gene sets ranked by DE t.",
   "phenotype_baseline", "Primary: T1 eigengene vs pre_ outcomes, corPvalueStudent.",
