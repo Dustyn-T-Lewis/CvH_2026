@@ -40,7 +40,6 @@ roc_df <- read_csv(file.path(DAT, "roc_curves.csv"), show_col_types = FALSE) |>
 tier1 <- read_csv(file.path(DAT, "circularity_tier1.csv"), show_col_types = FALSE)
 tier2 <- read_csv(file.path(DAT, "circularity_tier2.csv"), show_col_types = FALSE)
 rev_sum <- read_csv(file.path(DAT, "reversal_arm_summary.csv"), show_col_types = FALSE)
-rev_roc <- read_csv(file.path(DAT, "reversal_arm_roc.csv"), show_col_types = FALSE)
 cross_tab <- read_csv(file.path(DAT, "reversal_crosstab.csv"), show_col_types = FALSE)
 stability <- read_csv(file.path(DAT, "feature_stability.csv"), show_col_types = FALSE)
 

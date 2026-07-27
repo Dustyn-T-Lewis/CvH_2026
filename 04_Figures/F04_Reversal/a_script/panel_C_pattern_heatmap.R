@@ -142,7 +142,6 @@ X_SIG <- 0.8
 X_COL1 <- X_SIG + STRIP_W / 2 + TILE_W / 2 + 0.01
 X_COL2 <- X_COL1 + TILE_W + 0.01
 X_QUAD <- X_COL2 + TILE_W / 2 + STRIP_W / 2 + 0.01
-HEAT_LEFT <- X_SIG - STRIP_W / 2
 HEAT_RIGHT <- X_QUAD + STRIP_W / 2
 
 X_SANK_L <- HEAT_RIGHT + 0.08
@@ -287,20 +286,6 @@ col_headers <- tibble(
   color = unname(CONTRAST_COLORS[c("CRvH_Baseline", "CR_Training")])
 )
 
-# 8. LEGENDS
-n_g <- 50
-HEAT_MID <- (HEAT_LEFT + HEAT_RIGHT) / 2
-GRAD_HALFW <- (HEAT_RIGHT - HEAT_LEFT) * 0.30
-GRAD_L <- HEAT_MID - GRAD_HALFW
-GRAD_R <- HEAT_MID + GRAD_HALFW
-grad_xs <- seq(GRAD_L, GRAD_R, length.out = n_g)
-grad_h_legend <- tibble(
-  xmin = grad_xs,
-  xmax = lead(grad_xs, default = max(grad_xs) + diff(grad_xs)[1]),
-  fv = seq(-fc_max, fc_max, length.out = n_g),
-  fill = lfc_to_color(seq(-fc_max, fc_max, length.out = n_g), fc_max)
-)
-GRAD_Y <- total_h + ROW_H * 2.9
 
 FONT_UNI <- 2.5
 FONT_BAR <- 2.0
@@ -430,10 +415,6 @@ bar_data %>%
   dplyr::select(pathway, quadrant, n_seg, xmin, xmax) %>%
   write_csv(file.path(DAT, "panel_C_heatmap", "bar_data.csv"))
 
-# --- Export for composite ---
-pC_title <- "Reversal Pattern Classification"
-pC_subtitle <- sprintf("%d proteins | GO Slim | %d pathways", n_total, n_pw)
-pC_legend <- NULL
 p <- p + labs(title = NULL, subtitle = NULL, tag = NULL) +
   coord_cartesian(
     xlim = c(0.0, X_BAR_MAX + 2.0),

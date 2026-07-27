@@ -461,8 +461,6 @@ r_spear <- cor(scatter_df$logFC_CvH, scatter_df$logFC_TR,
   use = "complete.obs",
   method = "spearman"
 )
-sig_sub <- scatter_df |> filter(is_sig)
-r_pear <- cor(sig_sub$logFC_CvH, sig_sub$logFC_TR, use = "complete.obs")
 
 composite <- p_ul + p_scatter + p_ur + p_ll + p_lr + p_key +
   plot_layout(
@@ -492,13 +490,6 @@ ggsave(file.path(RPT_PDF, "MAIN_panel_A_ORA_composite.pdf"), composite,
   width = COMP_W, height = COMP_H, units = "mm", device = pdf_device
 )
 
-# --- Export for composite ---
-pA_title <- "Cancer Recovery Reversal: Quadrant ORA"
-pA_subtitle <- sprintf(
-  "N = %d | %d DEPs (\u03a0) | %d enriched | \u03c1 = %.2f",
-  n_total, n_sig, n_enrich, r_spear
-)
-pA_legend <- NULL
 composite <- composite &
   labs(title = NULL, subtitle = NULL, tag = NULL) &
   theme(legend.position = "none")

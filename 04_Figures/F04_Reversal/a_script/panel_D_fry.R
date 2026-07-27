@@ -647,7 +647,6 @@ fry_design_bidir <- c(
 )
 
 n_all <- max(n_tr, n_cvh)
-cor_imp <- cor_cr # backward compat for stitcher snapshot
 
 pD_subtitle_full <- sprintf(
   "circ r = %.3f | dupCor(CR) = %.3f, dupCor(all) = %.3f | n = %d | n_eff: Up=%.0f, Dn=%.0f",
@@ -686,10 +685,6 @@ ggsave(file.path(RPT_PDF, "MAIN_F04_fry.pdf"), pD_fry,
   width = PANEL_W * 2, height = 175, units = "mm", device = pdf_device
 )
 
-# --- Export for composite (strip titles) ---
-pD_title <- "fry: Reversal (bidirectional)"
-pD_subtitle <- pD_subtitle_full
-pD_legend <- NULL
 pD_fry <- pD_fry &
   labs(title = NULL, subtitle = NULL, tag = NULL) &
   theme(legend.position = "none")

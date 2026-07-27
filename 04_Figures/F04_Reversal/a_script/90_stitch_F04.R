@@ -22,10 +22,8 @@ n_total_A <- nrow(scatter_df)
 n_sig_A <- sum(scatter_df$is_sig)
 n_enrich_A <- if (exists("all_quad_ora") && nrow(all_quad_ora) > 0) sum(all_quad_ora$significant) else 0L
 r_spear_A <- cor(scatter_df$logFC_CvH, scatter_df$logFC_TR, use = "complete.obs", method = "spearman")
-r_pear_A <- cor(scatter_df$logFC_CvH[scatter_df$is_sig], scatter_df$logFC_TR[scatter_df$is_sig], use = "complete.obs")
 
 source(file.path(A, "panel_B_nes_scatter.R"))
-n_pw_B <- nrow(fgsea_hg)
 n_sig_pw_B <- nrow(fgsea_sig)
 rho_B <- as.numeric(nes_cor_all$estimate)
 rho_lo_B <- nes_ci_all[1]
@@ -33,8 +31,6 @@ rho_hi_B <- nes_ci_all[2]
 pw_rev_B <- rev_frac
 
 source(file.path(A, "panel_D_fry.R"))
-cor_imp_D <- cor_imp
-n_all_D <- n_all
 circ_r_D <- circ_r
 fry_up_D <- fry_up
 fry_dn_D <- fry_dn
@@ -42,7 +38,6 @@ fry_dn_D <- fry_dn
 source(file.path(A, "panel_E_rrho2.R"))
 n_shared_E <- n_shared
 max_rev_E <- max(max_UD, max_DU)
-n_rev_E <- if (max_UD >= max_DU) n_UD else n_DU
 message("  self-rendered supplement: SUPP_F04_rrho2")
 
 source(file.path(A, "panel_C_pattern_heatmap.R"))

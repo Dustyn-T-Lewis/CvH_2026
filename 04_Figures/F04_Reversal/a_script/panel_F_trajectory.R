@@ -24,10 +24,6 @@ AXISLAB <- c(H_pre = "Healthy", CR_pre = "CR pre", CR_post = "CR post")
 K <- 6 # soft clusters
 M_FUZZ <- 1.25 # fuzzifier (Mfuzz-style)
 PHI_BAND <- 0.25 # engine band (REVERSAL_PHI_BAND)
-CLASS_COLORS <- c(
-  Normalized = "#1B7837", Persistent = "#878787",
-  Exacerbated = "#D6604D"
-)
 
 # ── Data: group-mean trajectories of the disease signature ───────────────────
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dep_df, dal

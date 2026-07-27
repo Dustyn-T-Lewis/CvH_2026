@@ -254,13 +254,7 @@ export_df <- fgsea_hg %>%
   arrange(significance, desc(abs(NES_CRvH_Baseline) + abs(NES_CR_Training)))
 write_csv(export_df, file.path(DAT, "panel_B", "nes_scatter.csv"))
 
-# --- Export for composite ---
-pB_title <- "Pathway NES: Cancer Recovery Reversal"
-pB_subtitle <- subtitle_str
-pB_legend <- NULL
 pB <- pB + labs(title = NULL, subtitle = NULL, tag = NULL)
 
-# Backward-compatible alias
-pw_rev_frac <- rev_frac
 
 message("Reversal Panel B NES scatter done")

@@ -259,10 +259,6 @@ rrho2_meta <- tibble(
 )
 write_csv(rrho2_meta, file.path(DAT, "panel_E", "rrho2_summary.csv"))
 
-# --- Export for composite ---
-pE_title <- "RRHO2"
-pE_subtitle <- sprintf("%d genes | peak = %.0f", n_shared, max_val)
-pE_legend <- NULL
 pE_heat <- pE_heat +
   labs(title = NULL, subtitle = NULL, tag = NULL) +
   coord_fixed(ratio = 1, clip = "off")
