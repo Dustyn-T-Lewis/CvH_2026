@@ -101,6 +101,16 @@ Rscript 04_Figures/F06_Prediction/a_script/00_run_F06.R          # needs F04 and
 `04_Figures/F05_WGCNA/a_script/supp/network_validation.R` is a long parameter
 sweep. Run it on demand, not from the driver.
 
+Two test suites cover the shared statistics helpers:
+
+```sh
+Rscript -e "testthat::test_file('04_Figures/F05_WGCNA/tests/test-wgcna_stats.R')"
+Rscript -e "testthat::test_file('04_Figures/F06_Prediction/tests/test-prediction_utils.R')"
+```
+
+`docs/decisions.md` records the choices behind the pipeline and why they were
+made. Read it before changing anything statistical.
+
 ## Rules that matter
 
 Paths resolve from the project root; figure scripts anchor with
