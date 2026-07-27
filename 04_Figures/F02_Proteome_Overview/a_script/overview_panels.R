@@ -14,12 +14,14 @@ SUPP_CTR <- c(
   Baseline_Supplement = "CRE vs PLA", Training_CRE = "Tr. CRE",
   Training_PLA = "Tr. PLA", Supplement_Interaction = "Interaction"
 )
-# keyed by display label so the fill scales match the `ctr` factor directly
-MAIN_PAL <- c("CR vs H" = "#D6604D", "Training" = "#9C27B0", "Residual" = "#00897B")
-SUPP_PAL <- c(
-  "CRE vs PLA" = "#00897B", "Tr. CRE" = "#2166AC",
-  "Tr. PLA" = "#D6604D", "Interaction" = "#FF8F00"
-)
+# The fill scales key on the display label, so relabel the shared contrast
+# palette rather than restate hexes here, which is how F02 drifted into showing
+# CRvH_Baseline in the placebo red every other figure uses for Training_PLA.
+contrast_pal <- function(ctr_map) {
+  setNames(unname(CONTRAST_COLORS[names(ctr_map)]), unname(ctr_map))
+}
+MAIN_PAL <- contrast_pal(MAIN_CTR)
+SUPP_PAL <- contrast_pal(SUPP_CTR)
 
 load_dep <- function(ctr_map) {
   readr::read_csv(DEP_CSV, show_col_types = FALSE) |>
