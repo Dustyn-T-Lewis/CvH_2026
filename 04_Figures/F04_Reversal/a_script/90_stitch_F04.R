@@ -237,7 +237,10 @@ ggsave(file.path(RPT_SUPP_PDF, "SUPP_F04_diagnostics.pdf"), diagnostics,
   width = 360, height = 400, units = "mm", device = pdf_device
 )
 
-methods <- pS_melov + pS_cmap + pS_asym +
+# Each of these is already a patchwork; a bare + flattens the leftmost one into the
+# top level, leaving 5 plots for 3 areas and silently dropping two. wrap_elements keeps
+# each row as a single unit.
+methods <- wrap_elements(pS_melov) + wrap_elements(pS_cmap) + wrap_elements(pS_asym) +
   plot_layout(design = "AAAA\nBBBB\nCCCC") +
   plot_annotation(tag_levels = "A", theme = theme(
     plot.tag = element_text(face = "bold", size = 14),
