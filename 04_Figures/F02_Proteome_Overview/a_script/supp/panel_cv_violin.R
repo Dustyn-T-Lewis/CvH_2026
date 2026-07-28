@@ -5,6 +5,7 @@
 
 setwd(here::here())
 source("04_Figures/shared/style.R")
+source("04_Figures/shared/stats.R")
 
 pacman::p_load(dplyr, tidyr, stringr, readr, ggplot2, ggbeeswarm)
 
@@ -78,12 +79,6 @@ cv_all$facet <- factor(cv_all$facet,
 
 # Bootstrap 95% CI on median CV per group
 set.seed(42)
-boot_median_ci <- function(x, R = 2000, conf = 0.95) {
-  meds <- replicate(R, median(sample(x, replace = TRUE)))
-  qs   <- quantile(meds, c((1 - conf) / 2, (1 + conf) / 2))
-  c(lower = unname(qs[1]), upper = unname(qs[2]))
-}
-
 # Wilcoxon tests: T1 vs T2 within each facet (paired where possible)
 cliffs_delta <- function(x, y) {
   nx <- length(x); ny <- length(y)

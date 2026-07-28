@@ -73,3 +73,46 @@ test_that("classify_proteins_f4 sends non-estimable Pi values to NS, not to a cl
   expect_equal(as.character(classify_proteins_f4(NA_real_, 0.01)), "Sig Training only")
   expect_equal(as.character(classify_proteins_f4(0.01, NA_real_)), "Sig Cancer only")
 })
+
+test_that("compute_cv returns the percent CV of the selected columns", {
+  mat <- rbind(a = c(1, 2, 3), b = c(10, 10, 10))
+  cv <- compute_cv(mat, 1:3)
+  expect_equal(cv[["a"]], sd(c(1, 2, 3)) / 2 * 100, tolerance = 1e-9)
+  expect_equal(cv[["b"]], 0)
+})
+
+test_that("compute_cv honours idx and drops NAs before computing", {
+  mat <- rbind(a = c(1, 2, 3, 100))
+  expect_equal(compute_cv(mat, 1:3)[["a"]], compute_cv(cbind(1, 2, 3), 1:3)[[1]])
+  expect_equal(
+    compute_cv(rbind(a = c(1, NA, 3)), 1:3)[["a"]],
+    sd(c(1, 3)) / 2 * 100,
+    tolerance = 1e-9
+  )
+})
+
+test_that("compute_cv gives NA where fewer than two values survive", {
+  expect_true(is.na(compute_cv(rbind(a = c(5, NA, NA)), 1:3)[["a"]]))
+  expect_true(is.na(compute_cv(rbind(a = c(NA, NA, NA)), 1:3)[["a"]]))
+  expect_true(is.na(compute_cv(rbind(a = c(1, 2, 3)), 2)[["a"]]))
+})
+
+test_that("boot_median_ci brackets the median and is reproducible when seeded", {
+  x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+  set.seed(42)
+  ci <- boot_median_ci(x, R = 500)
+  expect_named(ci, c("lower", "upper"))
+  expect_lte(ci[["lower"]], median(x))
+  expect_gte(ci[["upper"]], median(x))
+  set.seed(42)
+  expect_equal(boot_median_ci(x, R = 500), ci)
+})
+
+test_that("boot_median_ci widens with a higher confidence level", {
+  x <- as.numeric(1:40)
+  set.seed(1)
+  narrow <- diff(boot_median_ci(x, R = 500, conf = 0.80))
+  set.seed(1)
+  wide <- diff(boot_median_ci(x, R = 500, conf = 0.99))
+  expect_gt(wide, narrow)
+})

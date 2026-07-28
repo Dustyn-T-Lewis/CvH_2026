@@ -20,3 +20,19 @@ classify_proteins_f4 <- function(pi_CvH, pi_TR, threshold = 0.05) {
   ) |>
     factor(levels = c("Sig Both", "Sig Cancer only", "Sig Training only", "NS"))
 }
+
+# Per-protein CV across the columns in idx, on the linear scale (Brenes 2024).
+# A protein observed once in the subset has no CV, hence the length < 2 guard.
+compute_cv <- function(mat, idx) {
+  apply(mat[, idx, drop = FALSE], 1, function(x) {
+    x <- x[!is.na(x)]
+    if (length(x) < 2) NA_real_ else sd(x) / mean(x) * 100
+  })
+}
+
+# Percentile bootstrap CI on a median. Callers seed before calling.
+boot_median_ci <- function(x, R = 2000, conf = 0.95) {
+  meds <- replicate(R, median(sample(x, replace = TRUE)))
+  qs <- quantile(meds, c((1 - conf) / 2, (1 + conf) / 2))
+  c(lower = unname(qs[1]), upper = unname(qs[2]))
+}

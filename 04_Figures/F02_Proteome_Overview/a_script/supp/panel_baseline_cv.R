@@ -39,17 +39,6 @@ h_t1_ids <- meta$Col_ID[meta$Group == "PPS"]
 # CV on linear scale (Brenes 2024)
 lin_mat <- 2^as.matrix(norm_df[, samp_names])
 
-compute_cv <- function(mat, idx) {
-  sub <- mat[, idx, drop = FALSE]
-  apply(sub, 1, function(x) {
-    x <- x[!is.na(x)]
-    if (length(x) < 2) {
-      return(NA_real_)
-    }
-    sd(x) / mean(x) * 100
-  })
-}
-
 cv_cr <- compute_cv(lin_mat, cr_t1_ids)
 cv_h <- compute_cv(lin_mat, h_t1_ids)
 

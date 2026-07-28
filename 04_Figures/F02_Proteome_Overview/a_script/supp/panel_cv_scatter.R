@@ -37,15 +37,6 @@ pdf_device <- get_pdf_device()
 # CV on linear scale per Brenes 2024
 lin_mat <- 2^as.matrix(norm_df[, samp_names])
 
-compute_cv <- function(mat, idx) {
-  sub <- mat[, idx, drop = FALSE]
-  apply(sub, 1, function(x) {
-    x <- x[!is.na(x)]
-    if (length(x) < 2) return(NA_real_)
-    sd(x) / mean(x) * 100
-  })
-}
-
 # Three group scatters: CR pooled, CRE, PLA
 scatter_groups <- list(
   "CR (pooled)" = list(
