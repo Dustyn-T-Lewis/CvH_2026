@@ -312,33 +312,4 @@ classify_database <- function(pathway_names) {
 }
 
 
-# MSigDB pathway ID -> 15 consolidated categories (keyword rules)
-CONSOLIDATED_PATHWAY_ORDER <- c(
-  "Muscle & Contractile", "Cytoskeleton & Motility", "ECM & Adhesion",
-  "Lipid Metabolism", "Carbohydrate & Energy Metabolism",
-  "Amino Acid & Cofactor Metabolism",
-  "Mitochondria & Energy", "Protein Homeostasis",
-  "Transport", "Translation & Ribosome", "Transcription & Chromatin",
-  "Immune & Inflammation", "DNA & Cell Cycle", "Circulatory System",
-  "Development", "Other"
-)
-
-CONSOLIDATED_COLORS <- c(
-  "Muscle & Contractile"              = "#E57373",
-  "Cytoskeleton & Motility"           = "#FFB74D",
-  "ECM & Adhesion"                    = "#FFF176",
-  "Lipid Metabolism"                  = "#AED581",
-  "Carbohydrate & Energy Metabolism"  = "#81C784",
-  "Amino Acid & Cofactor Metabolism"  = "#66BB6A",
-  "Mitochondria & Energy"             = "#4DB6AC",
-  "Protein Homeostasis"               = "#4FC3F7",
-  "Transport"                         = "#7986CB",
-  "Translation & Ribosome"            = "#BA68C8",
-  "Transcription & Chromatin"         = "#AB47BC",
-  "Immune & Inflammation"             = "#A1887F",
-  "DNA & Cell Cycle"                  = "#90A4AE",
-  "Circulatory System"                = "#CE93D8",
-  "Development"                       = "#B0BEC5",
-  "Other"                             = "#D0D0D0"
-)
 
