@@ -13,12 +13,9 @@ pacman::p_load(tidyverse, patchwork)
 RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
 DAT     <- "04_Figures/F04_Reversal/c_data/panel_supp"
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
-dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   filter(!is.na(logFC_CRvH_Baseline), !is.na(logFC_CR_Training))
@@ -130,7 +127,6 @@ pS_melov <- p_bar + p_null +
     theme = theme(plot.title = element_text(size = FIG_TITLE_SIZE, face = "bold"),
                   plot.subtitle = element_text(size = FIG_SUBTITLE_SIZE, color = "grey30")))
 
-ggsave(file.path(RPT_PNG, "SUPP_melov_proportion.png"), pS_melov,
-       width = 240, height = 100, units = "mm", dpi = 300)
-ggsave(file.path(RPT_PDF, "SUPP_melov_proportion.pdf"), pS_melov,
-       width = 240, height = 100, units = "mm", device = pdf_device)
+save_fig(pS_melov, "SUPP_melov_proportion", RPT_PDF, RPT_PNG,
+  width = 240, height = 100
+)

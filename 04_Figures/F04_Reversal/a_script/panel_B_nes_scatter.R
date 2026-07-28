@@ -120,7 +120,6 @@ subtitle_str <- sprintf(
   rho_sig_str, rev_frac * 100
 )
 
-# Build plot
 pB <- ggplot(mapping = aes(x = NES_CRvH_Baseline, y = NES_CR_Training)) +
   # Quadrant backgrounds: blue = reversed (off-diagonal), red = exacerbated
   annotate("rect",

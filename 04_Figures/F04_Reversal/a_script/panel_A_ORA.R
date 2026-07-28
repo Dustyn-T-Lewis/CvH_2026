@@ -20,7 +20,6 @@ COMP_RED <- unname(DIR_COLORS["Up"])
 COMP_BLUE <- unname(DIR_COLORS["Down"])
 N_SHOW <- 5
 
-# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R") # dep_df + imputation_df
 
 scatter_df <- dep_df %>%

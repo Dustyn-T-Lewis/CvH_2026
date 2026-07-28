@@ -134,7 +134,6 @@ pA_ICC <- ggplot(icc_df, aes(x = group, y = icc, fill = group)) +
        tag = "A'") +
   FIG_THEME + theme(legend.position = "none")
 
-# Save
 write.csv(icc_summary, file.path(DAT_DIR, "icc.csv"),
           row.names = FALSE)
 

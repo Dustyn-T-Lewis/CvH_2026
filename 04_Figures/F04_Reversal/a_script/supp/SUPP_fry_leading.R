@@ -9,8 +9,6 @@ RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
 DAT <- "04_Figures/F04_Reversal/c_data/panel_supp"
 
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
-dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
@@ -47,13 +45,11 @@ dir_cols <- if (exists("CANCER_DIR_COLORS")) {
   c("Cancer Up" = "#E57373", "Cancer Down" = "#64B5F6")
 }
 
-# Export CSV
 write.csv(drivers_ann %>% dplyr::select(gene, t_TR, t_CvH, logFC_CvH, cancer_dir),
   file.path(DAT, "SUPP_fry_leading_edge.csv"),
   row.names = FALSE
 )
 
-# Plot
 pS_fry_lead <- ggplot(
   drivers_ann,
   aes(
@@ -74,11 +70,8 @@ pS_fry_lead <- ggplot(
   FIG_THEME +
   theme(legend.position = "right")
 
-ggsave(file.path(RPT_PNG, "SUPP_fry_leading.png"), pS_fry_lead,
-  width = 140, height = 100, units = "mm", dpi = 300, bg = "white"
+save_fig(pS_fry_lead, "SUPP_fry_leading", RPT_PDF, RPT_PNG,
+  width = 140, height = 100,
+  bg = "white"
 )
-ggsave(file.path(RPT_PDF, "SUPP_fry_leading.pdf"), pS_fry_lead,
-  width = 140, height = 100, units = "mm", device = pdf_device
-)
-
 message("Done: SUPP_fry_leading  [", nrow(drivers_ann), " proteins plotted]")

@@ -10,8 +10,6 @@ RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
 DAT     <- "04_Figures/F04_Reversal/c_data/panel_supp"
 
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
-dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
@@ -54,7 +52,6 @@ count_df$quadrant <- factor(count_df$quadrant,
 write.csv(count_df, file.path(DAT, "SUPP_goslim_distribution.csv"),
           row.names = FALSE)
 
-# Plot
 pS_goslim <- ggplot(count_df, aes(x = n, y = consolidated, fill = consolidated)) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~ quadrant, ncol = 1, scales = "free_x") +
@@ -67,10 +64,9 @@ pS_goslim <- ggplot(count_df, aes(x = n, y = consolidated, fill = consolidated))
   theme(strip.text = element_text(face = "bold", size = FIG_STRIP_SIZE),
         axis.text.y = element_text(size = 7))
 
-ggsave(file.path(RPT_PNG, "SUPP_goslim_bars.png"), pS_goslim,
-       width = 170, height = 140, units = "mm", dpi = 300, bg = "white")
-ggsave(file.path(RPT_PDF, "SUPP_goslim_bars.pdf"), pS_goslim,
-       width = 170, height = 140, units = "mm", device = pdf_device)
-
+save_fig(pS_goslim, "SUPP_goslim_bars", RPT_PDF, RPT_PNG,
+  width = 170, height = 140,
+  bg = "white"
+)
 message("Done: SUPP_goslim_bars  [", n_distinct(sig_slim$gene), " genes, ",
         n_distinct(count_df$consolidated), " categories]")

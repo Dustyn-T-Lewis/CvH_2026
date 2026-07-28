@@ -136,7 +136,6 @@ sub_txt <- sprintf(
   delta_cv$delta[delta_cv$facet == "PLA"]
 )
 
-# Plot
 pA <- ggplot(cv_all, aes(x = timepoint, y = cv, fill = group_time)) +
   geom_violin(alpha = 0.5, linewidth = 0.3, color = "black", scale = "width") +
   geom_quasirandom(aes(color = group_time), alpha = 0.15, size = 0.5,
@@ -176,7 +175,6 @@ pA <- ggplot(cv_all, aes(x = timepoint, y = cv, fill = group_time)) +
   FIG_THEME + theme(legend.position = "none",
                     panel.spacing = unit(8, "mm"))
 
-# Save
 write.csv(as.data.frame(cv_ci),
           file.path(DAT_DIR, "audit_cv_violin_median_ci.csv"), row.names = FALSE)
 write.csv(wilcox_df,

@@ -104,6 +104,24 @@ get_pdf_device <- function() {
   if (cairo_ok) grDevices::cairo_pdf else grDevices::pdf
 }
 
+# One plot, both devices, same geometry. bg = NULL is ggsave's own default, which
+# defers to the plot theme; pass bg = "white" only where the caller did.
+save_fig <- function(plot, stem, dir_pdf, dir_png, width, height,
+                     bg = NULL, limitsize = TRUE, dpi = 300,
+                     device = get_pdf_device()) {
+  dir.create(dir_pdf, recursive = TRUE, showWarnings = FALSE)
+  dir.create(dir_png, recursive = TRUE, showWarnings = FALSE)
+  ggplot2::ggsave(file.path(dir_pdf, paste0(stem, ".pdf")), plot,
+    width = width, height = height, units = "mm",
+    device = device, limitsize = limitsize
+  )
+  ggplot2::ggsave(file.path(dir_png, paste0(stem, ".png")), plot,
+    width = width, height = height, units = "mm",
+    dpi = dpi, bg = bg, limitsize = limitsize
+  )
+  invisible(plot)
+}
+
 fmt_p <- function(p) {
   ifelse(p < 0.001, "< 0.001",
     ifelse(p < 0.01, sprintf("= %.3f", p),

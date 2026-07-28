@@ -17,7 +17,6 @@ DAT <- "04_Figures/F02_Proteome_Overview/c_data"
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 
-# Load data
 .dal <- readRDS("02_Normalization/c_data/DAList_normalized.rds")
 norm_df <- tibble::as_tibble(cbind(
   .dal$annotation[, c("uniprot_id", "protein", "gene", "description")],
@@ -153,7 +152,6 @@ pF <- ggplot(scatter_df, aes(x = cv_h, y = cv_cr)) +
     legend.position  = "none"
   )
 
-# Save
 ggsave(file.path(RPT, "baseline_cv.png"), pF,
   width = PF_W, height = PF_H, units = "mm", dpi = 300
 )

@@ -8,12 +8,9 @@ pacman::p_load(tidyverse, fgsea)
 RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
 DAT     <- "04_Figures/F04_Reversal/c_data/panel_supp"
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
-dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 
-# Data
 source("04_Figures/F04_Reversal/a_script/f04_data.R")
 dep_df <- dep_df %>%
   transmute(gene,
@@ -67,7 +64,6 @@ pS_ora_dedup <- ggplot(sweep_res,
   FIG_THEME +
   theme(legend.position = "bottom")
 
-ggsave(file.path(RPT_PNG, "SUPP_ora_dedup.png"), pS_ora_dedup,
-       width = 140, height = 100, units = "mm", dpi = 300)
-ggsave(file.path(RPT_PDF, "SUPP_ora_dedup.pdf"), pS_ora_dedup,
-       width = 140, height = 100, units = "mm", device = pdf_device)
+save_fig(pS_ora_dedup, "SUPP_ora_dedup", RPT_PDF, RPT_PNG,
+  width = 140, height = 100
+)

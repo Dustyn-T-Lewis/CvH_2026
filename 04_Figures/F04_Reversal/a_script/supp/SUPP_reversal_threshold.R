@@ -9,8 +9,6 @@ RPT_PNG <- "04_Figures/F04_Reversal/b_reports/supp/png/panels"
 RPT_PDF <- "04_Figures/F04_Reversal/b_reports/supp/pdf/panels"
 DAT     <- "04_Figures/F04_Reversal/c_data/panel_supp"
 
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
-dir.create(RPT_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT,     recursive = TRUE, showWarnings = FALSE)
 
 pdf_device <- get_pdf_device()
@@ -43,7 +41,6 @@ sweep_df <- map_dfr(thresholds, function(thr) {
 sweep_df$class <- factor(sweep_df$class,
                          levels = c("Reversed", "Exacerbated", "Negligible"))
 
-# Export CSV
 write.csv(sweep_df, file.path(DAT, "SUPP_reversal_threshold.csv"),
           row.names = FALSE)
 
@@ -64,9 +61,8 @@ pS_threshold <- ggplot(sweep_df, aes(threshold, pct, colour = class)) +
   FIG_THEME +
   theme(legend.position = "bottom")
 
-ggsave(file.path(RPT_PNG, "SUPP_reversal_threshold.png"), pS_threshold,
-       width = 140, height = 100, units = "mm", dpi = 300, bg = "white")
-ggsave(file.path(RPT_PDF, "SUPP_reversal_threshold.pdf"), pS_threshold,
-       width = 140, height = 100, units = "mm", device = pdf_device)
-
+save_fig(pS_threshold, "SUPP_reversal_threshold", RPT_PDF, RPT_PNG,
+  width = 140, height = 100,
+  bg = "white"
+)
 message("Done: SUPP_reversal_threshold  [", nrow(sweep_df), " rows exported]")
