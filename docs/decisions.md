@@ -176,17 +176,28 @@ Method lineage: Melov 2007 (PMID 17520024, proportion + permutation), Robinson
 22638577, ROAST/CAMERA), Cahill 2018 (RRHO2), Smyth & Altman 2013 (PMID
 23705896, shared baseline).
 
+### Collapsed into shared/
+
+- `CONSOLIDATED_PATHWAY_ORDER` / `CONSOLIDATED_COLORS`: `pathway_utils.R:316`
+  held a byte-identical copy that nothing in that file used, so it went and
+  `go_slim_categories.R` became the single definition. Its two
+  `if (!exists(...))` load-order guards are gone with it.
+- `compute_cv` and `boot_median_ci`, each defined twice, now live in
+  `shared/stats.R` with value tests. `stats.R` is up to 31 tests.
+- `save_fig()` in `style.R` replaces the PNG+PDF `ggsave` pair. `bg` defaults to
+  `NULL`, which is ggsave's own default and defers to the plot theme, so the two
+  F04 supplement panels that passed `bg = "white"` keep passing it and the seven
+  that did not are unaffected.
+
 ### Still duplicated, not yet collapsed
 
-Measured, left for a follow-up because each changes many call sites at once:
-
-- The PNG+PDF `ggsave` pair, 88 calls across 44 sites. Flags are inconsistent:
-  16 of 44 PNG calls set `bg = "white"`, 28 do not.
+- `save_fig()` is applied to the 9 F04 supplement panels only, where the pattern
+  was exactly uniform. The other ~35 `ggsave` sites vary in how they name their
+  output directories (`RPT` plus a subpath, separate `RPT_PNG`/`RPT_PDF`, or one
+  `RPT_DIR` for both), so converting them is a per-site edit rather than a
+  pattern substitution. Worth doing, not worth doing carelessly.
 - The F04 panel prologue (`setwd` + `source` + path constants + `dir.create` +
   `get_pdf_device`), 16 files, ~165 lines. 78 `dir.create` calls repo-wide.
 - `clear_dir` defined four times identically across stages 01-03, which have no
   shared file to hold it.
-- `CONSOLIDATED_PATHWAY_ORDER` / `CONSOLIDATED_COLORS` duplicated between
-  `pathway_utils.R:316` and `go_slim_categories.R:42`, the latter behind an
-  `if (!exists(...))` load-order guard.
-- `compute_cv` (twice), `boot_median_ci` (twice, byte-identical).
+- The four inline re-implementations of the reversal engine (see Cut, above).
